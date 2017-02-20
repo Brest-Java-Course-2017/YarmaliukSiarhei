@@ -43,6 +43,12 @@ hs_err_pid*
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 
+# File with iml extensions, target folder and files inside .idea folder.
+
+*.iml
+**/target
+**/.idea
+
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
