@@ -1,4 +1,4 @@
-package com.epam.trainning.util.model;
+package com.epam.trainning.model;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -10,6 +10,7 @@ public class User {
     private static final String ILLEGAL_ARGUMENT_EXCEPTION_PREFIX = "Incoming parameter is invalid. ";
 
     //    Must will be moved in property file
+//    TODO: 22.02 - checking valid login and password need be moved on Service Level.
     private static final String LOGIN_PATTERN = "^[a-zA-Z0-9_.-]{5,20}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
 
@@ -18,6 +19,27 @@ public class User {
     private String mLogin = null;
     private String mDescription = null;
     private String mPassword = null;
+
+    public User(String login, String password) throws IllegalArgumentException {
+
+        if (login == null || password == null) {
+            throw new IllegalArgumentException(login == null ? "Login value can't be a null." : "Password value can't be a null.");
+        }
+
+        this.mLogin = login;
+        this.mPassword = password;
+    }
+
+    public User(String login, String password, @Nullable String description) throws IllegalArgumentException {
+
+        if (login == null || password == null) {
+            throw new IllegalArgumentException(login == null ? "Login value can't be a null." : "Password value can't be a null.");
+        }
+        
+        this.mLogin = login;
+        this.mPassword = password;
+        this.mDescription = description;
+    }
 
     public User(Integer userId, String login, String password) throws IllegalArgumentException {
 
@@ -38,7 +60,7 @@ public class User {
         this.mPassword = password;
     }
 
-    public User(Integer userId, String login, String password, String description) throws IllegalArgumentException{
+    public User(Integer userId, String login, String password, @Nullable String description) throws IllegalArgumentException {
 
         if (!isValidUserId(userId) || !isValidLogin(login) || !isValidPassword(password)) {
 

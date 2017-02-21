@@ -1,4 +1,4 @@
-package com.epam.trainning.util.model;
+package com.epam.trainning.model;
 
 import com.epam.trainning.util.Pair;
 import org.junit.Assert;
@@ -115,8 +115,6 @@ public class UserTest {
 
     @Test
     public void setLogin() throws Exception {
-
-        testUser1.setDescription(null);
 
         Assert.assertEquals("Login = ", TEST_LOGIN, testUser1.getLogin());
     }
