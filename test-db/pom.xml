@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dao</artifactId>
+    <artifactId>test-db</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -15,22 +15,6 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.epam.trainning</groupId>
-            <artifactId>model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.epam.trainning</groupId>
-            <artifactId>dao-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.epam.trainning</groupId>
-            <artifactId>test-db</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -46,25 +30,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
         </dependency>
 
     </dependencies>

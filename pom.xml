@@ -12,6 +12,7 @@
         <module>utils</module>
         <module>dao-api</module>
         <module>dao</module>
+        <module>test-db</module>
     </modules>
 
     <name>Aggregator for user-management</name>
@@ -25,6 +26,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.12</junit.version>
         <google_code_find_bug.version>3.0.1</google_code_find_bug.version>
+        <spring.version>4.3.6.RELEASE</spring.version>
+        <h2.version>1.4.193</h2.version>
 
         <!--env.JAVA_HOME-->
         <!--env.PATH-->
@@ -43,8 +46,8 @@
         <dependencies>
 
             <!--<dependency>-->
-                <!--<groupId>com.epam.trainning</groupId>-->
-                <!--<artifactId>model</artifactId>-->
+            <!--<groupId>com.epam.trainning</groupId>-->
+            <!--<artifactId>model</artifactId>-->
             <!--</dependency>-->
             <!--<dependency>-->
             <!--<groupId>com.epam.trainning</groupId>-->
@@ -53,14 +56,53 @@
             <!--</dependency>-->
 
             <!--<dependency>-->
-                <!--<groupId>com.epam.trainning</groupId>-->
-                <!--<artifactId>dao</artifactId>-->
+            <!--<groupId>com.epam.trainning</groupId>-->
+            <!--<artifactId>dao</artifactId>-->
             <!--</dependency>-->
 
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>${google_code_find_bug.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
             </dependency>
 
             <dependency>

@@ -20,6 +20,10 @@ public class User {
     private String mDescription = null;
     private String mPassword = null;
 
+    public User() {
+
+    }
+
     public User(String login, String password) throws IllegalArgumentException {
 
         if (login == null || password == null) {
@@ -35,7 +39,7 @@ public class User {
         if (login == null || password == null) {
             throw new IllegalArgumentException(login == null ? "Login value can't be a null." : "Password value can't be a null.");
         }
-        
+
         this.mLogin = login;
         this.mPassword = password;
         this.mDescription = description;
