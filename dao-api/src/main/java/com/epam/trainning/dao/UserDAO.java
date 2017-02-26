@@ -10,10 +10,14 @@ public interface UserDAO {
 
     public User getUserById(Integer userId);
 
+    public User getUserByLogin(String login);
+
     public Integer addUser(User user);
 
-    public void updateUser(User user);
+    public boolean updateUser(User user);
 
-    public void deleteUserById(Integer userId);
+    public boolean deleteUserById(Integer userId);
+
+    public boolean deleteUserByLogin(String login);
 
 }

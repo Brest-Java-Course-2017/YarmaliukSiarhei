@@ -20,9 +20,9 @@ public class User {
     private String mDescription = null;
     private String mPassword = null;
 
-    public User() {
-
-    }
+//    public User() {
+//
+//    }
 
     public User(String login, String password) throws IllegalArgumentException {
 
@@ -78,7 +78,6 @@ public class User {
             throw new IllegalArgumentException(exceptionMessage);
         }
 
-
         this.mUserId = userId;
         this.mLogin = login;
         this.mDescription = description;
@@ -87,7 +86,7 @@ public class User {
 
     private boolean isValidUserId(Integer userId) {
 
-        if (userId != null && userId > 0) {
+        if (userId != null && userId >= 0) {
             return true;
         }
         return false;
