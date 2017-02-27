@@ -22,7 +22,7 @@
         </property>
     </bean>
 
-    <bean id="userDAO" class="com.epam.trainning.dao.UserDAOImpl">
+    <bean id="userDAO" class="com.epam.trainning.dao.UserDaoImpl">
         <constructor-arg ref="dataSource"/>
     </bean>
 </beans>

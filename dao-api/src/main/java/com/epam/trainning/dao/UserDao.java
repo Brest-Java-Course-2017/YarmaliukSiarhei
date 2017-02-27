@@ -4,7 +4,7 @@ import com.epam.trainning.model.User;
 
 import java.util.List;
 
-public interface UserDAO {
+public interface UserDao {
 
     public List<User> getAllUsers();
 

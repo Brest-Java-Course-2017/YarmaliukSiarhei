@@ -1,19 +1,14 @@
 package com.epam.trainning.model;
 
-import com.epam.trainning.util.Pair;
+import com.epam.trainning.util.MessageError;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class UserTest {
-
-    private static final String ILLEGAL_ARGUMENT_EXCEPTION_PREFIX = "Incoming parameter is invalid. ";
 
     private static final Integer TEST_USER_ID = new Integer(1);
     private static final String TEST_LOGIN = "test_user";
@@ -30,30 +25,28 @@ public class UserTest {
     }
 
     @Test
-    public void setUserIdTest() {
+    public void successfulSetUserIdTest() {
 
-        String exceptionMessageWithNull = ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + "User id can't be a null.";
-        String exceptionMessageWithZeroValue = ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + "User id can't be lower then 0.";
-
-        List<Pair<Integer, String>> listTestValues = new ArrayList<>(3);
-
-        listTestValues.add(new Pair<Integer, String>(null, exceptionMessageWithNull));
-        listTestValues.add(new Pair<Integer, String>(-1, exceptionMessageWithZeroValue));
-        listTestValues.add(new Pair<Integer, String>(0, exceptionMessageWithZeroValue));
-
-        User dummy = new User(1, TEST_LOGIN, TEST_PASSWORD);
-
-        thrownException.expect(IllegalArgumentException.class);
-
-        for (Pair<Integer, String> pair : listTestValues) {
-
-            thrownException.expectMessage(pair.second);
-            dummy.setUserId(pair.first);
-        }
-
-        assertEquals("User id = ", TEST_USER_ID, testUser.getUserId());
+        testUser.setUserId(0);
+        assertEquals("User id = ", Integer.valueOf(0), testUser.getUserId());
     }
 
+
+    @Test
+    public void failureSetUserIdTest1() {
+
+        thrownException.expect(IllegalArgumentException.class);
+        thrownException.expectMessage("Incoming parameter is invalid. User Id can't be a null.");
+        testUser.setUserId(null);
+    }
+
+    @Test
+    public void failureSetUserIdTest2() {
+
+        thrownException.expect(IllegalArgumentException.class);
+        thrownException.expectMessage("Incoming parameter is invalid. User Id can't be lower then 0.");
+        testUser.setUserId(-1);
+    }
 
 //    setlogin, setPassword, setDescriptor methods make like setUserId method
 

@@ -20,10 +20,6 @@ public class User {
     private String mDescription = null;
     private String mPassword = null;
 
-//    public User() {
-//
-//    }
-
     public User(String login, String password) throws IllegalArgumentException {
 
         if (login == null || password == null) {
@@ -123,7 +119,7 @@ public class User {
     public void setUserId(Integer userId) throws IllegalArgumentException {
 
         if (!isValidUserId(userId)) {
-            String exceptionMessagePostfix = userId == null ? "User id can't be a null." : "User id can't be lower then 0.";
+            String exceptionMessagePostfix = userId == null ? "User Id can't be a null." : "User Id can't be lower then 0.";
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + exceptionMessagePostfix);
         }
 

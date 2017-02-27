@@ -1,6 +1,7 @@
 package com.epam.trainning.dao;
 
 import com.epam.trainning.model.User;
+import com.epam.trainning.util.MessageError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 //@Repository
-public class UserDAOImpl implements UserDAO {
+public class UserDaoImpl implements UserDao {
 
     @Value("${sql.getAllUsers}")
     private final String GET_ALL_USERS_SQL = null;
@@ -46,18 +47,14 @@ public class UserDAOImpl implements UserDAO {
     @Value("${sql.getCountUserWithSameId}")
     private final String GET_COUNT_USER_WITH_SAME_ID = null;
 
-
     private static final String LOGIN = "login";
     private static final String USER_ID = "user_id";
     private static final String PASSWORD = "password";
     private static final String DESCRIPTION = "description";
 
-    private static final String ERROR_MSG_USER_ALREADY_EXISTS = "Can't insert a new user. User with the same login already exists.";
-    private static final String ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG = "Invalid incoming parameter.";
-
     private NamedParameterJdbcTemplate mNamedParameterJdbcTemplate;
 
-    public UserDAOImpl(DataSource dataSource) {
+    public UserDaoImpl(DataSource dataSource) {
         mNamedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
@@ -70,7 +67,7 @@ public class UserDAOImpl implements UserDAO {
     public User getUserById(Integer userId) throws IllegalArgumentException {
 
         if (userId == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " Id can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.ID_CAN_NOT_BE_A_NULL);
         }
         SqlParameterSource namedParameters = new MapSqlParameterSource(USER_ID, userId);
         User user = mNamedParameterJdbcTemplate.queryForObject(GET_USER_BY_ID, namedParameters, new UserRowMapper());
@@ -81,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
     public User getUserByLogin(String login) throws IllegalArgumentException {
 
         if (login == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " Login can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.LOGIN_CAN_NOT_BE_A_NULL);
         }
         SqlParameterSource namedParameters = new MapSqlParameterSource(LOGIN, login);
         User user = mNamedParameterJdbcTemplate.queryForObject(GET_USER_BY_LOGIN, namedParameters, new UserRowMapper());
@@ -92,22 +89,22 @@ public class UserDAOImpl implements UserDAO {
     public Integer addUser(User user) throws IllegalArgumentException {
 
         if (user == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.USER_CAN_NOT_BE_A_NULL);
         }
 
         if (isUserExist(user.getLogin())) {
-            throw new DataAccessException(ERROR_MSG_USER_ALREADY_EXISTS) {
+            throw new DataAccessException(MessageError.ADDED_USER_ALREADY_EXISTS) {
             };
         }
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(user);
-        int updatedRowsCount = mNamedParameterJdbcTemplate.update(ADD_USER, namedParameters, keyHolder);
+        mNamedParameterJdbcTemplate.update(ADD_USER, namedParameters, keyHolder);
 
         Number newId = keyHolder.getKey();
         if (newId == null) {
-            throw new DataAccessException("Returned unique key is a null.") {
+            throw new DataAccessException(MessageError.RETURNED_UNIQUE_KEY_IS_A_NULL) {
             };
         }
         return keyHolder.getKey().intValue();
@@ -135,20 +132,20 @@ public class UserDAOImpl implements UserDAO {
     public boolean updateUser(User user) throws IllegalArgumentException {
 
         if (user == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.USER_CAN_NOT_BE_A_NULL);
         }
 
-        if (isUserExist(user.getUserId())) {
+        if (!isUserExist(user.getUserId())) {
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.USER_IS_NOT_EXIST);
+
+        } else {
 
             SqlParameterSource namedParameter = new BeanPropertySqlParameterSource(user);
-            int countUpdatedRow = mNamedParameterJdbcTemplate.update(UPDATE_USER, namedParameter);
 
+            int countUpdatedRow = mNamedParameterJdbcTemplate.update(UPDATE_USER, namedParameter);
             if (countUpdatedRow > 0) {
                 return true;
             }
-
-        } else {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User is not exist.");
         }
 
         return false;
@@ -158,18 +155,20 @@ public class UserDAOImpl implements UserDAO {
     public boolean deleteUserById(Integer userId) throws IllegalArgumentException {
 
         if (userId == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User id can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.ID_CAN_NOT_BE_A_NULL);
         }
 
-        if (isUserExist(userId)) {
+        if (!isUserExist(userId)) {
+            throw new IllegalArgumentException(
+                    MessageError.InvalidIncomingParameters.COMPOSITE_PREFIX_USER_WITH_ID + userId +
+                            MessageError.InvalidIncomingParameters.COMPOSITE_POSTFIX_IS_NOT_EXISTS);
+
+        } else {
 
             int countDeletedRow = mNamedParameterJdbcTemplate.update(DELETE_USER_BY_ID, new MapSqlParameterSource(USER_ID, userId));
             if (countDeletedRow > 0) {
                 return true;
             }
-
-        } else {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User with userId = " + userId + " is not exist.");
         }
 
         return false;
@@ -178,11 +177,13 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean deleteUserByLogin(String login) throws IllegalArgumentException {
         if (login == null) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " Login can't be a null.");
+            throw new IllegalArgumentException(MessageError.InvalidIncomingParameters.LOGIN_CAN_NOT_BE_A_NULL);
         }
 
         if (!isUserExist(login)) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX_MSG + " User with Login = " + login + " is not exist.");
+            throw new IllegalArgumentException(
+                    MessageError.InvalidIncomingParameters.COMPOSITE_PREFIX_USER_WITH_LOGIN + login +
+                            MessageError.InvalidIncomingParameters.COMPOSITE_POSTFIX_IS_NOT_EXISTS);
 
         } else {
 
