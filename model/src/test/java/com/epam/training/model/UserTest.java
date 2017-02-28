@@ -1,6 +1,4 @@
-package com.epam.trainning.model;
-
-import com.epam.trainning.util.MessageError;
+package com.epam.training.model;
 
 import org.junit.Rule;
 import org.junit.Test;

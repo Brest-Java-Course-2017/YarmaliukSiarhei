@@ -6,23 +6,29 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--Searching filters example-->
-    <!--<context:component-scan base-package="com.epam.training">-->
     <!--<context:exclude-filter type="assignable" expression="Pair"/>-->
     <!--</context:component-scan>-->
+
     <!--<context:property-placeholder location="database.properties"/>-->
+
+    <!--<context:component-scan base-package="com.epam.training"/>-->
 
     <import resource="classpath*:test-spring-db.xml"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:database.properties</value>
                 <value>classpath:queries.properties</value>
+                <value>classpath:database.properties</value>
             </list>
         </property>
     </bean>
 
     <bean id="userDAO" class="com.epam.training.dao.UserDaoImpl">
         <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="userService" class="com.epam.training.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
     </bean>
 </beans>

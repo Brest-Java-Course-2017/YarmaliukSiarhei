@@ -1,4 +1,4 @@
-package com.epam.trainning.model;
+package com.epam.training.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

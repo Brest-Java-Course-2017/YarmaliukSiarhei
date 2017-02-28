@@ -1,4 +1,4 @@
-package com.epam.trainning.util;
+package com.epam.training.util;
 
 
 public final class MessageError {

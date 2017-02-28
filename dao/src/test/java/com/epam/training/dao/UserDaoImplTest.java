@@ -1,7 +1,7 @@
-package com.epam.trainning.dao;
+package com.epam.training.dao;
 
-import com.epam.trainning.model.User;
-import com.epam.trainning.util.MessageError;
+import com.epam.training.model.User;
+import com.epam.training.util.MessageError;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

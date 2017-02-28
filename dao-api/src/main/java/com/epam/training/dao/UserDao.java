@@ -1,6 +1,6 @@
-package com.epam.trainning.dao;
+package com.epam.training.dao;
 
-import com.epam.trainning.model.User;
+import com.epam.training.model.User;
 
 import java.util.List;
 
