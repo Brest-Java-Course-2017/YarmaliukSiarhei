@@ -44,10 +44,12 @@ hs_err_pid*
 .idea/**/uiDesigner.xml
 
 # File with iml extensions, target folder and files inside .idea folder.
+# Folder staging
 
 *.iml
 **/target
 **/.idea
+**/staging
 
 # Gradle:
 .idea/**/gradle.xml
