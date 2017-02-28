@@ -1,11 +1,16 @@
 package com.epam.trainning.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class User {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static final String ILLEGAL_ARGUMENT_EXCEPTION_PREFIX = "Incoming parameter is invalid. ";
 
@@ -22,7 +27,10 @@ public class User {
 
     public User(String login, String password) throws IllegalArgumentException {
 
+        LOGGER.debug("constructor User(String, String)");
+
         if (login == null || password == null) {
+            LOGGER.debug("constructor User(String, String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(login == null ? "Login value can't be a null." : "Password value can't be a null.");
         }
 
@@ -32,7 +40,10 @@ public class User {
 
     public User(String login, String password, @Nullable String description) throws IllegalArgumentException {
 
+        LOGGER.debug("constructor User(String, String, String)");
+
         if (login == null || password == null) {
+            LOGGER.debug("constructor User(String, String, String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(login == null ? "Login value can't be a null." : "Password value can't be a null.");
         }
 
@@ -43,6 +54,8 @@ public class User {
 
     public User(Integer userId, String login, String password) throws IllegalArgumentException {
 
+        LOGGER.debug("constructor User(Integer, String, String)");
+
         if (!isValidUserId(userId) || !isValidLogin(login) || !isValidPassword(password)) {
 
             String exceptionMessage = null;
@@ -52,6 +65,7 @@ public class User {
                 exceptionMessage = !isValidLogin(login) ? "Login value is invalid." : "Password value is invalid.";
             }
 
+            LOGGER.debug("constructor User(Integer, String, String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(exceptionMessage);
         }
 
@@ -62,6 +76,8 @@ public class User {
 
     public User(Integer userId, String login, String password, @Nullable String description) throws IllegalArgumentException {
 
+        LOGGER.debug("constructor User(Integer, String, String, String)");
+
         if (!isValidUserId(userId) || !isValidLogin(login) || !isValidPassword(password)) {
 
             String exceptionMessage = null;
@@ -71,6 +87,7 @@ public class User {
                 exceptionMessage = isValidLogin(login) ? "Login value is invalid." : "Password value is invalid.";
             }
 
+            LOGGER.debug("constructor User(Integer, String, String, String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(exceptionMessage);
         }
 
@@ -118,8 +135,12 @@ public class User {
 
     public void setUserId(Integer userId) throws IllegalArgumentException {
 
+        LOGGER.debug("setUserId(Integer)");
+
         if (!isValidUserId(userId)) {
             String exceptionMessagePostfix = userId == null ? "User Id can't be a null." : "User Id can't be lower then 0.";
+
+            LOGGER.debug("setUserId(Integer) - throw IllegalArgumentException");
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + exceptionMessagePostfix);
         }
 
@@ -132,8 +153,12 @@ public class User {
 
     public void setLogin(String login) throws IllegalArgumentException {
 
+        LOGGER.debug("setLogin(String)");
+
         if (!isValidLogin(login)) {
             String exceptionMessagePostfix = login == null ? "Login can't be a null" : "Login doesn't matches pattern.";
+
+            LOGGER.debug("setLogin(String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + exceptionMessagePostfix);
         }
 
@@ -146,8 +171,12 @@ public class User {
 
     public void setPassword(String password) {
 
+        LOGGER.debug("setPassword(String)");
+
         if (!isValidPassword(password)) {
             String exceptionMessagePostfix = password == null ? "Password can't be a null." : "Password doesn't matches pattern.";
+
+            LOGGER.debug("setPassword(String) - throw IllegalArgumentException");
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_PREFIX + exceptionMessagePostfix);
         }
 
@@ -160,6 +189,8 @@ public class User {
     }
 
     public void setDescription(@Nonnull String description) {
+
+        LOGGER.debug("setDescription(String)");
         this.mDescription = description;
     }
 

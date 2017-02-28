@@ -19,6 +19,7 @@
             <artifactId>model</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>
