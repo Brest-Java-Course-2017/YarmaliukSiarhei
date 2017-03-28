@@ -16,12 +16,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.epam.training</groupId>
-            <artifactId>utils</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -35,11 +29,6 @@
             <artifactId>log4j-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.1</version>
-        </dependency>
     </dependencies>
 
 
