@@ -2,17 +2,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.epam.trainning</groupId>
+    <groupId>com.epam.training</groupId>
     <artifactId>user-management</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
+        <module>service-api</module>
         <module>model</module>
         <module>dao-api</module>
         <module>dao</module>
         <module>test-db</module>
         <module>utils</module>
+        <module>service</module>
     </modules>
 
     <name>Aggregator for user-management</name>
@@ -28,6 +30,7 @@
         <spring.version>4.3.6.RELEASE</spring.version>
         <h2.version>1.4.193</h2.version>
         <log4j.verison>2.8</log4j.verison>
+        <easymock.version>3.4</easymock.version>
 
     </properties>
 
@@ -109,6 +112,12 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-jcl</artifactId>
                 <version>${log4j.verison}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${easymock.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

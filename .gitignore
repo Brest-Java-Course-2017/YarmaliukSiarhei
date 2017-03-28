@@ -45,11 +45,13 @@ hs_err_pid*
 
 # File with iml extensions, target folder and files inside .idea folder.
 # Folder staging
+# Folder log
 
 *.iml
 **/target
 **/.idea
 **/staging
+**/log
 
 # Gradle:
 .idea/**/gradle.xml

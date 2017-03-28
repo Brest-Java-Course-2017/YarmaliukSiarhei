@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:property-placeholder location="classpath*:service-queries.properties, classpath*:service-validate-patterns-settings.properties"/>
+
+    <bean id="userDao" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.epam.training.dao.UserDao"/>
+    </bean>
+
+    <bean id="namedParameterJdbcTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"/>
+    </bean>
+
+    <bean id="userService" class="com.epam.training.service.UserServiceImpl">
+    </bean>
+
+    <!--
+         In Service model I need use two query.
+         One for checking which count of users exists with a same login, when you create a new user.
+         Second query needs for checking user exists or not when you try update some user.
+         This need to prevent sending query to db which are erroneous.
+
+         For testing you can use two approach:
+         1. raise real database
+         2. mocking database API.
+      -->
+
+</beans>
