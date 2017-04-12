@@ -1,11 +1,14 @@
 package com.epam.training.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -44,7 +47,9 @@ public class User {
         this.mPassword = password;
     }
 
-    public User(Integer userId, String login, String password, String description) {
+    @JsonCreator
+    public User(@JsonProperty("userId") Integer userId, @JsonProperty("login") String login,
+                @JsonProperty("password") String password, @JsonProperty("description") String description) {
 
         LOGGER.debug("constructor User(Integer, String, String, String)");
 
@@ -121,7 +126,7 @@ public class User {
         return "User {" +
                 "userId = " + this.mUserId +
                 ", login = " + this.mLogin +
-                ", password = " + this.mPassword +
+                ", password = " + mPassword +
                 ", description = " + this.mDescription +
                 "}";
     }

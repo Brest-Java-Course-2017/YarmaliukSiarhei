@@ -12,6 +12,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,6 +29,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:service-test-mock.xml"})
+//@ComponentScan(basePackages = "com.epam.training")
 public class UserServiceImplMockTest {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -34,12 +37,14 @@ public class UserServiceImplMockTest {
     @Rule
     public ExpectedException thrownException = ExpectedException.none();
 
+//    @Resource(name = "userDao")
     @Autowired
     private UserDao mMockUserDao;
 
     @Autowired
     private NamedParameterJdbcTemplate mMockNamedJDBCTemplate;
 
+//    @Resource
     @Autowired
     private UserService mUserService;
 

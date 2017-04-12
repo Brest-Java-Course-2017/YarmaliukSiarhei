@@ -19,7 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-//@Repository
+//@Repository  -  one case of using is the automatic translation of exceptions
 public class UserDaoImpl implements UserDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
