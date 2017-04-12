@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mvn="http://www.springframework.org/schema/cache"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:utiil="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:component-scan base-package="com.epam.training.rest"/>
+
+    <mvc:annotation-driven/>
+
+    <!--<mvn:annotation-driven content-negotiation-manager="contentNegotiationManager"/>-->
+
+    <!--<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">-->
+    <!--<property name="mediaTypes">-->
+    <!--<value>-->
+    <!--json=application/json-->
+    <!--xml=application/xml-->
+    <!--</value>-->
+    <!--</property>-->
+
+    <!--<property name="mediaTypes">-->
+    <!--<props>-->
+    <!--<prop key="json">application/json</prop>-->
+    <!--</props>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:database.properties</value>
+                <value>classpath:queries.properties</value>
+                <value>classpath:service-queries.properties</value>
+                <value>classpath:service-validate-patterns-settings.properties.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:create-table.sql"/>
+        <jdbc:script location="classpath:data-script.sql"/>
+    </jdbc:initialize-database>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="userDao" class="com.epam.training.dao.UserDaoImpl">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="" class="com.epam.training.service.UserServiceImpl">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="userDao"/>
+    </bean>
+
+
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes" value="application/json"/>
+        <property name="prettyPrint" value="true"/>
+    </bean>
+
+</beans>

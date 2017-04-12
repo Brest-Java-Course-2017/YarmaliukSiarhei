@@ -8,7 +8,6 @@
     <!--Searching filters example-->
     <!--<context:component-scan base-package="com.epam.training">-->
     <!--<context:exclude-filter type="assignable" expression="Pair"/>-->
-    <!--</context:component-scan>-->
     <!--<context:property-placeholder location="database.properties"/>-->
 
     <import resource="classpath*:test-spring-db.xml"/>
