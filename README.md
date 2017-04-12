@@ -1,1 +1,1 @@
-#### Test project for epam java course 2017
+#### Test project for epam Java course 2017
