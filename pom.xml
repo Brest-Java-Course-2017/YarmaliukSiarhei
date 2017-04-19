@@ -16,6 +16,8 @@
         <module>utils</module>
         <module>service</module>
         <module>rest-app</module>
+        <module>client-api</module>
+        <module>client-rest</module>
     </modules>
 
     <name>Aggregator for user-management</name>
@@ -86,6 +88,11 @@
                 <artifactId>spring-webmvc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -121,6 +128,7 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -182,9 +190,9 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.eclipde.jetty</groupId>
+                    <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.4.2.v20170220</version>
+                    <version>9.4.3.v20170317</version>
                 </plugin>
 
                 <plugin>

@@ -300,6 +300,75 @@ public class UserRestControllerMockTest {
                 .andExpect(content().json(RETURNED_JSON));
     }
 
+    @Test
+    public void successfulDeleteUserByIdTest() throws Exception {
+
+        LOGGER.debug("successfulGetUserByIdTest()");
+
+        expect(mMockUserService.deleteUserById(anyObject(Integer.class))).andReturn(true);
+        replay(mMockUserService);
+
+        mockMvc.perform(
+                delete("/user/id")
+                        .param("userId", "1")
+
+        ).andDo(print())
+                .andExpect(status().isNoContent());
+
+
+    }
+
+    @Test
+    public void failureDeleteUserByIdTest_WithIncorrectId() throws Exception {
+
+        LOGGER.debug("failureDeleteUserByIdTest_WithIncorrectId()");
+
+        expect(mMockUserService.deleteUserById(anyObject(Integer.class))).andThrow(new IllegalArgumentException(ERROR_MESSAGE));
+        replay(mMockUserService);
+
+        mockMvc.perform(
+                delete("/user/id")
+                        .param("userId", "-1")
+
+        ).andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json("\"IllegalArgumentException: " + ERROR_MESSAGE + "\""));
+    }
+
+    @Test
+    public void successfulDeleteUserByLoginTest() throws Exception {
+
+        LOGGER.debug("successfulGetUserByLoginTest()");
+
+        expect(mMockUserService.deleteUserByLogin(anyObject(String.class))).andReturn(true);
+        replay(mMockUserService);
+
+        mockMvc.perform(
+                delete("/user/login")
+                        .param("login", "someLogin")
+
+        ).andDo(print())
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    public void failureDeleteUserByLoginTest_WithIncorrectLogin() throws Exception {
+
+        LOGGER.debug("failureDeleteUserByLoginTest_WithIncorrectLogin()");
+
+        expect(mMockUserService.deleteUserByLogin(anyObject(String.class))).andThrow(new IllegalArgumentException(ERROR_MESSAGE));
+        replay(mMockUserService);
+
+        mockMvc.perform(
+                delete("/user/login")
+                        .param("login", "")
+
+        ).andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().json("\"IllegalArgumentException: " + ERROR_MESSAGE + "\""));
+    }
+
 //    @Test
 //    public void testMethod() throws Exception {
 //

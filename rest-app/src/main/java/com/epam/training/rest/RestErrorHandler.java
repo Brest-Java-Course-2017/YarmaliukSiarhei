@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
+
 @ControllerAdvice(basePackages = {"com.epam.training"})
 public class RestErrorHandler {
 
@@ -27,11 +28,12 @@ public class RestErrorHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     public String handlerIllegalArgumentException(IllegalArgumentException ex) {
 
         LOGGER.debug("handlerIllegalArgumentException(IllegalArgumentException) - IllegalArgumentException: {}", ex);
+
         return "IllegalArgumentException: " + ex.getLocalizedMessage();
     }
 }
