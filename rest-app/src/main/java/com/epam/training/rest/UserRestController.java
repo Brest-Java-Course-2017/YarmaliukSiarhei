@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,6 +76,24 @@ public class UserRestController {
 
         LOGGER.debug("getUserById(int) - user id is: {}", id);
         return mUserService.getUserById(id);
+    }
+
+
+    @DeleteMapping(value = "/user/id", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteUserById(@RequestParam("userId") int id) {
+
+        LOGGER.debug("deleteUserById(int) - user id is: {}", id);
+        mUserService.deleteUserById(id);
+
+    }
+
+    @DeleteMapping(value = "/user/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserByLogin(@RequestParam("login") String login) {
+
+        LOGGER.debug("deleteUserByLogin(String) - login is: {}", login);
+        mUserService.deleteUserByLogin(login);
     }
 
 /*

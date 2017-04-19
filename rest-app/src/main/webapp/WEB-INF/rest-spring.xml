@@ -34,7 +34,7 @@
                 <value>classpath:database.properties</value>
                 <value>classpath:queries.properties</value>
                 <value>classpath:service-queries.properties</value>
-                <value>classpath:service-validate-patterns-settings.properties.properties</value>
+                <value>classpath:service-validate-patterns-settings.properties</value>
             </list>
         </property>
     </bean>

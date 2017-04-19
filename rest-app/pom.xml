@@ -74,7 +74,7 @@
         <plugins>
 
             <plugin>
-                <groupId>org.eclipde.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
 
                 <configuration>
