@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="console-app.properties"/>
+
+    <!--<bean id="customErrorHandler" class="com.epam.training.client.rest.CustomResponseErrorHandler"/>-->
+
+    <bean id="mockRestTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.springframework.web.client.RestTemplate"/>
+        <!--<property name="errorHandler" ref="customErrorHandler"/>-->
+    </bean>
+
+    <bean id="usersConsumer" class="com.epam.training.client.rest.UsersConsumerRest">
+        <constructor-arg index="0" value="${user.protocol}://${user.host}:${user.port}"/>
+        <constructor-arg index="1" value="${point.users}"/>
+        <constructor-arg index="2" value="${point.user}"/>
+        <property name="restTemplate" ref="mockRestTemplate"/>
+    </bean>
+</beans>

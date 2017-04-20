@@ -37,22 +37,16 @@ public class UserServiceImplMockTest {
     @Rule
     public ExpectedException thrownException = ExpectedException.none();
 
-//    @Resource(name = "userDao")
+    //    @Resource(name = "userDao")
     @Autowired
     private UserDao mMockUserDao;
 
     @Autowired
     private NamedParameterJdbcTemplate mMockNamedJDBCTemplate;
 
-//    @Resource
+    //    @Resource
     @Autowired
     private UserService mUserService;
-
-    @Value("${sql.getCountUsersWithSameUserId}")
-    private final String GET_COUNT_USER_WITH_SAME_ID = null;
-
-    @Value("${sql.getCountUsersWithSameLogin}")
-    private final String GET_COUNT_USER_WITH_SAME_LOGIN = null;
 
     private static final User EXPECTED_USER;
 
@@ -150,8 +144,6 @@ public class UserServiceImplMockTest {
 
         thrownException.expect(IllegalArgumentException.class);
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.USER_IS_NOT_EXIST);
-
-        Class<String> clazzString = String.class;
 
         expect(mMockNamedJDBCTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
 

@@ -30,7 +30,7 @@
     </bean>
 
     <bean id="userConsumer" class="com.epam.training.client.rest.UsersConsumerRest">
-        <constructor-arg index="0" value="${user.protocol}://${user.host}:${user.port}/"/>
+        <constructor-arg index="0" value="${user.protocol}://${user.host}:${user.port}"/>
         <constructor-arg index="1" value="${point.users}"/>
         <constructor-arg index="2" value="${point.user}"/>
         <property name="restTemplate" ref="restTemplate"/>
