@@ -7,12 +7,17 @@ import org.springframework.dao.DataAccessException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+
 public interface InvestigationDao {
 
-    public List<Investigation> getAllInvestigation(int offset, int count) throws DataAccessException;
+    public List<Investigation> getAllInvestigations(int offset, int count) throws DataAccessException;
 
     public List<Investigation> getInvestigationsBetweenPeriod(OffsetDateTime startDate,
                                                               OffsetDateTime endDate, int offset, int count) throws DataAccessException;
+
+    public List<Investigation> getEmployeeInvestigations(Integer employeeId, int offset, int count) throws DataAccessException;
+
+    public Investigation getInvestigationById(Integer investigationId) throws DataAccessException;
 
     public Integer addInvestigation(Investigation investigation) throws DataAccessException;
 
@@ -20,7 +25,7 @@ public interface InvestigationDao {
 
     public int updateInvestigation(Investigation investigation) throws DataAccessException;
 
-    public int updateInvolvedStaffInInvestigaiton(Integer investigationId, List<Integer> employeesId) throws DataAccessException;
+    public int updateInvolvedStaffInInvestigation(Integer investigationId, List<Integer> employeesId) throws DataAccessException;
 
     public int deleteInvestigationById(Integer investigationId) throws DataAccessException;
 }

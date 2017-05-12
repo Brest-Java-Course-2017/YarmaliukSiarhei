@@ -4,7 +4,7 @@ package com.segniertomato.work.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -12,31 +12,51 @@ import java.util.Objects;
 
 public class Employee {
 
-    private static Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private Integer employeeId = -1;
-    private String firstName;
+    private String name;
 
-    private OffsetDateTime age;
-    private OffsetDateTime startWorkingDate;
+    private LocalDate age;
+    private LocalDate startWorkingDate;
 
     private List<Investigation> participatedInvestigation = new LinkedList<>();
 
+    public Employee(Integer employeeId,String name, LocalDate age, LocalDate startWorkingDate) {
 
-    public Employee(String firstName, OffsetDateTime age, OffsetDateTime startWorkingDate) {
+        LOGGER.debug("constructor Employee(Integer, String, LocalDate, LocalDateTime)");
 
-        LOGGER.debug("constructor Employee(String, OffsetDateTime, OffsetDateTime)");
-
-        this.firstName = firstName;
+        this.employeeId = employeeId;
+        this.name = name;
         this.age = age;
         this.startWorkingDate = startWorkingDate;
     }
 
-    public Employee(String firstName, OffsetDateTime age, OffsetDateTime startWorkingDate, List<Investigation> participatedInvestigation) {
+    public Employee(Integer employeeId, String name, LocalDate age, LocalDate startWorkingDate, List<Investigation> participatedInvestigation) {
 
-        LOGGER.debug("constructor Employee(String, OffsetDateTime, OffsetDateTime, List<Investigation>)");
+        LOGGER.debug("constructor Employee(Integer, String, LocalDate, LocalDate, List<Investigation>)");
 
-        this.firstName = firstName;
+        this.employeeId = employeeId;
+        this.name = name;
+        this.age = age;
+        this.startWorkingDate = startWorkingDate;
+        this.participatedInvestigation = participatedInvestigation;
+    }
+
+    public Employee(String name, LocalDate age, LocalDate startWorkingDate) {
+
+        LOGGER.debug("constructor Employee(String, LocalDate, LocalDateTime)");
+
+        this.name = name;
+        this.age = age;
+        this.startWorkingDate = startWorkingDate;
+    }
+
+    public Employee(String name, LocalDate age, LocalDate startWorkingDate, List<Investigation> participatedInvestigation) {
+
+        LOGGER.debug("constructor Employee(String, LocalDate, LocalDate, List<Investigation>)");
+
+        this.name = name;
         this.age = age;
         this.startWorkingDate = startWorkingDate;
         this.participatedInvestigation = participatedInvestigation;
@@ -52,33 +72,33 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
+    public void setName(String name) {
 
-        LOGGER.debug("setFirstName(String)");
-        this.firstName = firstName;
+        LOGGER.debug("setTitle(String)");
+        this.name = name;
     }
 
-    public OffsetDateTime getAge() {
+    public LocalDate getAge() {
         return age;
     }
 
-    public void setAge(OffsetDateTime age) {
+    public void setAge(LocalDate age) {
 
-        LOGGER.debug("setAge(OffsetDateTime)");
+        LOGGER.debug("setAge(LocalDate)");
         this.age = age;
     }
 
-    public OffsetDateTime getStartWorkingDate() {
+    public LocalDate getStartWorkingDate() {
         return startWorkingDate;
     }
 
-    public void setStartWorkingDate(OffsetDateTime startWorkingDate) {
+    public void setStartWorkingDate(LocalDate startWorkingDate) {
 
-        LOGGER.debug("setStartWorkingDate(OffsetDateTime)");
+        LOGGER.debug("setStartWorkingDate(LocalDate)");
         this.startWorkingDate = startWorkingDate;
     }
 
@@ -100,7 +120,7 @@ public class Employee {
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
         return Objects.equals(employeeId, employee.employeeId) &&
-                Objects.equals(firstName, employee.firstName) &&
+                Objects.equals(name, employee.name) &&
                 Objects.equals(age, employee.age) &&
                 Objects.equals(startWorkingDate, employee.startWorkingDate) &&
                 Objects.equals(participatedInvestigation, employee.participatedInvestigation);
@@ -110,7 +130,7 @@ public class Employee {
     public int hashCode() {
 
         LOGGER.debug("hashCode()");
-        return Objects.hash(employeeId, firstName, age, startWorkingDate, participatedInvestigation);
+        return Objects.hash(employeeId, name, age, startWorkingDate, participatedInvestigation);
     }
 
     @Override
@@ -119,7 +139,7 @@ public class Employee {
         LOGGER.debug("toString()");
         return "Employee{" +
                 "employeeId=" + employeeId +
-                ", firstName='" + firstName + '\'' +
+                ", name='" + name + '\'' +
                 ", age=" + age +
                 ", startWorkingDate=" + startWorkingDate +
                 ", participatedInvestigation=" + participatedInvestigation +

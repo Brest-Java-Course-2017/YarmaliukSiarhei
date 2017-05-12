@@ -3,6 +3,7 @@ package com.segniertomato.work.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.time.OffsetDateTime;
 
 import java.util.LinkedList;
@@ -12,10 +13,11 @@ import java.util.Objects;
 
 public class Investigation {
 
-    private static Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private Integer investigationId = -1;
-    private String name;
+    private Integer number;
+    private String title;
     private String description;
 
     private OffsetDateTime startInvestigationDate;
@@ -23,26 +25,148 @@ public class Investigation {
 
     private List<Employee> involvedStaff = new LinkedList<>();
 
-    public Investigation(String name, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
+    public Investigation(Integer investigationId, Integer number, String title, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
 
-        LOGGER.debug("constructor Investigation(String, String, OffsetDateTime, OffsetDateTime)");
+        LOGGER.debug("constructor Investigation(Integer, Integer, String, String, OffsetDateTime, OffsetDateTime)");
 
-        this.name = name;
+        this.investigationId = investigationId;
+        this.number = number;
+        this.title = title;
         this.description = description;
         this.startInvestigationDate = startInvestigationDate;
         this.endInvestigationDate = endInvestigationDate;
     }
 
-    public Investigation(String name, String description, OffsetDateTime startInvestigationDate,
-                         OffsetDateTime endInvestigationDate, List<Employee> involvedStaff) {
+    public Investigation(String description, OffsetDateTime startInvestigationDate) {
 
-        LOGGER.debug("constructor Investigation(String, String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+        LOGGER.debug("constructor Investigation(String, OffsetDateTime)");
 
-        this.name = name;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+    }
+
+    public Investigation(String description, OffsetDateTime startInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(String, OffsetDateTime, List<Employee>)");
+
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
+
+        LOGGER.debug("constructor Investigation(String, OffsetDateTime, OffsetDateTime)");
+
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+    }
+
+    public Investigation(String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+
         this.description = description;
         this.startInvestigationDate = startInvestigationDate;
         this.endInvestigationDate = endInvestigationDate;
         this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(String title, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
+
+        LOGGER.debug("constructor Investigation(String, String, OffsetDateTime, OffsetDateTime)");
+
+        this.title = title;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+    }
+
+    public Investigation(String title, String description, OffsetDateTime startInvestigationDate,
+                         OffsetDateTime endInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+
+        this.title = title;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(Integer number, String description, OffsetDateTime startInvestigationDate) {
+
+        LOGGER.debug("constructor Investigation(Integer, String, OffsetDateTime)");
+
+        this.number = number;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+    }
+
+    public Investigation(Integer number, String description, OffsetDateTime startInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(Integer, String, OffsetDateTime, List<Employee>)");
+
+        this.number = number;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(Integer number, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
+
+        LOGGER.debug("constructor Investigation(Integer, String, OffsetDateTime, OffsetDateTime)");
+
+        this.number = number;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+    }
+
+    public Investigation(Integer number, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(Integer, String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+
+        this.number = number;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(Integer number, String title, String description, OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate) {
+
+        LOGGER.debug("constructor Investigation(Integer, String, String, OffsetDateTime, OffsetDateTime)");
+
+        this.number = number;
+        this.title = title;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+    }
+
+    public Investigation(Integer number, String title, String description, OffsetDateTime startInvestigationDate,
+                         OffsetDateTime endInvestigationDate, List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(String, String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+
+        this.number = number;
+        this.title = title;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+
+        LOGGER.debug("setNumber(Integer)");
+        this.number = number;
     }
 
     public Integer getInvestigationId() {
@@ -55,14 +179,14 @@ public class Investigation {
         this.investigationId = investigationId;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
+    public void setTitle(String title) {
 
-        LOGGER.debug("setName(String)");
-        this.name = name;
+        LOGGER.debug("setTitle(String)");
+        this.title = title;
     }
 
     public String getDescription() {
@@ -116,7 +240,7 @@ public class Investigation {
         Investigation that = (Investigation) o;
 
         return Objects.equals(investigationId, that.investigationId) &&
-                Objects.equals(name, that.name) &&
+                Objects.equals(title, that.title) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(startInvestigationDate, that.startInvestigationDate) &&
                 Objects.equals(endInvestigationDate, that.endInvestigationDate) &&
@@ -127,7 +251,7 @@ public class Investigation {
     public int hashCode() {
 
         LOGGER.debug("hashCode()");
-        return Objects.hash(investigationId, name, description, startInvestigationDate, endInvestigationDate, involvedStaff);
+        return Objects.hash(investigationId, title, description, startInvestigationDate, endInvestigationDate, involvedStaff);
     }
 
     @Override
@@ -136,7 +260,7 @@ public class Investigation {
         LOGGER.debug("toString()");
         return "Investigation{" +
                 "investigationId=" + investigationId +
-                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", startInvestigationDate=" + startInvestigationDate +
                 ", endInvestigationDate=" + endInvestigationDate +
