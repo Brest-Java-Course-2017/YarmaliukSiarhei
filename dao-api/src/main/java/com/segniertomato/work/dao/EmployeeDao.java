@@ -2,12 +2,10 @@ package com.segniertomato.work.dao;
 
 
 import com.segniertomato.work.model.Employee;
-import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.model.Pair;
 import org.springframework.dao.DataAccessException;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 
 
 public interface EmployeeDao {
@@ -28,5 +26,5 @@ public interface EmployeeDao {
 
     public int deleteEmployeeById(Integer employeeId) throws DataAccessException;
 
-    public Map<Integer, Integer> getEmployeesRating(int offset, int count) throws DataAccessException;
+    public List<Pair<Integer, Integer>> getEmployeesRating(int offset, int count) throws DataAccessException;
 }

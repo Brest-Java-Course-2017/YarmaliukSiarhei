@@ -3,6 +3,7 @@ package com.segniertomato.work.dao;
 
 import com.segniertomato.work.model.Employee;
 import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.model.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
         private static final String INVESTIGATION_ID = "investigation_id";
         private static final String OFFSET = "offset";
         private static final String LIMIT = "limit";
+    }
+
+    private static final class BindsNames {
+
+        private static final String EMPLOYEE_ID = "employee_id";
+        private static final String RATING = "rating";
     }
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -230,12 +237,27 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Map<Integer, Integer> getEmployeesRating(int offset, int count) throws DataAccessException {
+    public List<Pair<Integer, Integer>> getEmployeesRating(int offset, int count) throws DataAccessException {
 
         LOGGER.debug("getEmployeesRating(int, int)");
 
-        Map<String, Object> employeesRating = namedParameterJdbcTemplate.queryForMap(GET_EMPLOYEES_RATING, );
-        return null;
+        Map<String, Integer> namedParams = new HashMap<>();
+        namedParams.put(NamedParameterNames.OFFSET, offset);
+        namedParams.put(NamedParameterNames.LIMIT, count);
+
+        List<Map<String, Object>> returnedValues = namedParameterJdbcTemplate.queryForList(GET_EMPLOYEES_RATING, new MapSqlParameterSource(namedParams));
+
+        List<Pair<Integer, Integer>> employeesRating = new ArrayList<>(returnedValues.size());
+
+        returnedValues.forEach((item) -> {
+
+            employeesRating.add(new Pair<>(
+                    (Integer) item.get(BindsNames.EMPLOYEE_ID),
+                    ((Double) item.get(BindsNames.RATING)).intValue()
+            ));
+        });
+
+        return employeesRating;
     }
 
 

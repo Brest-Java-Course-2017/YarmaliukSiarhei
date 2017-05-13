@@ -3,6 +3,7 @@ package com.segniertomato.work.dao;
 
 import com.segniertomato.work.model.Employee;
 import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.model.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -23,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -458,14 +458,14 @@ public class EmployeeDaoImplTest {
 
         LOGGER.debug("successfulGetEmployeesRatingTest()");
 
-        Map<Integer, Integer> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET, COUNT_ALL_EMPLOYEE);
+        List<Pair<Integer, Integer>> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET, COUNT_ALL_EMPLOYEE);
         assertNotNull(returnedRating);
         assertTrue(returnedRating.size() == COUNT_ALL_EMPLOYEE);
 
-        returnedRating.forEach((key, value) -> {
-
-            assertNotNull("ERROR: Employee id is null.", key);
-            assertNotNull("ERROR: Rating value for employee with id: " + key + " is null.", value);
+        returnedRating.forEach((pair) -> {
+            assertNotNull(pair);
+            assertNotNull("ERROR: Employee id is null.", pair.first);
+            assertNotNull("ERROR: Rating value for employee with id: " + pair.first + " is null.", pair.second);
         });
     }
 
@@ -475,15 +475,15 @@ public class EmployeeDaoImplTest {
         LOGGER.debug("successfulGetEmployeesRatingTest_WithOffsetAndLimit()");
 
         int allowsReturnedEmployees = 2;
-        Map<Integer, Integer> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET + 1, allowsReturnedEmployees);
+        List<Pair<Integer, Integer>> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET + 1, allowsReturnedEmployees);
 
         assertNotNull(returnedRating);
         assertTrue(returnedRating.size() <= allowsReturnedEmployees);
 
-        returnedRating.forEach((key, value) -> {
-
-            assertNotNull("ERROR: Employee id is null.", key);
-            assertNotNull("ERROR: Rating value for employee with id: " + key + " is null.", value);
+        returnedRating.forEach((pair) -> {
+            assertNotNull(pair);
+            assertNotNull("ERROR: Employee id is null.", pair.first);
+            assertNotNull("ERROR: Rating value for employee with id: " + pair.first + " is null.", pair.second);
         });
     }
 
@@ -492,7 +492,7 @@ public class EmployeeDaoImplTest {
 
         LOGGER.debug("successfulGetEmployeesRatingTest_WithOutOfBoundsRange()");
 
-        Map<Integer, Integer> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET + COUNT_ALL_EMPLOYEE, COUNT_ALL_EMPLOYEE);
+        List<Pair<Integer, Integer>> returnedRating = employeeDao.getEmployeesRating(NULL_OFFSET + COUNT_ALL_EMPLOYEE, COUNT_ALL_EMPLOYEE);
         assertNotNull(returnedRating);
         assertTrue(returnedRating.isEmpty());
     }
