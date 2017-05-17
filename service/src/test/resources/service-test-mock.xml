@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:service-queries.properties</value>
+                <value>classpath:service-validate-patterns.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="employeeDao" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.segniertomato.work.dao.EmployeeDao"/>
+    </bean>
+
+    <bean id="mockNamedParameterJDBCTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"/>
+    </bean>
+
+    <bean id="investigationDao" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.segniertomato.work.dao.InvestigationDao"/>
+    </bean>
+
+    <bean id="employeeService" class="com.segniertomato.work.service.EmployeeServiceImpl" lazy-init="true">
+    </bean>
+
+    <bean id="investigationService" class="com.segniertomato.work.service.InvestigationServiceImpl" lazy-init="true">
+        <constructor-arg index="0" ref="mockNamedParameterJDBCTemplate"/>
+        <constructor-arg index="1" ref="investigationDao"/>
+    </bean>
+
+</beans>
