@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Some template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../resources/static/assets/bootstrap/dist/css/bootstrap.css"
+          th:href="@{/resources/static/assets/bootstrap/dist/css/bootstrap.css}" rel="stylesheet"/>
+
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="'Hello' +${name} + '!'">Hello sample</h2>
+    </div>
+
+    <!-- /container -->
+    <script src="../../resources/static/assets/js/jquery/jquery-3.1.1.slim.min.js"
+            th:src="@{/resources/static/assets/js/jquery/jquery-3.1.1.slim.min.js}"></script>
+    <script src="../../resources/static/assets/bootstrap/dist/js/bootstrap.min.js"
+            th:src="@{/resources/static/assets/bootstrap/dist/js/bootstrap.min.js}"></script>
+</body>
+</html>

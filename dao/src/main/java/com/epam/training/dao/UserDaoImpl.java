@@ -14,15 +14,26 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+
 //@Repository  -  one case of using is the automatic translation of exceptions
 public class UserDaoImpl implements UserDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /*
+    *  @Value("${}")
+    *  private final SomeType someVariable
+    *
+    *  We can't define variable like static,
+    *  because Spring will not able to inject data.
+    *
+    * */
 
     @Value("${sql.getAllUsers}")
     private final String GET_ALL_USERS_SQL = null;
@@ -101,7 +112,7 @@ public class UserDaoImpl implements UserDao {
         Number newId = keyHolder.getKey();
         if (newId == null) {
 
-            LOGGER.debug("addUser(User) - returned user's id is a null.\nThrow DataAccessException");
+            LOGGER.debug("addUser(User) - returned user's id is null.\nThrow DataAccessException");
             throw new DataAccessException(MessageError.RETURNED_UNIQUE_KEY_IS_NULL) {
             };
         }

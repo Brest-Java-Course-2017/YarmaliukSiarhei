@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sample javascript client</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<h1>Список пользователей</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Логин</th>
+            <th>Описание</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="userList">
+        <tr>
+            <td>abc</td>
+            <td>def</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr/>
+
+<form id="userForm">
+    <div class="mainArea">
+
+        <label>User Id:</label>
+        <input id="userId" name="id" type="text" disabled/>
+
+        <label>Login:</label>
+        <input type="text" id="login" name="login" required>
+
+        <label>Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label>Description:</label>
+        <input type="text" id="description" name="description" required>
+
+        <button id="btnSave">Сохранить</button>
+        <button id="btnClean">Очистить</button>
+
+    </div>
+</form>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
