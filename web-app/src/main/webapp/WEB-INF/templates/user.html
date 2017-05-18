@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Users</title>
+
+    <link rel="stylesheet" href="../../resources/static/assets/material-design-icons/material-design-icons.css"
+          type="text/css"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../resources/static/assets/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+
+    <link href="../../resources/static/assets/pages/css/users.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-toggleable-sm navbar-inverse fixed-top bg-inverse">
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand" href="/users">
+            <i class="material-icons">&#xe5cb;</i>
+            <span class="hidden-folded inline">User</span>
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-default" onclick="saveUser()">
+                    <i class="material-icons">&#xe161;</i>
+                    <span>Save</span>
+                </button>
+                <button class="btn btn-default" onclick="deleteUser()">
+                    <i class="material-icons">&#xe872;</i>
+                    <span>Delete</span>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="row">
+        <form role="form" th:with="item = ${user}" th:object="${item}">
+
+            <div class="form-group row">
+                <label for="inputLogin" class="col-3 form-control-label">Login:</label>
+                <div class="col-7">
+                    <input class="form-control" id="inputLogin" placeholder="Login" value="User 1" required="true"
+                           autofocus="" type="text"
+                           th:value=" ${item.login}"/>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="../../resources/static/assets/js/jquery/jquery-3.1.1.min.js"></script>
+<script src="../../resources/static/assets/js/tether.min.js"></script>
+<script src="../../resources/static/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../resources/static/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+<script src="../../resources/static/assets/pages/js/users.js"></script>
+
+
+</body>
+</html>

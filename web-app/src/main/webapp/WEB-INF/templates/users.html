@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Users</title>
+
+    <link rel="stylesheet" href="../../resources/static/assets/material-design-icons/material-design-icons.css"
+          type="text/css"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../resources/static/assets/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+
+    <link href="../../resources/static/assets/pages/css/users.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-toggleable-sm navbar-inverse fixed-top bg-inverse">
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand" href="/users">
+            <span class="hidden-folded inline">Users</span>
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-default" onclick="createUser()">
+                    <i class="material-icons">&#xe145;</i>
+                    <span>Add</span>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="row">
+        <div class="col-12" id="user-list-cont" style="">
+            <div class="list group" id="user-list">
+
+                <div class="list-group-item b-l b-l-2x" role="button"
+                     th:if="${usersList != null}"
+                     th:each="item : ${usersList}"
+                     th:id="'user_' + ${item.userId}"
+                     th:onclick="'editUser(' + ${item.userId} + ')'">
+                    <div class="list-body">
+                        <div>
+                            <b th:text="${item.login}">User 1</b>
+                        </div>
+                        <div class="text-ellipsis text-muted text-sm" th:text="${item.description}">
+                            Sample description for specified user number 1
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../resources/static/assets/js/jquery/jquery-3.1.1.min.js"></script>
+<script src="../../resources/static/assets/js/tether.min.js"></script>
+<script src="../../resources/static/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../resources/static/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+<script src="../../resources/static/assets/pages/js/users.js"></script>
+</body>
+</html>
