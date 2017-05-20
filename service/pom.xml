@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>dao</artifactId>
-
     <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>service</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -17,29 +17,23 @@
 
         <dependency>
             <groupId>com.segniertomato.work</groupId>
+            <artifactId>service-api</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>dao-api</artifactId>
+            <groupId>com.segniertomato.work</groupId>
+        </dependency>
+        <dependency>
+            <groupId>com.segniertomato.work</groupId>
+            <artifactId>dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.segniertomato.work</groupId>
             <artifactId>model</artifactId>
         </dependency>
         <dependency>
             <groupId>com.segniertomato.work</groupId>
-            <artifactId>dao-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.segniertomato.work</groupId>
             <artifactId>test-db</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jcl</artifactId>
         </dependency>
 
         <dependency>
@@ -48,16 +42,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
+            <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -65,15 +50,24 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
         </dependency>
 
     </dependencies>
-
 
 </project>

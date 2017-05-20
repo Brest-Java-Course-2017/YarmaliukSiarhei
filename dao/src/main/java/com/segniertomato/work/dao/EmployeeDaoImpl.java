@@ -165,7 +165,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         List<Investigation> investigations = employee.getParticipatedInvestigation();
 
-        if (investigations != null && investigations.isEmpty()) {
+        if (investigations != null) {
 
             List<Integer> investigationsId = new LinkedList<>();
             investigations.forEach((item) -> {

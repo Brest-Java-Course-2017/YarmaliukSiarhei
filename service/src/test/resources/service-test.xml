@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath*:test-spring-db.xml"/>
+
+    <context:property-placeholder
+            location="classpath*:database.properties, classpath*:queries.properties,
+             classpath*:service-queries.properties, classpath*:service-validate-patterns.properties"/>
+
+    <bean id="employeeDao" class="com.segniertomato.work.dao.EmployeeDaoImpl" lazy-init="true">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="employeeService" class="com.segniertomato.work.service.EmployeeServiceImpl" lazy-init="true">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="employeeDao"/>
+    </bean>
+
+
+    <bean id="investigationDao" class="com.segniertomato.work.dao.InvestigationDaoImpl" lazy-init="true">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean class="com.segniertomato.work.service.InvestigationServiceImpl" lazy-init="true">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="investigationDao"/>
+    </bean>
+
+</beans>
