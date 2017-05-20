@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <Console title="Console" target="SYSTEM_OUT">
+        <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg %n"/>
         </Console>
-        <File title="File" fileName="log/server.log">
+        <File name="File" fileName="log/server.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg %n"/>
         </File>
 
@@ -15,9 +15,9 @@
             <appender-ref ref="File"/>
         </Root>
 
-        <Logger title="org.springframework" level="DEBUG">
+        <Logger name="org.springframework" level="DEBUG">
             <AppenderRef ref="File" level="INFO"/>
         </Logger>
-        <Logger title="com.segniertomato" level="DEBUG"/>
+        <Logger name="com.segniertomato" level="DEBUG"/>
     </Loggers>
 </Configuration>
