@@ -6,14 +6,9 @@ public class MessageError {
     private MessageError() {
     }
 
-    public static final class Database {
+    public static final String EMPLOYEE_NOT_EXISTS = "Error. Employee is not exists.";
+    public static final String INVESTIGATION_NOT_EXISTS = "Error. Investigation is not exists.";
 
-        public static final String EMPLOYEE_NOT_EXISTS = "Error. Employee is not exists.";
-        public static final String INVESTIGATION_NOT_EXISTS = "Error. Investigation is not exists.";
-
-        private Database() {
-        }
-    }
 
     public static final class InvalidIncomingParameters {
 

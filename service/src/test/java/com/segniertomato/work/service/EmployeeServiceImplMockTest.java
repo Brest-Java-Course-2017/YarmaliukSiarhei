@@ -22,10 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertNotNull;
@@ -182,7 +179,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -240,7 +237,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureGetEmployeeByIdTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -316,7 +313,7 @@ public class EmployeeServiceImplMockTest {
         List<Investigation> invalidParticipatedInvestigation = Arrays.asList(
                 new Investigation("Some description",
                         OffsetDateTime.parse("1965-06-12T15:06:45Z"), OffsetDateTime.parse("1969-06-12T15:06:45Z"))
-                );
+        );
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -380,7 +377,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -429,7 +426,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(1);
@@ -526,7 +523,7 @@ public class EmployeeServiceImplMockTest {
         Employee updatedEmployee = new Employee(NOT_EXISTS_EMPLOYEE_ID,
                 "Some new Name", LocalDate.parse("1990-11-05"), sExpectedEmployee.getStartWorkingDate());
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -551,7 +548,7 @@ public class EmployeeServiceImplMockTest {
         Employee updatedEmployee = new Employee(NOT_EXISTS_EMPLOYEE_ID,
                 "Some new Name", LocalDate.parse("1990-11-05"), sExpectedEmployee.getStartWorkingDate(), participatedInvestigations);
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class)))
@@ -592,7 +589,7 @@ public class EmployeeServiceImplMockTest {
     @Test
     public void successfulUpdateEmployeeInvestigationsTest() throws Exception {
 
-        LOGGER.debug("");
+        LOGGER.debug("successfulUpdateEmployeeInvestigationsTest()");
 
         List<Integer> investigationsId = Arrays.asList(EXISTS_INVESTIGATION_ID);
 
@@ -641,7 +638,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -690,7 +687,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(1);
@@ -722,7 +719,7 @@ public class EmployeeServiceImplMockTest {
 
         LOGGER.debug("failureDeleteEmployeeByIdTest_WithNotExistsEmployee()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -730,7 +727,7 @@ public class EmployeeServiceImplMockTest {
 
         replay(mockEmployeeDao);
 
-        employeeService.deleteEmployeeById(EXISTS_EMPLOYEE_ID);
+        employeeService.deleteEmployeeById(NOT_EXISTS_EMPLOYEE_ID);
     }
 
     @Test
@@ -783,16 +780,16 @@ public class EmployeeServiceImplMockTest {
             assertTrue(item.first > 0);
 
             assertNotNull(item.second);
-            assertTrue(item.second > 0 && item.second < 100);
+            assertTrue(item.second >= 0 && item.second <= 100);
         });
 
 
     }
 
     @Test
-    public void failureGetEmployeesRatingsTest_WithWrongOffset() throws Exception {
+    public void failureGetEmployeesRatingsTest_WithInvalidOffset() throws Exception {
 
-        LOGGER.debug("failureGetEmployeesRatingsTest_WithWrongOffset()");
+        LOGGER.debug("failureGetEmployeesRatingsTest_WithInvalidOffset()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -804,9 +801,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureGetEmployeesRatingTest_WithWrongLimit() throws Exception {
+    public void failureGetEmployeesRatingTest_WithInvalidLimit() throws Exception {
 
-        LOGGER.debug("failureGetEmployeesRatingTest_WithWrongLimit()");
+        LOGGER.debug("failureGetEmployeesRatingTest_WithInvalidLimit()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);

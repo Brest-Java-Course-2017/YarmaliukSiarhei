@@ -43,7 +43,7 @@ public class InvestigationServiceImpl implements InvestigationService {
         private static final String EMPLOYEE_ID = "employee_id";
     }
 
-    @Autowired
+    @Autowired(required = false)
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
@@ -104,7 +104,7 @@ public class InvestigationServiceImpl implements InvestigationService {
         isTrue(offset >= 0, MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO);
         isTrue(count >= 0, MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO);
 
-        isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         return investigationDao.getEmployeeInvestigations(employeeId, offset, count);
     }
@@ -116,7 +116,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
         notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
         isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         return investigationDao.getInvestigationById(investigationId);
     }
@@ -144,7 +144,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
             notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
             isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+            isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
         });
 
         return investigationDao.addInvestigation(investigation);
@@ -157,7 +157,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
         notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
         isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         notNull(employeesId, MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL);
 
@@ -165,7 +165,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
             notNull(item, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
             isTrue(item > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(item, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+            isTrue(isExists(item, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
         });
 
         investigationDao.addInvolvedStaff2Investigation(investigationId, employeesId);
@@ -183,7 +183,7 @@ public class InvestigationServiceImpl implements InvestigationService {
                 MessageError.InvalidIncomingParameters.START_AND_END_DATES_SHOULD_MATCH_PATTERN);
         notNull(investigation.getDescription(), MessageError.InvalidIncomingParameters.INVESTIGATION_DESCRIPTION_CAN_NOT_BE_NULL);
 
-        isTrue(isExists(investigation.getInvestigationId(), Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigation.getInvestigationId(), Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         List<Employee> involvedStaff = investigation.getInvolvedStaff();
         notNull(involvedStaff, MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL);
@@ -195,7 +195,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
             notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
             isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+            isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
         });
 
         return investigationDao.updateInvestigation(investigation) > 0;
@@ -208,7 +208,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
         notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
         isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         notNull(employeesId, MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL);
 
@@ -216,7 +216,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
             notNull(item, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
             isTrue(item > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(item, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+            isTrue(isExists(item, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
         });
 
         return investigationDao.updateInvolvedStaffInInvestigation(investigationId, employeesId) > 0;
@@ -229,7 +229,7 @@ public class InvestigationServiceImpl implements InvestigationService {
 
         notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
         isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         return investigationDao.deleteInvestigationById(investigationId) > 0;
     }

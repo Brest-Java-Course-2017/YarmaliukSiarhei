@@ -15,7 +15,7 @@
         </property>
     </bean>
 
-    <bean id="employeeDao" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockEmployeeDao" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.segniertomato.work.dao.EmployeeDao"/>
     </bean>
 
@@ -23,16 +23,18 @@
         <constructor-arg value="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"/>
     </bean>
 
-    <bean id="investigationDao" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockInvestigationDao" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.segniertomato.work.dao.InvestigationDao"/>
     </bean>
 
     <bean id="employeeService" class="com.segniertomato.work.service.EmployeeServiceImpl" lazy-init="true">
+        <constructor-arg index="0" ref="mockNamedParameterJDBCTemplate"/>
+        <constructor-arg index="1" ref="mockEmployeeDao"/>
     </bean>
 
     <bean id="investigationService" class="com.segniertomato.work.service.InvestigationServiceImpl" lazy-init="true">
         <constructor-arg index="0" ref="mockNamedParameterJDBCTemplate"/>
-        <constructor-arg index="1" ref="investigationDao"/>
+        <constructor-arg index="1" ref="mockInvestigationDao"/>
     </bean>
 
 </beans>

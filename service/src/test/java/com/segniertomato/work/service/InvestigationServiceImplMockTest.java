@@ -47,38 +47,37 @@ public class InvestigationServiceImplMockTest {
     private InvestigationService investigationService;
 
     private static final int NULL_OFFSET = 0;
-    private static final int COUNT_ALL_EMPLOYEES = 4;
+    private static final int COUNT_ALL_INVESTIGATIONS = 4;
 
     private static final int EXISTS_EMPLOYEE_ID = 2;
     private static final int EXISTS_INVESTIGATION_ID = 2;
 
     private static final int INVALID_ID = -5;
     private static final int INVALID_OFFSET = -5;
-    private static final int INVALID_COUNT_ALL_EMPLOYEES = -5;
+    private static final int INVALID_COUNT_ALL_INVESTIGATIONS = -5;
 
-    private static final int NOT_EXISTS_EMPLOYEE_ID = 5;
-    private static final int NOT_EXISTS_INVESTIGATION_ID = 5;
+    private static final int NOT_EXISTS_ID = 5;
 
     private static final int VALID_INVESTIGATION_NUMBER = 5;
 
-    private static final OffsetDateTime VALID_START_INVESTIGATION_DATE;
-    private static final OffsetDateTime VALID_END_INVESTIGATION_DATE;
+    private static final OffsetDateTime START_DATE_IN_PERIOD;
+    private static final OffsetDateTime END_DATE_IN_PERIOD;
 
-    private static final OffsetDateTime INVALID_START_PERIOD;
-    private static final OffsetDateTime INVALID_END_PERIOD;
+    private static final OffsetDateTime FIRST_TEST_DATE;
+    private static final OffsetDateTime SECOND_TEST_DATE;
 
     private static final Investigation sExpectedInvestigation;
 
     static {
 
-        INVALID_START_PERIOD = OffsetDateTime.parse("2015-01-01T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        INVALID_END_PERIOD = OffsetDateTime.parse("2010-03-15T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        FIRST_TEST_DATE = OffsetDateTime.parse("2015-01-01T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        SECOND_TEST_DATE = OffsetDateTime.parse("2010-03-15T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        VALID_START_INVESTIGATION_DATE = OffsetDateTime.parse("2005-03-12T15:42:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        VALID_END_INVESTIGATION_DATE = OffsetDateTime.parse("2005-03-15T16:16:03Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        START_DATE_IN_PERIOD = OffsetDateTime.parse("2005-03-12T15:42:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        END_DATE_IN_PERIOD = OffsetDateTime.parse("2005-03-15T16:16:03Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         sExpectedInvestigation = new Investigation(EXISTS_INVESTIGATION_ID, VALID_INVESTIGATION_NUMBER, "Some title",
-                "Some interesting description.", VALID_START_INVESTIGATION_DATE, VALID_END_INVESTIGATION_DATE);
+                "Some interesting description.", START_DATE_IN_PERIOD, END_DATE_IN_PERIOD);
     }
 
     @After
@@ -102,7 +101,7 @@ public class InvestigationServiceImplMockTest {
         expect(mockInvestigationDao.getAllInvestigations(anyInt(), anyInt())).andReturn(Arrays.asList(sExpectedInvestigation));
         replay(mockInvestigationDao);
 
-        List<Investigation> investigations = investigationService.getAllInvestigations(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        List<Investigation> investigations = investigationService.getAllInvestigations(NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
 
         assertNotNull(investigations);
         investigations.forEach(Assert::assertNotNull);
@@ -119,7 +118,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getAllInvestigations(INVALID_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getAllInvestigations(INVALID_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -133,7 +132,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getAllInvestigations(NULL_OFFSET, INVALID_COUNT_ALL_EMPLOYEES);
+        investigationService.getAllInvestigations(NULL_OFFSET, INVALID_COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -150,7 +149,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockInvestigationDao);
 
         List<Investigation> investigations = investigationService.getInvestigationsBetweenPeriod(
-                VALID_START_INVESTIGATION_DATE, VALID_END_INVESTIGATION_DATE, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+                START_DATE_IN_PERIOD, END_DATE_IN_PERIOD, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
 
         assertNotNull(investigations);
         investigations.forEach(Assert::assertNotNull);
@@ -168,7 +167,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockInvestigationDao);
 
         investigationService.getInvestigationsBetweenPeriod(
-                VALID_START_INVESTIGATION_DATE, VALID_END_INVESTIGATION_DATE, INVALID_OFFSET, COUNT_ALL_EMPLOYEES);
+                START_DATE_IN_PERIOD, END_DATE_IN_PERIOD, INVALID_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -183,7 +182,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockInvestigationDao);
 
         investigationService.getInvestigationsBetweenPeriod(
-                VALID_START_INVESTIGATION_DATE, VALID_END_INVESTIGATION_DATE, NULL_OFFSET, INVALID_COUNT_ALL_EMPLOYEES);
+                START_DATE_IN_PERIOD, END_DATE_IN_PERIOD, NULL_OFFSET, INVALID_COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -197,7 +196,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getInvestigationsBetweenPeriod(INVALID_START_PERIOD, INVALID_END_PERIOD, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getInvestigationsBetweenPeriod(FIRST_TEST_DATE, SECOND_TEST_DATE, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -211,7 +210,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getInvestigationsBetweenPeriod(null, VALID_END_INVESTIGATION_DATE, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getInvestigationsBetweenPeriod(null, END_DATE_IN_PERIOD, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -225,7 +224,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getInvestigationsBetweenPeriod(VALID_START_INVESTIGATION_DATE, null, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getInvestigationsBetweenPeriod(START_DATE_IN_PERIOD, null, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -240,7 +239,7 @@ public class InvestigationServiceImplMockTest {
                 .andReturn(Arrays.asList(sExpectedInvestigation));
         replay(mockInvestigationDao);
 
-        List<Investigation> investigations = investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        List<Investigation> investigations = investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
         assertNotNull(investigations);
         investigations.forEach(Assert::assertNotNull);
     }
@@ -256,7 +255,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, INVALID_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, INVALID_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -270,13 +269,13 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, NULL_OFFSET, INVALID_COUNT_ALL_EMPLOYEES);
+        investigationService.getEmployeeInvestigations(EXISTS_EMPLOYEE_ID, NULL_OFFSET, INVALID_COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
-    public void failureGetEmployeeInvestigationsTest_WithWrongEmployeeId() throws Exception {
+    public void failureGetEmployeeInvestigationsTest_WithInvalidEmployeeId() throws Exception {
 
-        LOGGER.debug("failureGetEmployeeInvestigationsTest_WithWrongEmployeeId()");
+        LOGGER.debug("failureGetEmployeeInvestigationsTest_WithInvalidEmployeeId()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -284,7 +283,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getEmployeeInvestigations(INVALID_ID, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getEmployeeInvestigations(INVALID_ID, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -298,7 +297,7 @@ public class InvestigationServiceImplMockTest {
         replay(mockNamedParameterJdbcTemplate);
         replay(mockInvestigationDao);
 
-        investigationService.getEmployeeInvestigations(null, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getEmployeeInvestigations(null, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -306,7 +305,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureGetEmployeeInvestigationsTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -314,7 +313,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.getEmployeeInvestigations(NOT_EXISTS_EMPLOYEE_ID, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        investigationService.getEmployeeInvestigations(NOT_EXISTS_ID, NULL_OFFSET, COUNT_ALL_INVESTIGATIONS);
     }
 
     @Test
@@ -335,9 +334,9 @@ public class InvestigationServiceImplMockTest {
     }
 
     @Test
-    public void failureGetInvestigationByIdTest_WithWrongInvestigationId() throws Exception {
+    public void failureGetInvestigationByIdTest_WithInvalidInvestigationId() throws Exception {
 
-        LOGGER.debug("failureGetInvestigationByIdTest_WithWrongInvestigationId()");
+        LOGGER.debug("failureGetInvestigationByIdTest_WithInvalidInvestigationId()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -367,7 +366,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureGetGetInvestigationByIdTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -375,7 +374,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.getInvestigationById(NOT_EXISTS_EMPLOYEE_ID);
+        investigationService.getInvestigationById(NOT_EXISTS_ID);
     }
 
     @Test
@@ -458,9 +457,9 @@ public class InvestigationServiceImplMockTest {
 
         Investigation newInvestigation = new Investigation(VALID_INVESTIGATION_NUMBER, "Some title", "Some description",
                 OffsetDateTime.parse("1965-06-12T15:06:45Z"), null,
-                Arrays.asList(new Employee(NOT_EXISTS_EMPLOYEE_ID, "Artur C. Clark", LocalDate.parse("1989-05-15"), LocalDate.parse("1993-05-15"))));
+                Arrays.asList(new Employee(NOT_EXISTS_ID, "Artur C. Clark", LocalDate.parse("1989-05-15"), LocalDate.parse("1993-05-15"))));
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class)))
@@ -521,7 +520,6 @@ public class InvestigationServiceImplMockTest {
         investigationService.addInvestigation(null);
     }
 
-
     @Test
     public void successfulAddInvolvedStaff2InvestigationTest() throws Exception {
 
@@ -573,7 +571,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureAddInvolvedStaff2InvestigationTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -581,7 +579,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.addInvolvedStaff2Investigation(NOT_EXISTS_INVESTIGATION_ID, Arrays.asList(EXISTS_EMPLOYEE_ID));
+        investigationService.addInvolvedStaff2Investigation(NOT_EXISTS_ID, Arrays.asList(EXISTS_EMPLOYEE_ID));
     }
 
     @Test
@@ -623,7 +621,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureAddInvolvedStaff2InvestigationTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(1);
@@ -632,9 +630,8 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.addInvolvedStaff2Investigation(EXISTS_INVESTIGATION_ID, Arrays.asList(NOT_EXISTS_INVESTIGATION_ID));
+        investigationService.addInvolvedStaff2Investigation(EXISTS_INVESTIGATION_ID, Arrays.asList(NOT_EXISTS_ID));
     }
-
 
     @Test
     public void successfulUpdateInvestigationTest_WithoutInvolvedStaff() throws Exception {
@@ -717,10 +714,10 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureUpdateInvestigationTest_WithNotExistsInvestigation()");
 
-        Investigation updatedInvestigation = new Investigation(NOT_EXISTS_INVESTIGATION_ID, VALID_INVESTIGATION_NUMBER, "Some changed title",
+        Investigation updatedInvestigation = new Investigation(NOT_EXISTS_ID, VALID_INVESTIGATION_NUMBER, "Some changed title",
                 "Some changed description", OffsetDateTime.parse("1965-06-12T15:06:45Z"), null);
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -740,9 +737,9 @@ public class InvestigationServiceImplMockTest {
                 "Some changed description", OffsetDateTime.parse("1965-06-12T15:06:45Z"), null);
 
         updatedInvestigation.setInvolvedStaff(
-                Arrays.asList(new Employee(NOT_EXISTS_EMPLOYEE_ID, "Artur C. Clark", LocalDate.parse("1989-05-15"), LocalDate.parse("1993-05-15"))));
+                Arrays.asList(new Employee(NOT_EXISTS_ID, "Artur C. Clark", LocalDate.parse("1989-05-15"), LocalDate.parse("1993-05-15"))));
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class)))
@@ -830,7 +827,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureUpdateInvolvedStaffInInvestigationTest_WithNotExistsInvestigationId()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -838,7 +835,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.updateInvolvedStaffInInvestigation(NOT_EXISTS_INVESTIGATION_ID, Arrays.asList(EXISTS_EMPLOYEE_ID));
+        investigationService.updateInvolvedStaffInInvestigation(NOT_EXISTS_ID, Arrays.asList(EXISTS_EMPLOYEE_ID));
     }
 
     @Test
@@ -880,7 +877,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureUpdateInvolvedStaffInInvestigationTest_WithNotExistsEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(1);
@@ -889,7 +886,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.updateInvolvedStaffInInvestigation(EXISTS_INVESTIGATION_ID, Arrays.asList(NOT_EXISTS_INVESTIGATION_ID));
+        investigationService.updateInvolvedStaffInInvestigation(EXISTS_INVESTIGATION_ID, Arrays.asList(NOT_EXISTS_ID));
     }
 
     @Test
@@ -912,7 +909,7 @@ public class InvestigationServiceImplMockTest {
 
         LOGGER.debug("failureDeleteInvestigationByIdTest_WithNotExistsInvestigation()");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         expect(mockNamedParameterJdbcTemplate.queryForObject(isA(String.class), isA(SqlParameterSource.class), isA(Class.class))).andReturn(0);
@@ -920,7 +917,7 @@ public class InvestigationServiceImplMockTest {
 
         replay(mockInvestigationDao);
 
-        investigationService.deleteInvestigationById(EXISTS_INVESTIGATION_ID);
+        investigationService.deleteInvestigationById(NOT_EXISTS_ID);
     }
 
     @Test

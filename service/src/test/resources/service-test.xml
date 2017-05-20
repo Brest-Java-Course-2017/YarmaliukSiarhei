@@ -19,6 +19,7 @@
         <constructor-arg index="1" ref="employeeDao"/>
     </bean>
 
+
     <bean id="investigationDao" class="com.segniertomato.work.dao.InvestigationDaoImpl" lazy-init="true">
         <constructor-arg ref="dataSource"/>
     </bean>

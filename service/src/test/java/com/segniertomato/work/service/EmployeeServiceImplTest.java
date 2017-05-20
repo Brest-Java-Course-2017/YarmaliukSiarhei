@@ -4,6 +4,7 @@ package com.segniertomato.work.service;
 import com.segniertomato.work.message.MessageError;
 import com.segniertomato.work.model.Employee;
 import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.model.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -23,9 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,7 +52,8 @@ public class EmployeeServiceImplTest {
     private static final int NOT_EXISTS_EMPLOYEE_ID = 5;
     private static final int NOT_EXISTS_INVESTIGATION_ID = 5;
 
-    private static final Employee sExistsEmployee;
+    private static final Employee sFirstExistsEmployee;
+    private static final Employee sSecondExistsEmployee;
 
     private static final Investigation sFirstExistsInvestigation;
     private static final Investigation sSecondExistsInvestigation;
@@ -69,7 +69,7 @@ public class EmployeeServiceImplTest {
 
         sSecondExistsInvestigation = new Investigation(2, 2,
                 "Assassination of Martin Luther King Jr.",
-                "'Martin Luther King Jr. was assassinated by James Earl Ray in Memphis, Tennessee on April 4, 1968.'",
+                "Martin Luther King Jr. was assassinated by James Earl Ray in Memphis, Tennessee on April 4, 1968.",
                 OffsetDateTime.parse("1968-04-04T08:50:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 OffsetDateTime.parse("1968-06-10T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
@@ -79,10 +79,14 @@ public class EmployeeServiceImplTest {
                 OffsetDateTime.parse("1964-05-25T22:16:30Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 null);
 
-        sExistsEmployee = new Employee(3, "Frank Columbo",
+        sFirstExistsEmployee = new Employee(3, "Frank Columbo",
                 LocalDate.parse("1936-04-16", DateTimeFormatter.ISO_LOCAL_DATE),
                 LocalDate.parse("1953-11-16", DateTimeFormatter.ISO_LOCAL_DATE),
                 Arrays.asList(sFirstExistsInvestigation, sSecondExistsInvestigation, sThirdExistsInvestigation));
+
+        sSecondExistsEmployee = new Employee(1, "Nick Jeyrom", LocalDate.parse("1936-03-26", DateTimeFormatter.ISO_LOCAL_DATE),
+                LocalDate.parse("1956-09-25", DateTimeFormatter.ISO_LOCAL_DATE),
+                Arrays.asList(sFirstExistsInvestigation, sThirdExistsInvestigation));
     }
 
 
@@ -166,8 +170,8 @@ public class EmployeeServiceImplTest {
                 sFirstExistsInvestigation.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
         assertNotNull(employees);
 
-        sExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
-        assertTrue(employees.contains(sExistsEmployee));
+        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        assertTrue(employees.contains(sFirstExistsEmployee));
 
     }
 
@@ -200,7 +204,7 @@ public class EmployeeServiceImplTest {
 
         LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithNotExistsInvestigation");
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         employeeService.getInvolvedEmployeesInInvestigation(NOT_EXISTS_INVESTIGATION_ID, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
@@ -233,10 +237,10 @@ public class EmployeeServiceImplTest {
 
         LOGGER.debug("successfulGetEmployeeByIdTest()");
 
-        Employee returnedEmployee = employeeService.getEmployeeById(sExistsEmployee.getEmployeeId());
+        Employee returnedEmployee = employeeService.getEmployeeById(sFirstExistsEmployee.getEmployeeId());
 
-        sExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
-        assertEquals(sExistsEmployee, returnedEmployee);
+        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        assertEquals(sFirstExistsEmployee, returnedEmployee);
     }
 
     @Test
@@ -266,7 +270,7 @@ public class EmployeeServiceImplTest {
 
         LOGGER.debug("failureGetEmployeeByIdTest_WithInvalidEmployeeId()");
 
-        thrownException.expectMessage(MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         employeeService.getEmployeeById(NOT_EXISTS_EMPLOYEE_ID);
@@ -375,11 +379,12 @@ public class EmployeeServiceImplTest {
                 LocalDate.parse("2016-05-23", DateTimeFormatter.ISO_LOCAL_DATE),
                 Arrays.asList(invalidInvestigation));
 
-        thrownException.expectMessage(MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
         thrownException.expect(IllegalArgumentException.class);
 
         employeeService.addEmployee(newEmployee);
     }
+
     @Test
     public void failureAddEmployeeTest_WithInvalidParticipatedInvestigationId() throws Exception {
 
@@ -422,6 +427,469 @@ public class EmployeeServiceImplTest {
         thrownException.expect(IllegalArgumentException.class);
 
         employeeService.addEmployee(newEmployee);
+    }
+
+    @Test
+    public void successfulAddInvestigations2EmployeeTest() throws Exception {
+
+        LOGGER.debug("successfulAddInvestigations2EmployeeTest()");
+
+        sSecondExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+
+        List<Employee> involvedEmployees = employeeService.getInvolvedEmployeesInInvestigation(
+                sThirdExistsInvestigation.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+
+        assertFalse(involvedEmployees.contains(sSecondExistsEmployee));
+
+        employeeService.addInvestigations2Employee(sSecondExistsEmployee.getEmployeeId(), Arrays.asList(sThirdExistsInvestigation.getInvestigationId()));
+
+        involvedEmployees = employeeService.getInvolvedEmployeesInInvestigation(
+                sThirdExistsInvestigation.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+
+        assertTrue(involvedEmployees.contains(sSecondExistsEmployee));
+
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithNullEmployeeId() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNullEmployeeId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(null, Arrays.asList(sThirdExistsInvestigation.getInvestigationId()));
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithInvalidEmployeeId() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithInvalidEmployeeId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(INVALID_ID, Arrays.asList(sThirdExistsInvestigation.getInvestigationId()));
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithNotExistsEmployeeId() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNotExistsEmployeeId()");
+
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(NOT_EXISTS_EMPLOYEE_ID, Arrays.asList(sThirdExistsInvestigation.getInvestigationId()));
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithNullParticipatedInvestigations() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNullParticipatedInvestigations()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(sSecondExistsEmployee.getEmployeeId(), null);
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithNullInvestigationId() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNullInvestigationId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(sSecondExistsEmployee.getEmployeeId(), Arrays.asList(sThirdExistsInvestigation.getInvestigationId(), null));
+    }
+
+    @Test
+    public void failureAddInvestigations2EmployeeTest_WithNotExistsInvestigationId() throws Exception {
+
+        LOGGER.debug("failureAddInvestigations2EmployeeTest_WithNotExistsInvestigationId()");
+
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.addInvestigations2Employee(sSecondExistsEmployee.getEmployeeId(), Arrays.asList(NOT_EXISTS_EMPLOYEE_ID));
+    }
+
+    @Test
+    public void successfulUpdateEmployeeTest_WithoutParticipatedInvestigations() throws Exception {
+
+        LOGGER.debug("successfulUpdateEmployeeTest_WithoutParticipatedInvestigations()");
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Collections.emptyList()
+        );
+
+        boolean isUpdated = employeeService.updateEmployee(updatedEmployee);
+        assertTrue(isUpdated);
+
+        List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        assertTrue(allEmployees.contains(updatedEmployee));
+
+        sFirstExistsEmployee.getParticipatedInvestigation().forEach((item) -> {
+            List<Employee> employees = employeeService.getInvolvedEmployeesInInvestigation(item.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+            assertFalse(employees.contains(updatedEmployee));
+        });
+    }
+
+    @Test
+    public void successfulUpdateEmployeeTest_WithParticipatedInvestigations() throws Exception {
+
+        LOGGER.debug("successfulUpdateEmployeeTest_WithParticipatedInvestigations()");
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Arrays.asList(sFirstExistsInvestigation)
+        );
+
+        boolean isUpdated = employeeService.updateEmployee(updatedEmployee);
+        assertTrue(isUpdated);
+
+        updatedEmployee.setParticipatedInvestigation(Collections.emptyList());
+
+        List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        assertTrue(allEmployees.contains(updatedEmployee));
+
+        sFirstExistsEmployee.getParticipatedInvestigation().forEach((item) -> {
+            List<Employee> employees = employeeService.getInvolvedEmployeesInInvestigation(item.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+
+            if (item.getInvestigationId().equals(sFirstExistsInvestigation.getInvestigationId())) {
+                assertTrue(employees.contains(updatedEmployee));
+            } else {
+                assertFalse(employees.contains(updatedEmployee));
+            }
+        });
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithNullEmployee() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithNullEmployee()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(null);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithNullParticipatedInvestigations() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithNullParticipatedInvestigations()");
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                null
+        );
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithNotExistsEmployee() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithNotExistsEmployee()");
+
+        Employee updatedEmployee = new Employee(NOT_EXISTS_EMPLOYEE_ID,
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Arrays.asList(sFirstExistsInvestigation)
+        );
+
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithInvalidEmployeeId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithInvalidEmployeeId()");
+
+        Employee updatedEmployee = new Employee(INVALID_ID,
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Arrays.asList(sFirstExistsInvestigation)
+        );
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithNotExistsInvestigation() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithNotExistsInvestigation()");
+
+        List<Investigation> participatedInvestigations = Arrays.asList(
+                new Investigation(NOT_EXISTS_INVESTIGATION_ID, 114, "Some title", "Some description",
+                        OffsetDateTime.parse("1965-06-12T15:06:45Z"), OffsetDateTime.parse("1969-06-12T15:06:45Z"))
+        );
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                participatedInvestigations
+        );
+
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithInvalidParticipatedInvestigationId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithInvalidParticipatedInvestigationId()");
+
+        Investigation investigation = new Investigation("Some other description",
+                OffsetDateTime.parse("1965-06-12T15:06:45Z"), OffsetDateTime.parse("1969-06-12T15:06:45Z"));
+        investigation.setInvestigationId(INVALID_ID);
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Arrays.asList(investigation)
+        );
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void failureUpdateEmployeeTest_WithNullParticipatedInvestigationId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeTest_WithNullParticipatedInvestigationId()");
+
+        Investigation investigation = new Investigation("Some other description",
+                OffsetDateTime.parse("1965-06-12T15:06:45Z"), OffsetDateTime.parse("1969-06-12T15:06:45Z"));
+        investigation.setInvestigationId(null);
+
+        Employee updatedEmployee = new Employee(sFirstExistsEmployee.getEmployeeId(),
+                "Lieutenant " + sFirstExistsEmployee.getName(),
+                sFirstExistsEmployee.getAge().plusYears(2),
+                sFirstExistsEmployee.getStartWorkingDate().plusYears(2),
+                Arrays.asList(investigation)
+        );
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployee(updatedEmployee);
+    }
+
+    @Test
+    public void successfulUpdateEmployeeInvestigationsTest() throws Exception {
+
+        LOGGER.debug("successfulUpdateEmployeeInvestigationsTest()");
+
+        List<Integer> investigationsId = Arrays.asList(sSecondExistsInvestigation.getInvestigationId());
+
+        boolean isUpdate = employeeService.updateEmployeeInvestigations(sFirstExistsEmployee.getEmployeeId(), investigationsId);
+        assertTrue(isUpdate);
+
+        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+
+        List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        assertTrue(allEmployees.contains(sFirstExistsEmployee));
+
+        Arrays.asList(sFirstExistsInvestigation.getInvestigationId(), sSecondExistsInvestigation.getInvestigationId(),
+                sThirdExistsInvestigation.getInvestigationId()).forEach((item) -> {
+
+            List<Employee> employees = employeeService.getInvolvedEmployeesInInvestigation(item, NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+
+            if (item.equals(sSecondExistsInvestigation.getInvestigationId())) {
+                assertTrue(employees.contains(sFirstExistsEmployee));
+            } else {
+                assertFalse(employees.contains(sFirstExistsEmployee));
+            }
+        });
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithNullEmployeeId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNullEmployeeId(");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        List<Integer> investigationsId = Arrays.asList(sFirstExistsInvestigation.getInvestigationId());
+
+        employeeService.updateEmployeeInvestigations(null, investigationsId);
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithInvalidEmployeeId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithInvalidEmployeeId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        List<Integer> investigationsId = Arrays.asList(sFirstExistsInvestigation.getInvestigationId());
+
+        employeeService.updateEmployeeInvestigations(INVALID_ID, investigationsId);
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithNotExistsEmployeeId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNotExistsEmployeeId()");
+
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        List<Integer> investigationsId = Arrays.asList(sFirstExistsInvestigation.getInvestigationId());
+
+        employeeService.updateEmployeeInvestigations(NOT_EXISTS_EMPLOYEE_ID, investigationsId);
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithNullParticipatedInvestigations() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNullParticipatedInvestigations()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployeeInvestigations(sFirstExistsEmployee.getEmployeeId(), null);
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithNullInvestigationId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNullInvestigationId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        List<Integer> investigationsId = Arrays.asList(sFirstExistsInvestigation.getInvestigationId(), null);
+
+        employeeService.updateEmployeeInvestigations(sFirstExistsEmployee.getEmployeeId(), investigationsId);
+    }
+
+    @Test
+    public void failureUpdateEmployeeInvestigationsTest_WithNotExistsInvestigationId() throws Exception {
+
+        LOGGER.debug("failureUpdateEmployeeInvestigationsTest_WithNotExistsInvestigationId()");
+
+        thrownException.expectMessage(MessageError.INVESTIGATION_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.updateEmployeeInvestigations(sFirstExistsEmployee.getEmployeeId(), Arrays.asList(NOT_EXISTS_EMPLOYEE_ID));
+    }
+
+    @Test
+    public void successfulDeleteEmployeeByIdTest() throws Exception {
+
+        LOGGER.debug("successfulDeleteEmployeeByIdTest()");
+
+        boolean isDeleted = employeeService.deleteEmployeeById(sSecondExistsEmployee.getEmployeeId());
+        assertTrue(isDeleted);
+
+        List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+        assertFalse(allEmployees.contains(sSecondExistsEmployee));
+    }
+
+    @Test
+    public void failureDeleteEmployeeByIdTest_WithNotExistsEmployee() throws Exception {
+
+        LOGGER.debug("failureDeleteEmployeeByIdTest_WithNotExistsEmployee()");
+
+        thrownException.expectMessage(MessageError.EMPLOYEE_NOT_EXISTS);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.deleteEmployeeById(NOT_EXISTS_EMPLOYEE_ID);
+    }
+
+    @Test
+    public void failureDeleteEmployeeByIdTest_WithNullEmployeeId() throws Exception {
+
+        LOGGER.debug("failureDeleteEmployeeByIdTest_WithNullEmployeeId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.deleteEmployeeById(null);
+    }
+
+    @Test
+    public void failureDeleteEmployeeByIdTest_WithInvalidEmployeeId() throws Exception {
+
+        LOGGER.debug("failureDeleteEmployeeByIdTest_WithInvalidEmployeeId()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.deleteEmployeeById(INVALID_ID);
+    }
+
+    @Test
+    public void successfulGetEmployeeRatingsTest() throws Exception {
+
+        LOGGER.debug("successfulGetEmployeesRatingsTest()");
+
+        List<Pair<Integer, Integer>> employeesRatings = employeeService.getEmployeesRating(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
+
+        assertNotNull(employeesRatings);
+        employeesRatings.forEach((item) -> {
+
+            assertNotNull(item);
+
+            assertNotNull(item.first);
+            assertTrue(item.first > 0);
+
+            assertNotNull(item.second);
+            assertTrue(item.second >= 0 && item.second <= 100);
+        });
+    }
+
+    @Test
+    public void failureGetEmployeesRatingsTest_WithWrongOffset() throws Exception {
+
+        LOGGER.debug("failureGetEmployeesRatingsTest_WithInvalidOffset()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.getEmployeesRating(INVALID_OFFSET, COUNT_ALL_EMPLOYEES);
+    }
+
+    @Test
+    public void failureGetEmployeesRatingTest_WithInvalidLimit() throws Exception {
+
+        LOGGER.debug("failureGetEmployeesRatingTest_WithInvalidLimit()");
+
+        thrownException.expectMessage(MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO);
+        thrownException.expect(IllegalArgumentException.class);
+
+        employeeService.getEmployeesRating(NULL_OFFSET, INVALID_COUNT_ALL_EMPLOYEES);
     }
 
 }

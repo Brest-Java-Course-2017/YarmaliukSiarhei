@@ -56,15 +56,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeDao employeeDao;
 
-    public EmployeeServiceImpl() {
-        LOGGER.debug("constructor EmployeeServiceImpl()");
-    }
-
     public EmployeeServiceImpl(DataSource dataSource, EmployeeDao employeeDao) {
 
         LOGGER.debug("constructor EmployeeServiceImpl(DataSource, EmployeeDao)");
+
         this.employeeDao = employeeDao;
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    public EmployeeServiceImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, EmployeeDao employeeDao) {
+
+        LOGGER.debug("constructor EmployeeServiceImpl(NamedParameterJdbcTemplate, EmployeeDao)");
+
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.employeeDao = employeeDao;
     }
 
     @Override
@@ -87,7 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
         isTrue(count >= 0, MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO);
         isTrue(offset >= 0, MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO);
-        isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+        isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
 
         return employeeDao.getInvolvedEmployeesInInvestigation(investigationId, offset, count);
     }
@@ -99,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
         isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         return employeeDao.getEmployeeById(employeeId);
     }
@@ -126,7 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
             isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+            isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
         });
 
 //        TODO: in next version - change checking existing investigations from per id to batch.
@@ -141,7 +146,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
         isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         notNull(participateInvestigations, MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
 
@@ -149,7 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             notNull(item, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
             isTrue(item > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(item, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+            isTrue(isExists(item, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
         });
 
         employeeDao.addInvestigations2Employee(employeeId, participateInvestigations);
@@ -163,10 +168,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         notNull(employee, MessageError.InvalidIncomingParameters.EMPLOYEE_CAN_NOT_BE_NULL);
         notNull(employee.getEmployeeId(), MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
 
-        isTrue(employee.getEmployeeId() > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
+        isTrue(employee.getEmployeeId() > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
         isTrue(isValidName(employee.getName()), MessageError.InvalidIncomingParameters.EMPLOYEE_NAME_SHOULD_MATCH_PATTERN);
         isTrue(isValidDates(employee.getAge(), employee.getStartWorkingDate()), MessageError.InvalidIncomingParameters.EMPLOYEE_AGE_AND_WORKING_DATES_SHOULD_MATCH_PATTERN);
-        isTrue(isExists(employee.getEmployeeId(), Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employee.getEmployeeId(), Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         List<Investigation> investigations = employee.getParticipatedInvestigation();
         notNull(investigations, MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
@@ -178,7 +183,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             notNull(investigationId, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
             isTrue(investigationId > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(investigationId, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+            isTrue(isExists(investigationId, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
         });
 
 //        TODO: in next version - change checking existing investigations from per id to batch.
@@ -193,7 +198,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
         isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         notNull(investigationsId, MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
 
@@ -201,7 +206,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             notNull(item, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_CAN_NOT_BE_NULL);
             isTrue(item > 0, MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
-            isTrue(isExists(item, Investigation.class), MessageError.Database.INVESTIGATION_NOT_EXISTS);
+            isTrue(isExists(item, Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
         });
 
         return employeeDao.updateEmployeeInvestigations(employeeId, investigationsId) > 0;
@@ -214,7 +219,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         notNull(employeeId, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL);
         isTrue(employeeId > 0, MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
-        isTrue(isExists(employeeId, Employee.class), MessageError.Database.EMPLOYEE_NOT_EXISTS);
+        isTrue(isExists(employeeId, Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
         return employeeDao.deleteEmployeeById(employeeId) > 0;
     }
