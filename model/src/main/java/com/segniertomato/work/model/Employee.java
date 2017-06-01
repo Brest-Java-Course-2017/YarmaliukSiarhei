@@ -1,6 +1,8 @@
 package com.segniertomato.work.model;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.segniertomato.work.profile.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,17 +16,23 @@ public class Employee {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    @JsonView(View.Summary.class)
     private Integer employeeId = -1;
+
+    @JsonView(View.Summary.class)
     private String name;
 
+    @JsonView(View.Summary.class)
     private LocalDate age;
+
+    @JsonView(View.Summary.class)
     private LocalDate startWorkingDate;
 
-    private List<Investigation> participatedInvestigation = new LinkedList<>();
+    private List<Investigation> participatedInvestigations = new LinkedList<>();
 
-    public Employee(Integer employeeId,String name, LocalDate age, LocalDate startWorkingDate) {
+    public Employee(Integer employeeId, String name, LocalDate age, LocalDate startWorkingDate) {
 
-        LOGGER.debug("constructor Employee(Integer, String, LocalDate, LocalDateTime)");
+        LOGGER.debug("constructor Employee(Integer, String, LocalDate, LocalDate)");
 
         this.employeeId = employeeId;
         this.name = name;
@@ -32,7 +40,7 @@ public class Employee {
         this.startWorkingDate = startWorkingDate;
     }
 
-    public Employee(Integer employeeId, String name, LocalDate age, LocalDate startWorkingDate, List<Investigation> participatedInvestigation) {
+    public Employee(Integer employeeId, String name, LocalDate age, LocalDate startWorkingDate, List<Investigation> participatedInvestigations) {
 
         LOGGER.debug("constructor Employee(Integer, String, LocalDate, LocalDate, List<Investigation>)");
 
@@ -40,7 +48,7 @@ public class Employee {
         this.name = name;
         this.age = age;
         this.startWorkingDate = startWorkingDate;
-        this.participatedInvestigation = participatedInvestigation;
+        this.participatedInvestigations = participatedInvestigations;
     }
 
     public Employee(String name, LocalDate age, LocalDate startWorkingDate) {
@@ -59,7 +67,7 @@ public class Employee {
         this.name = name;
         this.age = age;
         this.startWorkingDate = startWorkingDate;
-        this.participatedInvestigation = participatedInvestigation;
+        this.participatedInvestigations = participatedInvestigation;
     }
 
     public Integer getEmployeeId() {
@@ -102,14 +110,14 @@ public class Employee {
         this.startWorkingDate = startWorkingDate;
     }
 
-    public List<Investigation> getParticipatedInvestigation() {
-        return participatedInvestigation;
+    public List<Investigation> getParticipatedInvestigations() {
+        return participatedInvestigations;
     }
 
-    public void setParticipatedInvestigation(List<Investigation> participatedInvestigation) {
+    public void setParticipatedInvestigations(List<Investigation> participatedInvestigations) {
 
-        LOGGER.debug("setParticipatedInvestigation(List<Investigation>)");
-        this.participatedInvestigation = participatedInvestigation;
+        LOGGER.debug("setParticipatedInvestigations(List<Investigation>)");
+        this.participatedInvestigations = participatedInvestigations;
     }
 
     @Override
@@ -123,14 +131,14 @@ public class Employee {
                 Objects.equals(name, employee.name) &&
                 Objects.equals(age, employee.age) &&
                 Objects.equals(startWorkingDate, employee.startWorkingDate) &&
-                Objects.equals(participatedInvestigation, employee.participatedInvestigation);
+                Objects.equals(participatedInvestigations, employee.participatedInvestigations);
     }
 
     @Override
     public int hashCode() {
 
         LOGGER.debug("hashCode()");
-        return Objects.hash(employeeId, name, age, startWorkingDate, participatedInvestigation);
+        return Objects.hash(employeeId, name, age, startWorkingDate, participatedInvestigations);
     }
 
     @Override
@@ -142,7 +150,7 @@ public class Employee {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", startWorkingDate=" + startWorkingDate +
-                ", participatedInvestigation=" + participatedInvestigation +
+                ", participatedInvestigations=" + participatedInvestigations +
                 '}';
     }
 }

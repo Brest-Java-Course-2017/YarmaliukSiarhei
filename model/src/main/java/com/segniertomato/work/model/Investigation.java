@@ -1,26 +1,40 @@
 package com.segniertomato.work.model;
 
 
+import com.fasterxml.jackson.annotation.*;
+import com.segniertomato.work.profile.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.OffsetDateTime;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Investigation {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    @JsonView(View.Summary.class)
     private Integer investigationId = -1;
+
+    @JsonView(View.Summary.class)
     private Integer number;
+
+    @JsonView(View.Summary.class)
     private String title;
+
+    @JsonView(View.Summary.class)
     private String description;
 
+    @JsonView(View.Summary.class)
     private OffsetDateTime startInvestigationDate;
+
+    @JsonView(View.Summary.class)
     private OffsetDateTime endInvestigationDate;
 
     private List<Employee> involvedStaff = new LinkedList<>();
@@ -151,6 +165,21 @@ public class Investigation {
 
         LOGGER.debug("constructor Investigation(String, String, OffsetDateTime, OffsetDateTime, List<Employee>)");
 
+        this.number = number;
+        this.title = title;
+        this.description = description;
+        this.startInvestigationDate = startInvestigationDate;
+        this.endInvestigationDate = endInvestigationDate;
+        this.involvedStaff = involvedStaff;
+    }
+
+    public Investigation(Integer investigationId, Integer number, String title, String description,
+                         OffsetDateTime startInvestigationDate, OffsetDateTime endInvestigationDate,
+                         List<Employee> involvedStaff) {
+
+        LOGGER.debug("constructor Investigation(Integer, Integer, String, String, OffsetDateTime, OffsetDateTime, List<Employee>)");
+
+        this.investigationId = investigationId;
         this.number = number;
         this.title = title;
         this.description = description;

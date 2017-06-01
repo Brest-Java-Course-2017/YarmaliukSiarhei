@@ -1,7 +1,9 @@
 package com.segniertomato.work.rest.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.profile.View;
 import com.segniertomato.work.service.InvestigationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +33,7 @@ public class InvestigationRestController {
 //    Get user data like available investigations count and current page
 //    Use default values for limit and offset
 
+    @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + VERSION + "/investigations", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Investigation> getInvestigations(@RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
                                                  @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
@@ -39,7 +42,8 @@ public class InvestigationRestController {
         return investigationService.getAllInvestigations(offset, limit);
     }
 
-    @GetMapping(value = "api/" + VERSION + "/investigations/filter")
+    @JsonView(View.Summary.class)
+    @GetMapping(value = "/api/" + VERSION + "/investigations/filter", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Investigation> getInvestigationsBetweenPeriod(@RequestParam(name = "startDate") OffsetDateTime startDate,
                                                               @RequestParam(name = "endDate") OffsetDateTime endDate,
                                                               @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
@@ -49,16 +53,18 @@ public class InvestigationRestController {
         return investigationService.getInvestigationsBetweenPeriod(startDate, endDate, offset, limit);
     }
 
-    @GetMapping(value = "/api/" + VERSION + "/investigations/{id}")
-    public Investigation getInvestigationById(@PathVariable(name = "id") int id) {
+    @JsonView(View.Summary.class)
+    @GetMapping(value = "/api/" + VERSION + "/investigations/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseStatus(HttpStatus.FOUND)
+    public Investigation getInvestigationById(@PathVariable int id) {
 
         LOGGER.debug("getInvestigationById(int)");
-
         return investigationService.getInvestigationById(id);
     }
 
-
-    @GetMapping(value = "api/" + VERSION + "/investigations/employee/{id}")
+    @JsonView(View.Summary.class)
+    @GetMapping(value = "/api/" + VERSION + "/investigations/employee/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseStatus(HttpStatus.FOUND)
     public List<Investigation> getEmployeeInvestigations(@PathVariable int id,
                                                          @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
                                                          @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
@@ -67,7 +73,7 @@ public class InvestigationRestController {
         return investigationService.getEmployeeInvestigations(id, offset, limit);
     }
 
-    @PostMapping(value = "api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public int addInvestigation(@RequestBody Investigation investigation) {
 
@@ -75,7 +81,7 @@ public class InvestigationRestController {
         return investigationService.addInvestigation(investigation);
     }
 
-    @PostMapping(value = "api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void addInvolvedStaff2Investigation(@PathVariable int id, @RequestBody List<Integer> employeesId) {
 
@@ -83,7 +89,7 @@ public class InvestigationRestController {
         investigationService.addInvolvedStaff2Investigation(id, employeesId);
     }
 
-    @PutMapping(value = "api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateInvestigation(@RequestBody Investigation investigation) {
 
@@ -91,7 +97,7 @@ public class InvestigationRestController {
         investigationService.updateInvestigation(investigation);
     }
 
-    @PutMapping(value = "api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateInvolvedStaffInInvestigation(@PathVariable int id, @RequestBody List<Integer> employeesId) {
 
@@ -107,5 +113,13 @@ public class InvestigationRestController {
         investigationService.deleteInvestigationById(id);
     }
 
+    /*
+    @InitBinder
+    protected void initBinder(WebDataBinder binder){
+
+        LOGGER.debug("initBinder(WebDataBinder)");
+        binder.addCustomFormatter(new OffsetDateTimeFormatter(DateTimeFormatter.ISO_OFFSET_DATE_TIME), OffsetDateTime.class);
+    }
+    */
 
 }

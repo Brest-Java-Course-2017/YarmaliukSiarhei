@@ -4,13 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 
-@ControllerAdvice(basePackages = "com.segneirtomato.work.rest")
+@ControllerAdvice(basePackages = {"com.segniertomato.work.rest"})
 public class RestErrorHandler {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -21,7 +22,7 @@ public class RestErrorHandler {
     public String handlerDataAccessException(DataAccessException ex) {
 
         LOGGER.debug("handlerDataAccessException(DataAccessException) - DataAccessException: {}" + ex);
-        return "DataAccessException" + ex.getLocalizedMessage();
+        return "DataAccessException: " + ex.getLocalizedMessage();
     }
 
 
@@ -31,6 +32,14 @@ public class RestErrorHandler {
     public String handlerIllegalArgumentException(IllegalArgumentException ex) {
 
         LOGGER.debug("handlerIllegalArgumentException(IllegalArgumentException) - IllegalArgumentException: {}" + ex);
-        return ex.getLocalizedMessage();
+        return "IllegalArgumentException: " + ex.getLocalizedMessage();
     }
+/*
+    @InitBinder
+    protected void initBinder(WebDataBinder binder){
+
+        LOGGER.debug("initBinder(WebDataBinder)");
+        binder.addCustomFormatter(new OffsetDateTimeFormatter(DateTimeFormatter.ISO_OFFSET_DATE_TIME), OffsetDateTime.class);
+    }
+    */
 }

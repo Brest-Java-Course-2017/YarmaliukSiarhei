@@ -1,8 +1,10 @@
 package com.segniertomato.work.rest.controller;
 
+
+import com.fasterxml.jackson.annotation.JsonView;
 import com.segniertomato.work.model.Employee;
-import com.segniertomato.work.model.Investigation;
 import com.segniertomato.work.model.Pair;
+import com.segniertomato.work.profile.View;
 import com.segniertomato.work.service.EmployeeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +29,7 @@ public class EmployeeRestController {
     @Autowired
     private EmployeeService employeeService;
 
+    @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + VERSION + "/employees", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Employee> getEmployees(@RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
                                        @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
@@ -35,14 +38,17 @@ public class EmployeeRestController {
         return employeeService.getAllEmployees(offset, limit);
     }
 
-    @GetMapping(value = "api/" + VERSION + "/employees/investigation/{id}")
+    @JsonView(View.Summary.class)
+    @GetMapping(value = "/api/" + VERSION + "/employees/investigation/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Employee> getInvolvedEmployeesInInvestigation(@PathVariable int id,
-                                                                   @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-                                                                   @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
+                                                              @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
+                                                              @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
         LOGGER.debug("getInvolvedEmployeesInInvestigation(int, int, int)");
         return employeeService.getInvolvedEmployeesInInvestigation(id, offset, limit);
     }
 
+
+    @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + VERSION + "/employees/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
     public Employee getEmployeeById(@PathVariable int id) {

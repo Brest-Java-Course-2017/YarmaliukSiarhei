@@ -119,9 +119,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureGetInvolvedEmployeesInInvestigationTest_WithWrongOffset() throws Exception {
+    public void failureGetInvolvedEmployeesInInvestigationTest_WithInvalidOffset() throws Exception {
 
-        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithWrongOffset()");
+        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithInvalidOffset()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -133,9 +133,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureGetInvolvedEmployeesInInvestigationTest_WithWrongLimit() throws Exception {
+    public void failureGetInvolvedEmployeesInInvestigationTest_WithInvalidLimit() throws Exception {
 
-        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithWrongLimit()");
+        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithInvalidLimit()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -147,9 +147,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureGetInvolvedEmployeesInInvestigationTest_WithWrongInvestigationId() throws Exception {
+    public void failureGetInvolvedEmployeesInInvestigationTest_WithInvalidInvestigationId() throws Exception {
 
-        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithWrongInvestigationId()");
+        LOGGER.debug("failureGetInvolvedEmployeesInInvestigationTest_WithInvalidInvestigationId()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -205,9 +205,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureGetEmployeeByIdTest_WithWrongEmployeeId() throws Exception {
+    public void failureGetEmployeeByIdTest_WithInvalidEmployeeId() throws Exception {
 
-        LOGGER.debug("failureGetEmployeeByIdTest_WithWrongEmployeeId()");
+        LOGGER.debug("failureGetEmployeeByIdTest_WithInvalidEmployeeId()");
 
         thrownException.expectMessage(MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO);
         thrownException.expect(IllegalArgumentException.class);
@@ -306,9 +306,9 @@ public class EmployeeServiceImplMockTest {
     }
 
     @Test
-    public void failureAddEmployeeTest_WithInvalidParticipatedInvestigations() throws Exception {
+    public void failureAddEmployeeTest_WithInvalidParticipatedInvestigationsId() throws Exception {
 
-        LOGGER.debug("failureAddEmployeeTest_WithInvalidParticipatedInvestigations()");
+        LOGGER.debug("failureAddEmployeeTest_WithInvalidParticipatedInvestigationsId()");
 
         List<Investigation> invalidParticipatedInvestigation = Arrays.asList(
                 new Investigation("Some description",

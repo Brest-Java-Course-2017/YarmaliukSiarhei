@@ -126,7 +126,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         namedParameterJdbcTemplate.update(ADD_EMPLOYEE, namedParams, keyHolder);
         Integer employeeId = keyHolder.getKey().intValue();
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
 
         if (investigations != null && !investigations.isEmpty()) {
 
@@ -163,7 +163,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         LOGGER.debug("updateEmployee(Employee)");
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
 
         if (investigations != null) {
 

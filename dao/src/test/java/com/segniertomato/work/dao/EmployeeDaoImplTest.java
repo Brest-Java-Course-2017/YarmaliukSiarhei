@@ -230,7 +230,7 @@ public class EmployeeDaoImplTest {
         assertTrue(returnedEmployeeId > 0);
 
         newEmployee.setEmployeeId(returnedEmployeeId);
-        newEmployee.setParticipatedInvestigation(Collections.emptyList());
+        newEmployee.setParticipatedInvestigations(Collections.emptyList());
 
 
         Arrays.asList(sFirstExistsInvestigation.getInvestigationId(), sSecondExistsInvestigation.getInvestigationId())
@@ -338,7 +338,7 @@ public class EmployeeDaoImplTest {
 
         List<Employee> employees = employeeDao.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEE);
 
-        updateEmployee.setParticipatedInvestigation(Collections.emptyList());
+        updateEmployee.setParticipatedInvestigations(Collections.emptyList());
         assertTrue(employees.contains(updateEmployee));
 
         Arrays.asList(sFirstExistsInvestigation.getInvestigationId(), sSecondExistsInvestigation.getInvestigationId(), 3)
