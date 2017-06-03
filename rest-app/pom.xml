@@ -105,9 +105,6 @@
                     <httpConnector>
                         <port>8088</port>
                     </httpConnector>
-                    <stopPort>8088</stopPort>
-                    <stopKey>stop</stopKey>
-                    <stopWait>10</stopWait>
                 </configuration>
             </plugin>
         </plugins>

@@ -2,7 +2,6 @@ package com.segniertomato.work.rest;
 
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,11 +14,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-class CustomJsonDeserializers {
+public class CustomJsonDeserializers {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -58,7 +58,7 @@ class CustomJsonDeserializers {
         }
 
         @Override
-        public Investigation deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+        public Investigation deserialize(JsonParser parser, DeserializationContext context) throws IOException {
 
             LOGGER.debug("deserialize(JsonParser, DeserializationContext)");
 
@@ -101,7 +101,7 @@ class CustomJsonDeserializers {
         }
 
         @Override
-        public Employee deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+        public Employee deserialize(JsonParser parser, DeserializationContext context) throws IOException {
 
             LOGGER.debug("deserialize(JsonParser, DeserializationContext)");
 
@@ -126,30 +126,85 @@ class CustomJsonDeserializers {
 
         LOGGER.debug("createInvestigation(JsonNode, DateTimeFormatter)");
 
-        Integer investigationId = node.get(InvestigationFieldNames.INVESTIGATION_ID).intValue();
-        Integer number = node.get(InvestigationFieldNames.NUMBER).intValue();
-        String title = node.get(InvestigationFieldNames.TITLE).textValue();
-        String description = node.get(InvestigationFieldNames.DESCRIPTION).textValue();
+        Integer investigationId = getTextOrIntegerValueFromNode(node.get(InvestigationFieldNames.INVESTIGATION_ID), Integer.class);
 
-        String startDate = node.get(InvestigationFieldNames.START_INVESTIGATION_DATE).textValue();
-        String endDate = node.get(InvestigationFieldNames.END_INVESTIGATION_DATE).textValue();
+        Integer number = getTextOrIntegerValueFromNode(node.get(InvestigationFieldNames.NUMBER), Integer.class);
 
-        return new Investigation(investigationId, number, title, description,
-                OffsetDateTime.parse(startDate, offsetDateTimeFormatter),
-                OffsetDateTime.parse(endDate, offsetDateTimeFormatter));
+        String title = getTextOrIntegerValueFromNode(node.get(InvestigationFieldNames.TITLE), String.class);
+
+        String description = getTextOrIntegerValueFromNode(node.get(InvestigationFieldNames.DESCRIPTION), String.class);
+
+        OffsetDateTime startDate = getDateFromNode(
+                node.get(InvestigationFieldNames.START_INVESTIGATION_DATE), offsetDateTimeFormatter, OffsetDateTime.class);
+
+        OffsetDateTime endDate = getDateFromNode(
+                node.get(InvestigationFieldNames.END_INVESTIGATION_DATE), offsetDateTimeFormatter, OffsetDateTime.class);
+
+        return new Investigation(investigationId, number, title, description, startDate, endDate);
     }
 
     private static Employee createEmployee(JsonNode node, DateTimeFormatter localDateFormatter) {
 
         LOGGER.debug("createEmployee(JsonNode, DateTimeFormatter)");
 
-        Integer employeeId = node.get(EmployeeFieldNames.EMPLOYEE_ID).intValue();
-        String name = node.get(EmployeeFieldNames.NAME).textValue();
-        String age = node.get(EmployeeFieldNames.AGE).textValue();
-        String startWorkingDate = node.get(EmployeeFieldNames.START_WORKING_DATE).textValue();
+        Integer employeeId = getTextOrIntegerValueFromNode(node.get(EmployeeFieldNames.EMPLOYEE_ID), Integer.class);
 
-        return new Employee(employeeId, name,
-                LocalDate.parse(age, localDateFormatter), LocalDate.parse(startWorkingDate, localDateFormatter));
+        String name = getTextOrIntegerValueFromNode(node.get(EmployeeFieldNames.NAME), String.class);
+
+        LocalDate age = getDateFromNode(
+                node.get(EmployeeFieldNames.AGE), localDateFormatter, LocalDate.class);
+
+        LocalDate startWorkingDate = getDateFromNode(
+                node.get(EmployeeFieldNames.START_WORKING_DATE), localDateFormatter, LocalDate.class);
+
+        return new Employee(employeeId, name, age, startWorkingDate);
+    }
+
+    private static <T> T getTextOrIntegerValueFromNode(JsonNode node, Class<T> classValue) {
+
+        LOGGER.debug("getTextOrIntegerValueFromNode(JsonNode, Class<T>)");
+
+        String typeName = classValue.getName();
+
+        if (typeName.equals(String.class.getName())) {
+            String value = node.isNull() ? null : node.textValue();
+            return classValue.cast(value);
+
+        } else if (classValue.getName().equals(Integer.class.getName())) {
+            Integer value = node.isNull() ? null : node.intValue();
+            return classValue.cast(value);
+
+        } else {
+            throw new IllegalArgumentException("Not supported incoming class type. Incoming type should be String or Integer.");
+        }
+
+    }
+
+    private static <T> T getDateFromNode(JsonNode node, DateTimeFormatter formatter, Class<T> classValue) {
+
+        LOGGER.debug("getDateFomNode(JsonNode, DateTimeFormatter, Class<T>)");
+
+        try {
+
+            String typeName = classValue.getName();
+
+            if (typeName.equals(OffsetDateTime.class.getName())) {
+                OffsetDateTime offsetDateTime = node.isNull() ? null : OffsetDateTime.parse(node.textValue(), formatter);
+                return classValue.cast(offsetDateTime);
+
+            } else if (typeName.equals(LocalDate.class.getName())) {
+                LocalDate localDate = node.isNull() ? null : LocalDate.parse(node.textValue(), formatter);
+                return classValue.cast(localDate);
+
+            } else {
+                throw new IllegalArgumentException("Not supported incoming class type. Incoming type should be OffsetDateTime or LocalDate.");
+            }
+
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException("Can't parse incoming JSON into date format. Error message: "
+                    + ex.getLocalizedMessage());
+        }
+
     }
 
 }

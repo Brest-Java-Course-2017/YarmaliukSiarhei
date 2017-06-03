@@ -57,7 +57,7 @@ public class EmployeeRestController {
         return employeeService.getEmployeeById(id);
     }
 
-    @PostMapping(value = "/api/" + VERSION + "/employees/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/" + VERSION + "/employees", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public int addEmployee(@RequestBody Employee employee) {
 

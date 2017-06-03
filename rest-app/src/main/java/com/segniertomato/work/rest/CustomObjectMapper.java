@@ -3,7 +3,6 @@ package com.segniertomato.work.rest;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,20 +34,20 @@ public class CustomObjectMapper {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 
+        LOGGER.debug("create JavaTimeModule");
+
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(OffsetDateTime.class, new OffsetDateTimeJsonSerializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         javaTimeModule.addDeserializer(OffsetDateTime.class, new OffsetDateTimeJsonDeserializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         mapper.registerModule(javaTimeModule);
+
+        LOGGER.debug("create SimpleModule");
 
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addDeserializer(Investigation.class,
                 new CustomJsonDeserializers.InvestigationJsonDeserializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME, DateTimeFormatter.ISO_LOCAL_DATE));
         simpleModule.addDeserializer(Employee.class,
                 new CustomJsonDeserializers.EmployeeJsonDeserializer(DateTimeFormatter.ISO_LOCAL_DATE, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-
-
-//        simpleModule.addDeserializer(OffsetDateTime.class, new OffsetDateTimeJsonDeserializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-
         mapper.registerModule(simpleModule);
 
         return mapper;
@@ -66,9 +65,11 @@ public class CustomObjectMapper {
         }
 
         @Override
-        public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException, JsonProcessingException {
+        public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
 
             LOGGER.debug("serialize(OffsetDateTime, JsonGenerator, SerializerProvider)");
+            LOGGER.debug("incoming OffsetDateTime is {}", offsetDateTime);
+
             jsonGenerator.writeString(offsetDateTime.format(dateTimeFormatter));
         }
     }
@@ -85,9 +86,11 @@ public class CustomObjectMapper {
         }
 
         @Override
-        public OffsetDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+        public OffsetDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
 
             LOGGER.debug("deserialize(JsonParser, DeserializationContext)");
+            LOGGER.debug("incoming OffsetDateTime string is {}", parser.getValueAsString());
+
             return OffsetDateTime.parse(parser.getValueAsString(), dateTimeFormatter);
         }
     }
