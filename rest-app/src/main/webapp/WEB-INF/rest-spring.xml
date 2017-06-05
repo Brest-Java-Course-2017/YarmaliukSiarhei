@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.segniertomato.work.rest, com.segniertomato.work.profile"/>
+
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json"/>
+                <property name="prettyPrint" value="true"/>
+
+                <property name="objectMapper" ref="objectMapper"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="registerDefaultFormatters" value="true"/>
+        <property name="formatters">
+            <set>
+                <bean class="com.segniertomato.work.rest.OffsetDateTimeFormatter">
+                    <constructor-arg value="ISO_OFFSET_DATE_TIME"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:database.properties</value>
+                <value>classpath:queries.properties</value>
+                <value>classpath:service-queries.properties</value>
+                <value>classpath:service-validate-patterns.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:create-table.sql"/>
+        <jdbc:script location="classpath:data-script.sql"/>
+    </jdbc:initialize-database>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="investigationDao" class="com.segniertomato.work.dao.InvestigationDaoImpl">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="employeeDao" class="com.segniertomato.work.dao.EmployeeDaoImpl">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean class="com.segniertomato.work.service.InvestigationServiceImpl">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="investigationDao"/>
+    </bean>
+
+    <bean class="com.segniertomato.work.service.EmployeeServiceImpl">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="employeeDao"/>
+    </bean>
+
+</beans>

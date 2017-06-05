@@ -27,6 +27,7 @@
         <module>test-db</module>
         <module>service-api</module>
         <module>service</module>
+        <module>rest-app</module>
     </modules>
 
     <properties>
@@ -40,6 +41,11 @@
         <spring.version>4.3.8.RELEASE</spring.version>
         <h2.version>1.4.195</h2.version>
         <easymock.version>3.4</easymock.version>
+        <jackson.databind.version>2.8.8.1</jackson.databind.version>
+        <jackson.annotations.version>2.8.8</jackson.annotations.version>
+        <jackson.jsr310.version>2.8.8</jackson.jsr310.version>
+        <json.assert.version>1.5.0</json.assert.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
     </properties>
 
 
@@ -74,6 +80,11 @@
             <dependency>
                 <groupId>com.segniertomato.work</groupId>
                 <artifactId>service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.segniertomato.work</groupId>
+                <artifactId>rest-app</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -111,6 +122,36 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${json.assert.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.databind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.jsr310.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.annotations.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
             </dependency>
 
             <dependency>
@@ -144,6 +185,16 @@
                 <version>${spring.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -159,6 +210,7 @@
                     <configuration>
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
+                        <useIncrementalCompilation>false</useIncrementalCompilation>
                     </configuration>
                 </plugin>
 
@@ -169,12 +221,18 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>9.4.5.v20170502</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.17</version>
                     <configuration>
                         <enableRulesSummary>true</enableRulesSummary>
-                        <consuleOutput>true</consuleOutput>
+                        <consoleOutput>true</consoleOutput>
                     </configuration>
                 </plugin>
 
@@ -183,6 +241,8 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.20</version>
                     <configuration>
+                        <reuseForks>true</reuseForks>
+                        <!--<forkCount>6</forkCount>-->
                         <includes>
                             <include>**/Test*.java</include>
                             <include>**/*Test.java</include>
@@ -239,7 +299,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
                 <configuration>
-                    <author>Yarmaliuk Siarhei</author>
+                    <defaultAuthor>Yarmaliuk Siarhei</defaultAuthor>
                     <defaultVersion>${project.version}</defaultVersion>
                     <show>public</show>
                 </configuration>
@@ -287,6 +347,7 @@
                         <format>html</format>
                         <format>xml</format>
                     </formats>
+                    <check/>
                 </configuration>
             </plugin>
 

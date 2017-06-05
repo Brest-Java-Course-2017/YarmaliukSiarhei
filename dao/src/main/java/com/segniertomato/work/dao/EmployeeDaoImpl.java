@@ -126,16 +126,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
         namedParameterJdbcTemplate.update(ADD_EMPLOYEE, namedParams, keyHolder);
         Integer employeeId = keyHolder.getKey().intValue();
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
 
         if (investigations != null && !investigations.isEmpty()) {
 
-            List<Integer> investigationIds = new ArrayList<>(investigations.size());
-            investigations.forEach((item -> {
-                investigationIds.add(item.getInvestigationId());
-            }));
+            List<Integer> investigationsId = new ArrayList<>(investigations.size());
+            investigations.forEach(item -> investigationsId.add(item.getInvestigationId()));
 
-            addInvestigations2Employee(employeeId, investigationIds);
+            addInvestigations2Employee(employeeId, investigationsId);
         }
 
         return employeeId;
@@ -146,15 +144,15 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         LOGGER.debug("addInvestigations2Employee(Integer, List<Investigation>)");
 
-        Map<String, Integer>[] batchValues = Utils.getBatchValues((item) -> {
+        List<Integer> existsInvestigationsId = namedParameterJdbcTemplate.queryForList(GET_EMPLOYEE_INVESTIGATIONS_ID,
+                new MapSqlParameterSource(NamedParameterNames.EMPLOYEE_ID, employeeId), Integer.class);
 
-                    Map<String, Integer> rowNamedParameter = new HashMap<>();
-                    rowNamedParameter.put(NamedParameterNames.EMPLOYEE_ID, employeeId);
-                    rowNamedParameter.put(NamedParameterNames.INVESTIGATION_ID, participateInvestigations.get(item));
-                    return rowNamedParameter;
-                },
-                participateInvestigations.size());
+        Pair<List<Integer>, List<Integer>> lists = Utils.getNotEqualsElementsInLists(participateInvestigations, existsInvestigationsId);
 
+        LOGGER.debug("Elements are: " );
+        lists.first.forEach(LOGGER::debug);
+
+        Map<String, Integer>[] batchValues = createBatchForEmployeeInvestigations(employeeId, lists.first);
         namedParameterJdbcTemplate.batchUpdate(ADD_INVESTIGATION_EMPLOYEE_RELATIONS, batchValues);
     }
 
@@ -163,14 +161,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         LOGGER.debug("updateEmployee(Employee)");
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
 
         if (investigations != null) {
 
-            List<Integer> investigationsId = new LinkedList<>();
-            investigations.forEach((item) -> {
-                investigationsId.add(item.getInvestigationId());
-            });
+            List<Integer> investigationsId = new ArrayList<>();
+            investigations.forEach(item -> investigationsId.add(item.getInvestigationId()));
 
             updateEmployeeInvestigations(employee.getEmployeeId(), investigationsId);
         }
@@ -186,42 +182,27 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
         int updatedRow = 0;
 
-        List<Integer> removeCandidate = namedParameterJdbcTemplate.queryForList(GET_EMPLOYEE_INVESTIGATIONS_ID,
+        List<Integer> removeInvestigationCandidates = namedParameterJdbcTemplate.queryForList(GET_EMPLOYEE_INVESTIGATIONS_ID,
                 new MapSqlParameterSource(NamedParameterNames.EMPLOYEE_ID, employeeId), Integer.class);
 
         if (!investigationsId.isEmpty()) {
 
-            List<Integer> addCandidate = new LinkedList<>(investigationsId);
+            Pair<List<Integer>, List<Integer>> listPair = Utils.getNotEqualsElementsInLists(investigationsId, removeInvestigationCandidates);
 
-            ListIterator<Integer> removeListIterator = removeCandidate.listIterator();
-
-            while (removeListIterator.hasNext()) {
-
-                Integer removeCandidateId = removeListIterator.next();
-                ListIterator<Integer> addListIterator = addCandidate.listIterator();
-
-                while (addListIterator.hasNext()) {
-
-                    if (removeCandidateId == addListIterator.next()) {
-                        addListIterator.remove();
-                        removeListIterator.remove();
-                        break;
-                    }
-                }
+            List<Integer> addInvestigations = listPair.first;
+            if (!addInvestigations.isEmpty()) {
+                addInvestigations2Employee(employeeId, addInvestigations);
+                updatedRow += addInvestigations.size();
             }
 
-            if (!addCandidate.isEmpty()) {
-
-                addInvestigations2Employee(employeeId, addCandidate);
-                updatedRow += addCandidate.size();
-            }
+            removeInvestigationCandidates = listPair.second;
         }
 
-        if (!removeCandidate.isEmpty()) {
-            Map<String, Integer>[] batchValues = createBatchForInvestigationEmployee(employeeId, removeCandidate);
+        if (!removeInvestigationCandidates.isEmpty()) {
+            Map<String, Integer>[] batchValues = createBatchForEmployeeInvestigations(employeeId, removeInvestigationCandidates);
             namedParameterJdbcTemplate.batchUpdate(DELETE_INVESTIGATION_EMPLOYEE_RELATIONS, batchValues);
 
-            updatedRow += removeCandidate.size();
+            updatedRow += removeInvestigationCandidates.size();
         }
 
         return updatedRow;
@@ -261,14 +242,14 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
 
-    private Map<String, Integer>[] createBatchForInvestigationEmployee(Integer employeeId, List<Integer> investigationsId) {
+    private Map<String, Integer>[] createBatchForEmployeeInvestigations(Integer employeeId, List<Integer> investigationsId) {
 
-        return Utils.getBatchValues(
-                (item) -> {
-                    Map<String, Integer> rowNamedParameters = new HashMap<>();
-                    rowNamedParameters.put(NamedParameterNames.EMPLOYEE_ID, employeeId);
-                    rowNamedParameters.put(NamedParameterNames.INVESTIGATION_ID, investigationsId.get(item));
-                    return rowNamedParameters;
+        return Utils.getBatchValues((item) -> {
+
+                    Map<String, Integer> rowNamedParameter = new HashMap<>();
+                    rowNamedParameter.put(NamedParameterNames.EMPLOYEE_ID, employeeId);
+                    rowNamedParameter.put(NamedParameterNames.INVESTIGATION_ID, investigationsId.get(item));
+                    return rowNamedParameter;
                 },
                 investigationsId.size());
     }

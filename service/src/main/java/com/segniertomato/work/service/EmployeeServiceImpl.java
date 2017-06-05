@@ -121,7 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         isTrue(isValidName(employee.getName()), MessageError.InvalidIncomingParameters.EMPLOYEE_NAME_SHOULD_MATCH_PATTERN);
         isTrue(isValidDates(employee.getAge(), employee.getStartWorkingDate()), MessageError.InvalidIncomingParameters.EMPLOYEE_AGE_AND_WORKING_DATES_SHOULD_MATCH_PATTERN);
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
         notNull(investigations, MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
 
         investigations.forEach((item) -> {
@@ -173,7 +173,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         isTrue(isValidDates(employee.getAge(), employee.getStartWorkingDate()), MessageError.InvalidIncomingParameters.EMPLOYEE_AGE_AND_WORKING_DATES_SHOULD_MATCH_PATTERN);
         isTrue(isExists(employee.getEmployeeId(), Employee.class), MessageError.EMPLOYEE_NOT_EXISTS);
 
-        List<Investigation> investigations = employee.getParticipatedInvestigation();
+        List<Investigation> investigations = employee.getParticipatedInvestigations();
         notNull(investigations, MessageError.InvalidIncomingParameters.EMPLOYEE_PARTICIPATED_INVESTIGATIONS_CAN_NOT_BE_NULL);
 
         investigations.forEach((item) -> {
@@ -243,7 +243,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             if (age.isBefore(startWorkingDate) &&
                     startWorkingDate.isBefore(LocalDate.now())) {
-                return Period.between(age, LocalDate.now()).getYears() >= REQUIREMENT_AGE;
+                return Period.between(age, startWorkingDate).getYears() >= REQUIREMENT_AGE;
             }
         }
 

@@ -170,7 +170,7 @@ public class EmployeeServiceImplTest {
                 sFirstExistsInvestigation.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
         assertNotNull(employees);
 
-        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        sFirstExistsEmployee.setParticipatedInvestigations(Collections.emptyList());
         assertTrue(employees.contains(sFirstExistsEmployee));
 
     }
@@ -239,7 +239,7 @@ public class EmployeeServiceImplTest {
 
         Employee returnedEmployee = employeeService.getEmployeeById(sFirstExistsEmployee.getEmployeeId());
 
-        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        sFirstExistsEmployee.setParticipatedInvestigations(Collections.emptyList());
         assertEquals(sFirstExistsEmployee, returnedEmployee);
     }
 
@@ -311,7 +311,7 @@ public class EmployeeServiceImplTest {
         assertTrue(newEmployeeId > 0);
 
         newEmployee.setEmployeeId(newEmployeeId);
-        newEmployee.setParticipatedInvestigation(Collections.emptyList());
+        newEmployee.setParticipatedInvestigations(Collections.emptyList());
 
         List<Employee> employees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES + 1);
         assertTrue(employees.contains(newEmployee));
@@ -434,7 +434,7 @@ public class EmployeeServiceImplTest {
 
         LOGGER.debug("successfulAddInvestigations2EmployeeTest()");
 
-        sSecondExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        sSecondExistsEmployee.setParticipatedInvestigations(Collections.emptyList());
 
         List<Employee> involvedEmployees = employeeService.getInvolvedEmployeesInInvestigation(
                 sThirdExistsInvestigation.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
@@ -534,7 +534,7 @@ public class EmployeeServiceImplTest {
         List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
         assertTrue(allEmployees.contains(updatedEmployee));
 
-        sFirstExistsEmployee.getParticipatedInvestigation().forEach((item) -> {
+        sFirstExistsEmployee.getParticipatedInvestigations().forEach((item) -> {
             List<Employee> employees = employeeService.getInvolvedEmployeesInInvestigation(item.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
             assertFalse(employees.contains(updatedEmployee));
         });
@@ -555,12 +555,12 @@ public class EmployeeServiceImplTest {
         boolean isUpdated = employeeService.updateEmployee(updatedEmployee);
         assertTrue(isUpdated);
 
-        updatedEmployee.setParticipatedInvestigation(Collections.emptyList());
+        updatedEmployee.setParticipatedInvestigations(Collections.emptyList());
 
         List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
         assertTrue(allEmployees.contains(updatedEmployee));
 
-        sFirstExistsEmployee.getParticipatedInvestigation().forEach((item) -> {
+        sFirstExistsEmployee.getParticipatedInvestigations().forEach((item) -> {
             List<Employee> employees = employeeService.getInvolvedEmployeesInInvestigation(item.getInvestigationId(), NULL_OFFSET, COUNT_ALL_EMPLOYEES);
 
             if (item.getInvestigationId().equals(sFirstExistsInvestigation.getInvestigationId())) {
@@ -713,7 +713,7 @@ public class EmployeeServiceImplTest {
         boolean isUpdate = employeeService.updateEmployeeInvestigations(sFirstExistsEmployee.getEmployeeId(), investigationsId);
         assertTrue(isUpdate);
 
-        sFirstExistsEmployee.setParticipatedInvestigation(Collections.emptyList());
+        sFirstExistsEmployee.setParticipatedInvestigations(Collections.emptyList());
 
         List<Employee> allEmployees = employeeService.getAllEmployees(NULL_OFFSET, COUNT_ALL_EMPLOYEES);
         assertTrue(allEmployees.contains(sFirstExistsEmployee));

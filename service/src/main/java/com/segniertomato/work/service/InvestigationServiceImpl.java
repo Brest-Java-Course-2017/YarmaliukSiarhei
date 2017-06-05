@@ -134,6 +134,16 @@ public class InvestigationServiceImpl implements InvestigationService {
 
         notNull(investigation.getDescription(), MessageError.InvalidIncomingParameters.INVESTIGATION_DESCRIPTION_CAN_NOT_BE_NULL);
 
+        OffsetDateTime startInvestigationDateInUTC =
+                investigation.getStartInvestigationDate().withOffsetSameInstant(ZoneOffset.UTC);
+        investigation.setStartInvestigationDate(startInvestigationDateInUTC);
+
+        if (investigation.getEndInvestigationDate() != null) {
+            OffsetDateTime endDateInUTC =
+                    investigation.getEndInvestigationDate().withOffsetSameInstant(ZoneOffset.UTC);
+            investigation.setEndInvestigationDate(endDateInUTC);
+        }
+
         List<Employee> involvedStaff = investigation.getInvolvedStaff();
         notNull(involvedStaff, MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL);
 
@@ -184,6 +194,16 @@ public class InvestigationServiceImpl implements InvestigationService {
         notNull(investigation.getDescription(), MessageError.InvalidIncomingParameters.INVESTIGATION_DESCRIPTION_CAN_NOT_BE_NULL);
 
         isTrue(isExists(investigation.getInvestigationId(), Investigation.class), MessageError.INVESTIGATION_NOT_EXISTS);
+
+        OffsetDateTime startInvestigationDateInUTC =
+                investigation.getStartInvestigationDate().withOffsetSameInstant(ZoneOffset.UTC);
+        investigation.setStartInvestigationDate(startInvestigationDateInUTC);
+
+        if (investigation.getEndInvestigationDate() != null) {
+            OffsetDateTime endDateInUTC =
+                    investigation.getEndInvestigationDate().withOffsetSameInstant(ZoneOffset.UTC);
+            investigation.setEndInvestigationDate(endDateInUTC);
+        }
 
         List<Employee> involvedStaff = investigation.getInvolvedStaff();
         notNull(involvedStaff, MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL);

@@ -60,10 +60,10 @@ public class InvestigationDaoImplTest {
         sValidExistsStartPeriod = OffsetDateTime.parse("1965-06-16T15:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         sValidExistsEndPeriod = OffsetDateTime.parse("1970-01-25T00:00:00Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        sFirstExistsInvestigation = new Investigation("Assassination of Martin Luther King Jr.",
-                "Martin Luther King Jr. was assassinated by James Earl Ray in Memphis, Tennessee on April 4, 1968.",
-                OffsetDateTime.parse("1968-04-04T08:50:00Z"), OffsetDateTime.parse("1968-04-10T00:00:00Z"));
-        sFirstExistsInvestigation.setInvestigationId(2);
+        sFirstExistsInvestigation = new Investigation("Murders of Sharon Tate",
+                "American actress and sex symbol Sharon Tate was murdered on August 1969 by members of the Charles Manson’s family.",
+                OffsetDateTime.parse("1969-09-13T16:09:00Z"), OffsetDateTime.parse("1972-02-04T13:26:16Z"));
+        sFirstExistsInvestigation.setInvestigationId(1);
 
         sFirstExistsEmployee = new Employee(1, "Nick Jeyrom", LocalDate.parse("1936-03-26"), LocalDate.parse("1956-09-25"));
 
@@ -299,7 +299,7 @@ public class InvestigationDaoImplTest {
 
         LOGGER.debug("successfulAddInvolvedStaff2InvestigationTest()");
 
-        List<Integer> addEmployees = Arrays.asList(sFirstExistsEmployee.getEmployeeId(), sSecondExistsEmployee.getEmployeeId());
+        List<Integer> addEmployees = Arrays.asList(sSecondExistsEmployee.getEmployeeId());
 
         investigationDao.addInvolvedStaff2Investigation(sFirstExistsInvestigation.getInvestigationId(), addEmployees);
 

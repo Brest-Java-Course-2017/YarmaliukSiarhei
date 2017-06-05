@@ -39,5 +39,7 @@ CREATE TABLE investigation_staff_relations (
   ON DELETE CASCADE ON UPDATE CASCADE,
 
   FOREIGN KEY (employee_id) REFERENCES staff (employee_id)
-  ON DELETE CASCADE ON UPDATE CASCADE
+  ON DELETE CASCADE ON UPDATE CASCADE,
+
+  PRIMARY KEY (investigation_id, employee_id)
 );
