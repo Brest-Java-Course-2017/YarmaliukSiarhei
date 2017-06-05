@@ -223,7 +223,7 @@ public class InvestigationRestControllerMockTest {
                         .param(LIMIT, "1")
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.START_AND_END_DATES_SHOULD_MATCH_PATTERN + "\""));
     }
 
@@ -263,7 +263,7 @@ public class InvestigationRestControllerMockTest {
                         .param(LIMIT, "1")
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.START_DATE_IN_PERIOD_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -298,7 +298,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " + MessageError.INVESTIGATION_NOT_EXISTS + "\""));
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " + MessageError.INVESTIGATION_NOT_EXISTS + "\""));
 
     }
 
@@ -317,7 +317,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.INVESTIGATION_NOT_EXISTS + "\""));
 
     }
@@ -381,7 +381,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.EMPLOYEE_NOT_EXISTS + "\""));
 
     }
@@ -403,7 +403,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO + "\""));
 
     }
@@ -427,7 +427,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.LIMIT_CAN_NOT_BE_LOWER_THAN_ZERO + "\""));
 
     }
@@ -451,7 +451,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.OFFSET_CAN_NOT_BE_LOWER_THAN_ZERO + "\""));
 
     }
@@ -528,7 +528,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_NULL_OR_MINUS_ONE + "\""));
     }
 
@@ -553,7 +553,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.START_AND_END_DATES_SHOULD_MATCH_PATTERN + "\""));
     }
 
@@ -581,7 +581,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.EMPLOYEE_NOT_EXISTS + "\""));
     }
 
@@ -609,7 +609,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_SHOULD_BE_GREATER_THAN_ZERO + "\""));
     }
 
@@ -637,7 +637,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -725,7 +725,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO + "\""));
     }
 
@@ -749,7 +749,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.INVESTIGATION_NOT_EXISTS + "\""));
     }
 
@@ -789,7 +789,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -813,7 +813,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.EMPLOYEE_NOT_EXISTS + "\""));
     }
 
@@ -903,7 +903,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.INVESTIGATION_INVOLVED_STAFF_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -928,7 +928,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.INVESTIGATION_NOT_EXISTS + "\""));
     }
 
@@ -955,7 +955,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.EMPLOYEE_NOT_EXISTS + "\""));
     }
 
@@ -982,7 +982,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -1055,7 +1055,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO + "\""));
     }
 
@@ -1079,7 +1079,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.INVESTIGATION_NOT_EXISTS + "\""));
     }
 
@@ -1087,8 +1087,6 @@ public class InvestigationRestControllerMockTest {
     public void failureUpdateInvolvedStaffInInvestigationTest_WithNullInvolvedStaff() throws Exception {
 
         LOGGER.debug("failureUpdateInvolvedStaffInInvestigationTest_WithNullInvolvedStaff()");
-
-        List<Integer> employeesId = Arrays.asList(EXISTS_EMPLOYEE_ID);
 
         replay(mockInvestigationService);
 
@@ -1121,7 +1119,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.EMPLOYEE_ID_CAN_NOT_BE_NULL + "\""));
     }
 
@@ -1145,7 +1143,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.EMPLOYEE_NOT_EXISTS + "\""));
     }
 
@@ -1181,7 +1179,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.INVESTIGATION_NOT_EXISTS + "\""));
     }
 
@@ -1222,7 +1220,7 @@ public class InvestigationRestControllerMockTest {
 
         ).andDo(print())
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json("\"IllegalArgumentException: " +
+                .andExpect(content().json("\"Error message: IllegalArgumentException - " +
                         MessageError.InvalidIncomingParameters.INVESTIGATION_ID_SHOULD_BE_GREATER_THAN_ZERO + "\""));
     }
 

@@ -256,7 +256,9 @@ public class EmployeeDaoImplTest {
 
         LOGGER.debug("successfulAddInvestigations2EmployeeTest()");
 
-        List<Integer> addInvestigations = Arrays.asList(sFirstExistsInvestigation.getInvestigationId(), sSecondExistsInvestigation.getInvestigationId());
+        Integer thirdExistsInvestigationId = 3;
+
+        List<Integer> addInvestigations = Arrays.asList(thirdExistsInvestigationId);
 
         employeeDao.addInvestigations2Employee(sFirstExistsEmployee.getEmployeeId(), addInvestigations);
 

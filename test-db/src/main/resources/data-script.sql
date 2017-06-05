@@ -4,6 +4,7 @@ VALUES (NULL,
         'American actress and sex symbol Sharon Tate was murdered on August 1969 by members of the Charles Manson’s family.',
         '1969-09-13 16:09:00', '1972-02-04 13:26:16');
 
+
 INSERT INTO investigation (investigation_number, title, description, start_date, end_date)
 VALUES (NULL,
         'Assassination of Martin Luther King Jr.',

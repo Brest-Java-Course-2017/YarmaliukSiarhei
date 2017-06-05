@@ -22,7 +22,7 @@ public class RestErrorHandler {
     public String handlerDataAccessException(DataAccessException ex) {
 
         LOGGER.debug("handlerDataAccessException(DataAccessException) - DataAccessException: {}" + ex);
-        return "DataAccessException: " + ex.getLocalizedMessage();
+        return "Error message: DataAccessException - " + ex.getLocalizedMessage();
     }
 
 
@@ -32,14 +32,6 @@ public class RestErrorHandler {
     public String handlerIllegalArgumentException(IllegalArgumentException ex) {
 
         LOGGER.debug("handlerIllegalArgumentException(IllegalArgumentException) - IllegalArgumentException: {}" + ex);
-        return "IllegalArgumentException: " + ex.getLocalizedMessage();
+        return "Error message: IllegalArgumentException - " + ex.getLocalizedMessage();
     }
-/*
-    @InitBinder
-    protected void initBinder(WebDataBinder binder){
-
-        LOGGER.debug("initBinder(WebDataBinder)");
-        binder.addCustomFormatter(new OffsetDateTimeFormatter(DateTimeFormatter.ISO_OFFSET_DATE_TIME), OffsetDateTime.class);
-    }
-    */
 }

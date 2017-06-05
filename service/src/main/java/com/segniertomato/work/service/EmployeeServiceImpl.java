@@ -243,7 +243,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             if (age.isBefore(startWorkingDate) &&
                     startWorkingDate.isBefore(LocalDate.now())) {
-                return Period.between(age, LocalDate.now()).getYears() >= REQUIREMENT_AGE;
+                return Period.between(age, startWorkingDate).getYears() >= REQUIREMENT_AGE;
             }
         }
 

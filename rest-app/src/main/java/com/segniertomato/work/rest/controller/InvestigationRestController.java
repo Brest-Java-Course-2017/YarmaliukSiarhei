@@ -4,6 +4,7 @@ package com.segniertomato.work.rest.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.segniertomato.work.model.Investigation;
 import com.segniertomato.work.profile.View;
+import com.segniertomato.work.rest.RestControllerUtils;
 import com.segniertomato.work.service.InvestigationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,11 +22,6 @@ public class InvestigationRestController {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final String DEFAULT_LIMIT = "10";
-    private static final String DEFAULT_OFFSET = "0";
-
-    private static final String VERSION = "v1";
-
     @Autowired
     private InvestigationService investigationService;
 
@@ -34,27 +30,27 @@ public class InvestigationRestController {
 //    Use default values for limit and offset
 
     @JsonView(View.Summary.class)
-    @GetMapping(value = "/api/" + VERSION + "/investigations", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Investigation> getInvestigations(@RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-                                                 @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
+    @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Investigation> getInvestigations(@RequestParam(name = "limit", defaultValue = RestControllerUtils.DEFAULT_LIMIT) int limit,
+                                                 @RequestParam(name = "offset", defaultValue = RestControllerUtils.DEFAULT_OFFSET) int offset) {
 
         LOGGER.debug("getInvestigations(int, int)");
         return investigationService.getAllInvestigations(offset, limit);
     }
 
     @JsonView(View.Summary.class)
-    @GetMapping(value = "/api/" + VERSION + "/investigations/filter", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/filter", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Investigation> getInvestigationsBetweenPeriod(@RequestParam(name = "startDate") OffsetDateTime startDate,
                                                               @RequestParam(name = "endDate") OffsetDateTime endDate,
-                                                              @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-                                                              @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
+                                                              @RequestParam(name = "limit", defaultValue = RestControllerUtils.DEFAULT_LIMIT) int limit,
+                                                              @RequestParam(name = "offset", defaultValue = RestControllerUtils.DEFAULT_OFFSET) int offset) {
 
         LOGGER.debug("getInvestigationsBetweenPeriod(Offset, Offset, int, int)");
         return investigationService.getInvestigationsBetweenPeriod(startDate, endDate, offset, limit);
     }
 
     @JsonView(View.Summary.class)
-    @GetMapping(value = "/api/" + VERSION + "/investigations/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
     public Investigation getInvestigationById(@PathVariable int id) {
 
@@ -63,17 +59,17 @@ public class InvestigationRestController {
     }
 
     @JsonView(View.Summary.class)
-    @GetMapping(value = "/api/" + VERSION + "/investigations/employee/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/employee/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
     public List<Investigation> getEmployeeInvestigations(@PathVariable int id,
-                                                         @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-                                                         @RequestParam(name = "offset", defaultValue = DEFAULT_OFFSET) int offset) {
+                                                         @RequestParam(name = "limit", defaultValue = RestControllerUtils.DEFAULT_LIMIT) int limit,
+                                                         @RequestParam(name = "offset", defaultValue = RestControllerUtils.DEFAULT_OFFSET) int offset) {
 
         LOGGER.debug("getEmployeeInvestigations(int, int, int)");
         return investigationService.getEmployeeInvestigations(id, offset, limit);
     }
 
-    @PostMapping(value = "/api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public int addInvestigation(@RequestBody Investigation investigation) {
 
@@ -81,7 +77,7 @@ public class InvestigationRestController {
         return investigationService.addInvestigation(investigation);
     }
 
-    @PostMapping(value = "/api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void addInvolvedStaff2Investigation(@PathVariable int id, @RequestBody List<Integer> employeesId) {
 
@@ -89,7 +85,7 @@ public class InvestigationRestController {
         investigationService.addInvolvedStaff2Investigation(id, employeesId);
     }
 
-    @PutMapping(value = "/api/" + VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateInvestigation(@RequestBody Investigation investigation) {
 
@@ -97,7 +93,7 @@ public class InvestigationRestController {
         investigationService.updateInvestigation(investigation);
     }
 
-    @PutMapping(value = "/api/" + VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/{id}/staff", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateInvolvedStaffInInvestigation(@PathVariable int id, @RequestBody List<Integer> employeesId) {
 
@@ -105,21 +101,11 @@ public class InvestigationRestController {
         investigationService.updateInvolvedStaffInInvestigation(id, employeesId);
     }
 
-    @DeleteMapping(value = "/api/" + VERSION + "/investigations/{id}")
+    @DeleteMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInvestigationById(@PathVariable int id) {
 
         LOGGER.debug("deleteInvestigationById(int)");
         investigationService.deleteInvestigationById(id);
     }
-
-    /*
-    @InitBinder
-    protected void initBinder(WebDataBinder binder){
-
-        LOGGER.debug("initBinder(WebDataBinder)");
-        binder.addCustomFormatter(new OffsetDateTimeFormatter(DateTimeFormatter.ISO_OFFSET_DATE_TIME), OffsetDateTime.class);
-    }
-    */
-
 }

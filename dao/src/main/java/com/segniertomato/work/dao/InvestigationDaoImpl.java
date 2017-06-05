@@ -3,6 +3,7 @@ package com.segniertomato.work.dao;
 
 import com.segniertomato.work.model.Employee;
 import com.segniertomato.work.model.Investigation;
+import com.segniertomato.work.model.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -140,9 +141,7 @@ public class InvestigationDaoImpl implements InvestigationDao {
         if (involvedStaff != null && !involvedStaff.isEmpty()) {
 
             List<Integer> addEmployeesId = new ArrayList<>(involvedStaff.size());
-            involvedStaff.forEach((item) -> {
-                addEmployeesId.add(item.getEmployeeId());
-            });
+            involvedStaff.forEach(item -> addEmployeesId.add(item.getEmployeeId()));
 
             addInvolvedStaff2Investigation(investigationId, addEmployeesId);
         }
@@ -155,7 +154,12 @@ public class InvestigationDaoImpl implements InvestigationDao {
 
         LOGGER.debug("addInvolvedStaff2Investigation(Integer, List<Integer>)");
 
-        Map<String, Integer>[] batchValues = createBatchForInvestigationEmployee(investigationId, employeesId);
+        List<Integer> existsEmployeesId = namedParameterJdbcTemplate.queryForList(GET_INVESTIGATION_EMPLOYEES_ID,
+                new MapSqlParameterSource(NamedParameterNames.INVESTIGATION_ID, investigationId), Integer.class);
+
+        Pair<List<Integer>, List<Integer>> lists = Utils.getNotEqualsElementsInLists(employeesId, existsEmployeesId);
+
+        Map<String, Integer>[] batchValues = createBatchForInvestigationEmployee(investigationId, lists.first);
         namedParameterJdbcTemplate.batchUpdate(ADD_INVESTIGATION_EMPLOYEE_RELATIONS, batchValues);
     }
 
@@ -169,9 +173,7 @@ public class InvestigationDaoImpl implements InvestigationDao {
         if (involvedStaff != null) {
 
             List<Integer> employeesId = new ArrayList<>(involvedStaff.size());
-            involvedStaff.forEach((item) -> {
-                employeesId.add(item.getEmployeeId());
-            });
+            involvedStaff.forEach(item -> employeesId.add(item.getEmployeeId()));
 
             updateInvolvedStaffInInvestigation(investigation.getInvestigationId(), employeesId);
         }
@@ -187,41 +189,27 @@ public class InvestigationDaoImpl implements InvestigationDao {
 
         int updatedRow = 0;
 
-        List<Integer> removeCandidateEmployeesId = namedParameterJdbcTemplate.queryForList(GET_INVESTIGATION_EMPLOYEES_ID,
+        List<Integer> removeEmployeeCandidates = namedParameterJdbcTemplate.queryForList(GET_INVESTIGATION_EMPLOYEES_ID,
                 new MapSqlParameterSource(NamedParameterNames.INVESTIGATION_ID, investigationId), Integer.class);
 
         if (!employeesId.isEmpty()) {
 
-            List<Integer> addCandidateEmployeesId = new LinkedList<>(employeesId);
+            Pair<List<Integer>, List<Integer>> listPair = Utils.getNotEqualsElementsInLists(employeesId, removeEmployeeCandidates);
 
-            ListIterator<Integer> removeListIterator = removeCandidateEmployeesId.listIterator();
-            while (removeListIterator.hasNext()) {
-
-                Integer currentId = removeListIterator.next();
-                ListIterator<Integer> addListIterator = addCandidateEmployeesId.listIterator();
-
-                while (addListIterator.hasNext()) {
-                    if (addListIterator.next() == currentId) {
-                        addListIterator.remove();
-                        removeListIterator.remove();
-                        break;
-                    }
-                }
+            List<Integer> addEmployees = listPair.first;
+            if (!addEmployees.isEmpty()) {
+                addInvolvedStaff2Investigation(investigationId, addEmployees);
+                updatedRow += addEmployees.size();
             }
 
-            if (!addCandidateEmployeesId.isEmpty()) {
-
-                addInvolvedStaff2Investigation(investigationId, addCandidateEmployeesId);
-                updatedRow += addCandidateEmployeesId.size();
-            }
+            removeEmployeeCandidates = listPair.second;
         }
 
-        if (!removeCandidateEmployeesId.isEmpty()) {
-
-            Map<String, Integer>[] batchValues = createBatchForInvestigationEmployee(investigationId, removeCandidateEmployeesId);
+        if (!removeEmployeeCandidates.isEmpty()) {
+            Map<String, Integer>[] batchValues = createBatchForInvestigationEmployee(investigationId, removeEmployeeCandidates);
             namedParameterJdbcTemplate.batchUpdate(DELETE_INVESTIGATION_EMPLOYEE_RELATIONS, batchValues);
 
-            updatedRow += removeCandidateEmployeesId.size();
+            updatedRow += removeEmployeeCandidates.size();
         }
 
         return updatedRow;

@@ -1,6 +1,7 @@
 package com.segniertomato.work.rest.controller;
 
 
+import com.segniertomato.work.rest.RestControllerUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,12 +34,12 @@ public class VersionControllerMockTest {
     }
 
     @Test
-    public void GetVersionTest() throws Exception{
+    public void GetVersionTest() throws Exception {
 
         mockMvc.perform(
                 get("/api/version")
         ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("1.0"));
+                .andExpect(content().json("\"" + RestControllerUtils.VERSION + "\""));
     }
 }

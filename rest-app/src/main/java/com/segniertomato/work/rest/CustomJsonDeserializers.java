@@ -62,24 +62,25 @@ public class CustomJsonDeserializers {
 
             LOGGER.debug("deserialize(JsonParser, DeserializationContext)");
 
-            JsonNode node = parser.getCodec().readTree(parser);
+            Investigation deserializedInvestigation = null;
 
-//            if (node == null) {
-//                String incomingJSON = parser.getValueAsString();
-//                JsonParser jsonParser = parser.getCodec().getFactory().createParser(incomingJSON);
-//                node = jsonParser.getCodec().readTree(jsonParser);
-//            }
+            try {
 
-            Investigation deserializedInvestigation = createInvestigation(node, offsetDateTimeFormatter);
-            if (node.hasNonNull(InvestigationFieldNames.INVOLVED_STAFF)) {
-                JsonNode involvedStaffNode = node.get(InvestigationFieldNames.INVOLVED_STAFF);
+                JsonNode node = parser.getCodec().readTree(parser);
+                deserializedInvestigation = createInvestigation(node, offsetDateTimeFormatter);
 
-                List<Employee> involvedStaff = new ArrayList<>(involvedStaffNode.size());
-                involvedStaffNode.forEach((itemNode) -> involvedStaff.add(createEmployee(itemNode, localDateFormatter)));
+                if (node.hasNonNull(InvestigationFieldNames.INVOLVED_STAFF)) {
+                    JsonNode involvedStaffNode = node.get(InvestigationFieldNames.INVOLVED_STAFF);
 
-                deserializedInvestigation.setInvolvedStaff(involvedStaff);
+                    List<Employee> involvedStaff = new ArrayList<>(involvedStaffNode.size());
+                    involvedStaffNode.forEach((itemNode) -> involvedStaff.add(createEmployee(itemNode, localDateFormatter)));
+
+                    deserializedInvestigation.setInvolvedStaff(involvedStaff);
+                }
+
+            } catch (NullPointerException ex) {
+                throw new IllegalArgumentException("Invalid format of incoming request body." + ex.getLocalizedMessage(), ex.getCause());
             }
-
             return deserializedInvestigation;
         }
 
@@ -105,17 +106,24 @@ public class CustomJsonDeserializers {
 
             LOGGER.debug("deserialize(JsonParser, DeserializationContext)");
 
-            JsonNode node = parser.getCodec().readTree(parser);
+            Employee deserializedEmployee = null;
 
-            Employee deserializedEmployee = createEmployee(node, localDateFormatter);
+            try {
 
-            if (node.hasNonNull(EmployeeFieldNames.PARTICIPATED_INVESTIGATIONS)) {
-                JsonNode participatedInvestigationsNode = node.get(EmployeeFieldNames.PARTICIPATED_INVESTIGATIONS);
+                JsonNode node = parser.getCodec().readTree(parser);
+                deserializedEmployee = createEmployee(node, localDateFormatter);
 
-                List<Investigation> investigations = new ArrayList<>(participatedInvestigationsNode.size());
-                participatedInvestigationsNode.forEach((itemNode) -> investigations.add(createInvestigation(itemNode, offsetDateTimeFormatter)));
+                if (node.hasNonNull(EmployeeFieldNames.PARTICIPATED_INVESTIGATIONS)) {
+                    JsonNode participatedInvestigationsNode = node.get(EmployeeFieldNames.PARTICIPATED_INVESTIGATIONS);
 
-                deserializedEmployee.setParticipatedInvestigations(investigations);
+                    List<Investigation> investigations = new ArrayList<>(participatedInvestigationsNode.size());
+                    participatedInvestigationsNode.forEach((itemNode) -> investigations.add(createInvestigation(itemNode, offsetDateTimeFormatter)));
+
+                    deserializedEmployee.setParticipatedInvestigations(investigations);
+                }
+
+            } catch (NullPointerException ex) {
+                throw new IllegalArgumentException("Invalid format of incoming request body." + ex.getLocalizedMessage(), ex.getCause());
             }
 
             return deserializedEmployee;
