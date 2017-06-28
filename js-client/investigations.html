@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>Detective Agency js-client</title>
+
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="css/style.css"/>
+
+</head>
+
+<body>
+
+
+<!-- If content can be removed or replaced independently from main information - use <article tag>-->
+<!--<article>-->
+
+<header class="primary-header">
+
+    <div class="row">
+        <nav>
+            <a href="investigations.html">Investigations</a>
+            <a href="">Staff</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="row">
+
+        <section>
+
+            <h1 class="header-title">Investigations</h1>
+
+            <i class="material-icons header-button" onclick="addInvestigation()" style="cursor: pointer">add</i>
+
+            <i id="removeFilterButton" class="material-icons header-button" onclick="removeFilter()"
+               style="cursor: pointer; display: none">cancel</i>
+
+            <input id="end_datetimepicker" type="text">
+            <input id="start_datetimepicker" type="text">
+
+        </section>
+
+        <section id="containerForInvestigations" class="scroll-area" style="overflow: auto">
+
+            <section class="list_item investigation">
+
+                <section class="list_item-title">
+
+                    <!-- This strong is investigation's id-->
+                    <strong hidden>895</strong>
+                    <!--<input type="hidden" name="investigation_id" value="-1">-->
+
+                    <strong class="list_item_title-number">№ 765</strong>
+                    <strong class="list_item_title-name">The Killer Clown (Unofficial name)</strong>
+
+                    <section class="list_item-title-action">
+                        <i class="material-icons list_item_title-button"
+                           onclick="removeInvestigation(this.parentElement.parentElement.parentElement)"
+                           style="cursor: pointer">delete</i>
+                        <i class="material-icons list_item_title-button"
+                           onclick="editInvestigation(this.parentElement.parentElement.parentElement)"
+                           style="cursor: pointer">mode_edit</i>
+                    </section>
+                </section>
+
+                <section class="list_item-date group">
+                    <strong>start date:</strong>
+                    <span>25.03.2016 / 30.05.2016</span>
+                </section>
+
+                <section>
+                    <p>Some investigation's description.</p>
+                </section>
+
+                <article>
+                    <hr>
+                    <h5>List of involved employees</h5>
+                </article>
+            </section>
+
+            <img id="loading_animation" src="images/refresh.gif" alt="loading ..."/>
+        </section>
+    </div>
+</main>
+
+<footer class="primary-footer">
+    <div class="row">
+
+        <div class="footer_about">
+            <a href="mailto:segniertomato@gmail.com?subject=About%20investigations%20report%20system" target="_blank">
+                Contact with me</a>
+        </div>
+
+        <div class="license">
+            <small class="footer_license">
+                Apache License, Version 2.0
+            </small>
+        </div>
+    </div>
+</footer>
+
+<div id="alerts_area">
+</div>
+
+<div id="investigationModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="modal_title" class="modal-title" style="margin: 0 auto">Create investigation</h4>
+            </div>
+            <div class="modal-body" style="margin-top: 15px">
+                <form class="form-horizontal">
+                    <div class="form-group modal-group">
+                        <label for="investigationNumber" class="modal-label">Number</label>
+                        <input type="number" class="form-control modal-input" id="investigationNumber">
+                    </div>
+                    <div class="form-group modal-group">
+                        <label for="investigationTitle" class="modal-label">Title</label>
+                        <input type="text" class="form-control modal-input" id="investigationTitle">
+                    </div>
+
+                    <!-- DateTime picker-->
+                    <div class="form-group modal-group">
+                        <label for="investigationStartDate" class="modal-label">Start date</label>
+                        <input id="investigationStartDate" class="form-control modal-input" type="text">
+                    </div>
+
+                    <div class="form-group modal-group">
+                        <label for="investigationEndDate" class="modal-label">End date</label>
+                        <input id="investigationEndDate" class="form-control modal-input" type="text">
+                    </div>
+
+                    <div class="form-group modal-group">
+                        <label for="investigationDescription" class="modal-label">Description</label>
+                        <textarea id="investigationDescription" class="form-control modal-input" rows="6"
+                                  style="resize: vertical"></textarea>
+                    </div>
+
+                    <div class="form-group modal-group" style="padding-top: 10px">
+                        <label for="involvedStaff">Select involvedStaff</label>
+                        <select multiple id="involvedStaff" class="form-control" size="7"
+                                style="display: block; padding: auto 15px">
+
+                            <option value="1">Nick James</option>
+                            <option value="2" selected>Jeremy Colins</option>
+                            <option value="3">Tom Pepper</option>
+                            <option value="4" selected>Mike Wake</option>
+                            <option value="5">Senior Tomato</option>
+                            <option>David Lebowski</option>
+                            <option>Mike Wake</option>
+                            <option>Jake Chan</option>
+                            <option>Test 1</option>
+                            <option>Test 2</option>
+                            <option>Test 3</option>
+                            <option>Test 4</option>
+                        </select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="modal_save" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal confirm -->
+<div class="modal fade" id="confirmModal" style="display: none; z-index: 1050;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+                <strong>Do you want delete investigation?</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="confirmOk">Ok</button>
+                <button type="button" class="btn btn-default" id="confirmCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- &code's symbol; - like '\"' in Java -->
+<!-- %20 - encode space symbol -->
+
+<!-- Maybe defer of async -->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/jquery.datetimepicker.full.min.js"></script>
+<script src="js/investigation.js" defer></script>
+
+</body>
+</html>

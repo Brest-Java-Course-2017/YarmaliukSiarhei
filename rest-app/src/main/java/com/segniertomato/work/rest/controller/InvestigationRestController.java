@@ -17,6 +17,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 
+@CrossOrigin
 @RestController
 public class InvestigationRestController {
 
