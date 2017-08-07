@@ -6,10 +6,10 @@
     <title>Detective Agency js-client</title>
 
     <link rel="stylesheet" href="css/main.css"/>
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="css/multi-select.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel="stylesheet" href="css/style.css"/>
@@ -24,10 +24,14 @@
 
 <header class="primary-header">
 
+    <!--style="border-top: 4px solid #ffbd09"-->
+
     <div class="row">
         <nav>
-            <a href="investigations.html">Investigations</a>
-            <a href="">Staff</a>
+            <ul>
+                <li><a href="investigations.html">Investigations</a></li>
+                <li><a href="employees.html">Staff</a></li>
+            </ul>
         </nav>
     </div>
 </header>
@@ -51,12 +55,13 @@
 
         <section id="containerForInvestigations" class="scroll-area" style="overflow: auto">
 
-            <section class="list_item investigation">
+            <!--<section class="list_item investigation">-->
+            <section class="list_item">
 
                 <section class="list_item-title">
 
                     <!-- This strong is investigation's id-->
-                    <strong hidden>895</strong>
+                    <strong hidden id="investigation_id_55">895</strong>
                     <!--<input type="hidden" name="investigation_id" value="-1">-->
 
                     <strong class="list_item_title-number">№ 765</strong>
@@ -83,12 +88,11 @@
 
                 <article>
                     <hr>
-                    <h5>List of involved employees</h5>
+                    <h5 onclick="showInvolvedStaff(this.parentElement.parentElement)">List of involved employees</h5>
                 </article>
             </section>
-
-            <img id="loading_animation" src="images/refresh.gif" alt="loading ..."/>
         </section>
+        <img id="loading_animation" src="images/refresh.gif" alt="loading ..."/>
     </div>
 </main>
 
@@ -111,6 +115,7 @@
 <div id="alerts_area">
 </div>
 
+<!-- Add and edit modal -->
 <div id="investigationModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -132,12 +137,17 @@
                     <!-- DateTime picker-->
                     <div class="form-group modal-group">
                         <label for="investigationStartDate" class="modal-label">Start date</label>
-                        <input id="investigationStartDate" class="form-control modal-input" type="text">
+                        <i id="removeStartDateButton" class="material-icons modal_button-datetimepicker"
+                           onclick="removePickerData(INVESTIGATION_FIELD_TYPE.START_DATE, this)">cancel</i>
+                        <input id="investigationStartDate" class="form-control modal_input-datetimepicker" type="text">
                     </div>
 
                     <div class="form-group modal-group">
                         <label for="investigationEndDate" class="modal-label">End date</label>
-                        <input id="investigationEndDate" class="form-control modal-input" type="text">
+                        <i id="removeEndDateButton" class="material-icons modal_button-datetimepicker"
+                           onclick="removePickerData(INVESTIGATION_FIELD_TYPE.END_DATE, this)">cancel</i>
+
+                        <input id="investigationEndDate" class="form-control modal_input-datetimepicker" type="text">
                     </div>
 
                     <div class="form-group modal-group">
@@ -148,22 +158,22 @@
 
                     <div class="form-group modal-group" style="padding-top: 10px">
                         <label for="involvedStaff">Select involvedStaff</label>
-                        <select multiple id="involvedStaff" class="form-control" size="7"
-                                style="display: block; padding: auto 15px">
 
-                            <option value="1">Nick James</option>
-                            <option value="2" selected>Jeremy Colins</option>
-                            <option value="3">Tom Pepper</option>
-                            <option value="4" selected>Mike Wake</option>
-                            <option value="5">Senior Tomato</option>
-                            <option>David Lebowski</option>
-                            <option>Mike Wake</option>
-                            <option>Jake Chan</option>
-                            <option>Test 1</option>
-                            <option>Test 2</option>
-                            <option>Test 3</option>
-                            <option>Test 4</option>
-                        </select>
+                        <div class="modal_multiselect-container">
+                            <select multiple="multiple" id="involvedStaff" name="my-select[]" class="form-control">
+                                <!--<option value="1">Nick James</option>-->
+                                <!--<option selected>Jeremy Colins</option>-->
+                                <!--<option value="3">Tom Pepper</option>-->
+                                <!--<option value="4" selected>Mike Wake</option>-->
+                                <!--<option value="5">Senior Tomato</option>-->
+                                <!--<option selected value="7">Big Lebowski</option>-->
+                                <!--<option value="8">Mike Wake</option>-->
+                                <!--<option value="9">Jake Chan</option>-->
+                                <!--<option value="10">Jake Chan 2</option>-->
+                                <!--<option value="11">Jake Chan 3</option>-->
+                                <!--<option value="12">Jake Chan 4</option>-->
+                            </select>
+                        </div>
                     </div>
                 </form>
 
@@ -174,7 +184,220 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div>
+
+<!-- Involved employees modal -->
+<div id="involvedStaffTable" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true" style="overflow: hidden">
+    <div class="modal-dialog modal-lg">
+        <!--<div class="modal-content" style="overflow: hidden;">-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Involved Staff</h4>
+            </div>
+            <div id="involvedStaffTableModalBody" class="modal-body table-body">
+                <table>
+                    <!-- Table header -->
+                    <!-- <caption>Some name of table</caption> -->
+
+                    <!-- Additional elements with can help you organize your table -->
+                    <!-- thead , tbody & tfoot-->
+
+                    <!-- colspan & rowspan attributes for td and th elements will fuse selected count of cell in one -->
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Work experience (Y/M)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="involvedStaffTableBody">
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>James Colins</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    <tr>
+                        <td>Jake Chan</td>
+                        <td>1996-05-26</td>
+                        <td>2001-11-01</td>
+                    </tr>
+                    </tbody>
+
+                    <tfoot>
+                    </tfoot>
+                </table>
+                <div class="table_modal-loading_container">
+                    <img id="modalTableLoadingAnimation" src="images/refresh.gif" alt="loading ..."/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <!-- Modal confirm -->
 <div class="modal fade" id="confirmModal" style="display: none; z-index: 1050;">
     <div class="modal-dialog">
@@ -200,8 +423,10 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/moment.min.js"></script>
+<script src="js/jquery.multi-select.js"></script>
 <script src="js/jquery.datetimepicker.full.min.js"></script>
-<script src="js/investigation.js" defer></script>
+<script src="js/detective_agency.helper.js" defer></script>
+<script src="js/investigations.js" defer></script>
 
 </body>
 </html>

@@ -18,9 +18,9 @@
 */
 
 /*
- You must remember "вес специфичности" (ru)
- 0-0-1 - for type selector (most low)
- 0-1-0 - for class selector
+ You must remember "вес специфичности" (ru) (not bit mack)
+ 0-0-2 - for type selector (most low)
+ 0-3-0 - for class selector
  1-0-0 - for indentify selector (higher)
 */
 
@@ -87,6 +87,22 @@ h5 {
     font-weight: 600;
 }
 
+h5:hover {
+    color: #648880;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+nav > ul > li {
+    display: inline-block;
+}
+
+ul{
+    border-top: 4px solid #ffbd09;
+    display: inline-block;
+    padding-top: 5px;
+}
+
 p {
     margin-bottom: 16px;
 }
@@ -116,6 +132,67 @@ main {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+/*
+  ========================================
+  Modal table
+  ========================================
+*/
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #4a4a4d;
+    font: 14px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+thead {
+    background: #395870;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+tbody {
+    font-weight: 700;
+}
+
+th, td, .table_modal-loading_container {
+    padding: 10px 15px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+th:first-child, td:first-child {
+    text-align: left;
+}
+
+th:first-child {
+    border-top-left-radius: 5px;
+}
+
+th:last-child {
+    border-top-right-radius: 5px;
+}
+
+tbody td {
+    border-bottom: 1px solid #888;
+    border-left: 1px solid #888;
+}
+
+tbody td:first-child {
+    border-left: 0;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr:nth-child(even) {
+    background: #f0f0f2;
+}
+
 
 /*
   ========================================
@@ -212,7 +289,6 @@ article a {
     text-align: center;
     display: inline-block;
     float: right;
-
 }
 
 .scroll-area {
@@ -236,6 +312,7 @@ article a {
     border-radius: 5px;
 }
 
+.list_item
 .list_item > a {
     margin-left: auto;
 }
@@ -312,17 +389,150 @@ article a {
     display: inline-block;
 }
 
-#loading_animation {
-    align: middle;
-    display: block;
-    margin: 40px auto;
+.modal_input-datetimepicker {
+    float: left;
+    width: 52%;
+    margin-left: 5%;
+    display: inline-block;
 }
+
+.modal_button-datetimepicker {
+    height: 34px;
+    min-width: 48px;
+    width: 6.5%;
+    margin-left: 15px;
+    padding: 2px auto;
+    float: right;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+
 
 .alert {
     position: relative;
     margin: 0 auto 15px auto;
     font-weight: bold;
     display: none;
+}
+
+
+.modal_input-validation {
+    padding-right: 42.5px;
+}
+
+.modal_input_validation-status_icon {
+    position: absolute;
+    min-width: 34px;
+    right: 5px;
+    top: 10px;
+    text-align: center;
+}
+
+.modal_validate-container {
+    position: relative;
+}
+
+.modal_multiselect-container {
+    display: block;
+    padding: auto 10px;
+}
+
+.modal_multiselect_lists-header {
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+    background-color: #1b6d85;
+}
+
+.ms-container {
+    background: transparent url('../images/switch.png') no-repeat 50% 50%;
+    width: 100%;
+}
+
+.ms-container .ms-selectable li.ms-hover,
+.ms-container .ms-selection li.ms-hover {
+    background-color: #1b6d85;
+}
+
+.has-error {
+    color: #a94442;
+}
+
+.has-success {
+    color: #3c763d;
+}
+
+.modal_multiselect_lists-loading {
+    width: 100%;
+    height: 200px;
+    top: 0;
+    left: 0;
+    position: relative;
+    display: block;
+    opacity: 0.7;
+    background-color: #fff;
+    z-index: 99;
+    text-align: center;
+    vertical-align: center;
+}
+
+.modal_multiselect_lists_loading-image {
+    position: absolute;
+    top: 45%;
+    z-index: 100;
+}
+
+.list_item-title::after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.list_item_date-age {
+    float: left;
+    width: 30%;
+    margin: 15px 15px 10px 20px;
+    display: inline-block;
+}
+
+.list_item_date-start_working, .list_item-rating_container {
+    float: right;
+    width: 60%;
+    margin: 15px 15px 10px 0px;
+    display: inline-block;
+}
+
+.list_item_date-age > strong {
+    margin-right: 15px;
+}
+
+.list_item_date-start_working > strong, .list_item-rating_container > strong {
+    float: left;
+    width: 45%;
+    margin-right: 15px;
+    margin-left: 15px;
+    text-align: right;
+}
+
+.list_item_date-start_working > span .list_item-rating_container > span {
+    float: left;
+    width: 50%;
+}
+
+.list_item_date-start_working > span, .list_item_date-age > span,
+.list_item-rating_container > span {
+    font-size: 18px;
+    font-weight: 900;
+    margin: auto 10px;
+}
+
+.table-body {
+    max-height: 700px;
+    position: relative;
+    overflow: auto;
 }
 
 #alerts_area {
@@ -333,19 +543,14 @@ article a {
     right: 30px;
 }
 
-.modal.loading .modal-content:before {
-    content: 'Loading...';
-    text-align: center;
-    line-height: 155px;
-    font-size: 20px;
-    background: rgba(0, 0, 0, .8);
-    position: absolute;
-    top: 55px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    color: #EEE;
-    z-index: 1000;
+#loading_animation {
+    align: middle;
+    display: block;
+    margin: 20px auto;
+}
+
+#modalTableLoadingAnimation {
+    margin: 0 auto;
 }
 
 /*

@@ -52,7 +52,6 @@ public class InvestigationRestController {
 
     @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseStatus(HttpStatus.FOUND)
     public Investigation getInvestigationById(@PathVariable int id) {
 
         LOGGER.debug("getInvestigationById(int)");
@@ -61,7 +60,6 @@ public class InvestigationRestController {
 
     @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/investigations/employee/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseStatus(HttpStatus.FOUND)
     public List<Investigation> getEmployeeInvestigations(@PathVariable int id,
                                                          @RequestParam(name = "limit", defaultValue = RestControllerUtils.DEFAULT_LIMIT) int limit,
                                                          @RequestParam(name = "offset", defaultValue = RestControllerUtils.DEFAULT_OFFSET) int offset) {

@@ -47,7 +47,6 @@ public class EmployeeRestController {
 
     @JsonView(View.Summary.class)
     @GetMapping(value = "/api/" + RestControllerUtils.VERSION + "/employees/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseStatus(HttpStatus.FOUND)
     public Employee getEmployeeById(@PathVariable int id) {
 
         LOGGER.debug("getEmployeeById(id) - id is: {}", id);
