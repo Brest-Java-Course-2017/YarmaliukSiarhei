@@ -15,6 +15,7 @@ public class VersionController {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // curl -v localhost:8088/api/version
     @GetMapping("/api/version")
     public String getVersion() {
 

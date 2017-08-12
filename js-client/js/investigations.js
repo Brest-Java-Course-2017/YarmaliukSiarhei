@@ -79,7 +79,6 @@ function initInvestigationsLoading() {
         requestParams, {Accept: "application/json"}, null, "text json");
 
     investigationLoader.loadData();
-    // setInvestigationsScroll(investigationLoader);
 }
 
 function initInvestigationModalWindow() {
@@ -119,12 +118,7 @@ function resetInvestigationModalWindow() {
     modalTitleElement.innerText = "Edit investigation";
 
     $("#involvedStaff").multiSelect("destroy");
-
     $("#involvedStaff").empty();
-    // let employeesContainer = document.getElementById("involvedStaff");
-    // while (employeesContainer.firstChild) {
-    //     employeesContainer.removeChild(employeesContainer.firstChild);
-    // }
 
     let investigationIdsElements = ["investigationNumber", "investigationTitle", "investigationDescription", "investigationStartDate", "investigationEndDate"];
 
@@ -180,7 +174,6 @@ function prepareEditInvestigationModalWindow(element) {
     let investigationDescriptionElement = document.getElementById("investigationDescription");
     setElementValidation(investigationDescriptionElement, INVESTIGATION_FIELD_TYPE.DESCRIPTION, true);
     investigationDescriptionElement.value = investigationDescription;
-    // investigationDescriptionElement.innerText = investigationDescription;
 
     return {
         investigationId: parseInt(investigationId, 10),
@@ -254,7 +247,6 @@ function addInvestigation() {
         };
 
         debugger;
-        let dataS = JSON.stringify(addInvestigation);
 
         let investigationLoader = new daHelper.DataLoader("POST", daHelper.INVESTIGATIONS_URL,
             successfulResponse("containerForInvestigations", "alerts_area", [addInvestigation]),
@@ -350,12 +342,12 @@ function editInvestigation(element) {
             let isRedraw = false;
             if (isSameInvestigation(originalInvestigation)) {
                 url += "/" + originalInvestigation.investigationId + daHelper.STAFF_URL;
-                // [id1, id2,id3]
+
                 requestParams = getSelectedEmployeesIds();
             } else {
                 editInvestigation = getInvestigationFromModalWindow();
                 editInvestigation.investigationId = originalInvestigation.investigationId;
-                // requestParams = {json: JSON.stringify(editInvestigation)};
+
                 requestParams = editInvestigation;
                 isRedraw = true;
             }
@@ -373,8 +365,6 @@ function editInvestigation(element) {
             };
 
             debugger;
-            // var dataS = $.serialize(requestParams);
-            let dataS = JSON.stringify(requestParams);
 
             let investigationLoader = new daHelper.DataLoader("PUT", url,
                 successfulResponse(editInvestigation, "alerts_area", isRedraw),
@@ -443,7 +433,6 @@ function filter(startDate, endDate) {
         requestParams, {Accept: "application/json"}, null, "text json");
 
     investigationLoader.loadData();
-    // setInvestigationsScroll(investigationLoader);
 }
 
 function removeFilter() {
@@ -484,7 +473,6 @@ function showInvolvedStaff(investigationElement) {
 
             } else if (this.requestData.offset === 0) {
                 drawEmptyDataMessageInTable("No data.");
-                // daHelper.drawEmptyData("involvedStaffTableModalBody", "No data.");
             }
 
             let element = document.getElementById("involvedStaffTableModalBody");
@@ -501,7 +489,6 @@ function showInvolvedStaff(investigationElement) {
 
             enableLoadingAnimationInInvolvedStaffTable(false);
 
-            // daHelper.drawEmptyData("involvedStaffTableModalBody", "Data is not available.");
             drawEmptyDataMessageInTable("Data is not available.");
             daHelper.drawMessage(alertAreaElementId, daHelper.LOAD_ERROR_MESSAGE,
                 daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
@@ -514,9 +501,6 @@ function showInvolvedStaff(investigationElement) {
 
     $("#involvedStaffTable").modal("show");
     involvedStaffLoader.loadData();
-
-    // $(window).on('scroll', setEmployeesScroll(employeeLoader));
-    // setInvestigationsScrollInTable(involvedStaffLoader);
 }
 
 function setEmployeesScrollInTable(loader) {
@@ -679,9 +663,6 @@ function createEmployeeLiElement(employee, classPostfix, isVisible) {
     let liElement = document.createElement("li");
     liElement.className = "ms-elem" + classPostfix;
 
-    // liElement.setAttribute("id", employee.id + postfix);
-    // liElement.setAttribute("style", "display:list-item;");
-
     liElement.id = "" + employee.employeeId + classPostfix;
     liElement.style.display = isVisible ? "list-item" : "none";
     liElement.innerHTML = "<span>" + employee.name + "</span>";
@@ -730,7 +711,6 @@ function getSelectedEmployeesIds() {
     let selectedElements = selectedStaffContainerElement.children;
 
     for (let i = 0; i < selectedElements.length; i++) {
-        // if (selectedElements[i].style.display === "list-item") {
         if (daHelper.hasClass(selectedElements[i], "ms-selected")) {
             debugger;
             selectedElementsIds.push(selectedElements[i].id.split("-selection")[0]);
@@ -1022,14 +1002,13 @@ function clearInvestigationsHTMLElementsInDOM() {
     console.log("clearInvestigationHTMLElementsInDOM()");
 
     document.getElementsByClassName("investigation").remove();
-    if($("#containerForEmptyDataMessage")) $("#containerForEmptyDataMessage").remove();
+    if($("#containerForEmptyDataMessage").length) $("#containerForEmptyDataMessage").remove();
 }
 
 
 function setInvestigationsScroll(loader) {
     console.log("setInvestigationsScroll(loader)");
 
-    // window.onscroll = function () {
     return function () {
         debugger;
 

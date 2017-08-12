@@ -18,10 +18,6 @@
 
 <body>
 
-
-<!-- If content can be removed or replaced independently from main information - use <article tag>-->
-<!--<article>-->
-
 <header class="primary-header">
     <div class="row">
         <nav>
@@ -48,42 +44,6 @@
     </section>
     <div class="row">
         <section id="containerForInvestigations" class="data-area">
-
-            <section class="list_item">
-
-                <section class="list_item-title">
-
-                    <!-- This strong is investigation's id-->
-                    <strong hidden id="investigation_id_55">895</strong>
-                    <!--<input type="hidden" name="investigation_id" value="-1">-->
-
-                    <strong class="list_item_title-number">№ 765</strong>
-                    <strong class="list_item_title-name">The Killer Clown (Unofficial name)</strong>
-
-                    <section class="list_item-title-action">
-                        <i class="material-icons list_item_title-button"
-                           onclick="removeInvestigation(this.parentElement.parentElement.parentElement)"
-                           style="cursor: pointer">delete</i>
-                        <i class="material-icons list_item_title-button"
-                           onclick="editInvestigation(this.parentElement.parentElement.parentElement)"
-                           style="cursor: pointer">mode_edit</i>
-                    </section>
-                </section>
-
-                <section class="list_item-date group">
-                    <strong>start date:</strong>
-                    <span>25.03.2016 / 30.05.2016</span>
-                </section>
-
-                <section>
-                    <p>Some investigation's description.</p>
-                </section>
-
-                <article>
-                    <hr>
-                    <h5 onclick="showInvolvedStaff(this.parentElement.parentElement)">List of involved employees</h5>
-                </article>
-            </section>
         </section>
         <img id="loading_animation" src="images/refresh.gif" alt="loading ..."/>
     </div>
@@ -154,12 +114,6 @@
 
                         <div class="modal_multiselect-container">
                             <select multiple="multiple" id="involvedStaff" name="my-select[]" class="form-control">
-                                <!--<option value="1">Nick James</option>-->
-                                <!--<option selected>Jeremy Colins</option>-->
-                                <!--<option value="3">Tom Pepper</option>-->
-                                <!--<option value="4" selected>Mike Wake</option>-->
-                                <!--<option value="5">Senior Tomato</option>-->
-                                <!--<option value="12">Jake Chan 4</option>-->
                             </select>
                         </div>
                     </div>
@@ -178,7 +132,6 @@
 <div id="involvedStaffTable" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
      aria-labelledby="myLargeModalLabel" aria-hidden="true" style="overflow: hidden">
     <div class="modal-dialog modal-lg">
-        <!--<div class="modal-content" style="overflow: hidden;">-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -186,13 +139,6 @@
             </div>
             <div id="involvedStaffTableModalBody" class="modal-body table-body">
                 <table>
-                    <!-- Table header -->
-                    <!-- <caption>Some name of table</caption> -->
-
-                    <!-- Additional elements with can help you organize your table -->
-                    <!-- thead , tbody & tfoot-->
-
-                    <!-- colspan & rowspan attributes for td and th elements will fuse selected count of cell in one -->
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
@@ -201,176 +147,6 @@
                     </tr>
                     </thead>
                     <tbody id="involvedStaffTableBody">
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>James Colins</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
-                    <tr>
-                        <td>Jake Chan</td>
-                        <td>1996-05-26</td>
-                        <td>2001-11-01</td>
-                    </tr>
                     </tbody>
 
                     <tfoot>
@@ -403,9 +179,6 @@
         </div>
     </div>
 </div>
-
-<!-- &code's symbol; - like '\"' in Java -->
-<!-- %20 - encode space symbol -->
 
 <!-- Maybe defer of async -->
 <script src="js/jquery-3.2.1.min.js"></script>

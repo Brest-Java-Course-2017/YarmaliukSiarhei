@@ -111,11 +111,12 @@ function addEmployee() {
                 let rating = getRating(employee.employeeId);
                 $("#" + daHelper.EMPLOYEE_ID_PREFIX + employee.employeeId).parent()
                     .find(".list_item-rating_container").children().eq(1).text(rating);
+
+                if ($("#containerForEmptyDataMessageInTable").length) $("#containerForEmptyDataMessageInTable").remove();
             }
         };
 
         debugger;
-        let dataS = JSON.stringify(addEmployee);
 
         let employeeLoader = new daHelper.DataLoader("POST", daHelper.EMPLOYEES_URL,
             successfulRequestFunction("containerForEmployees", "alerts_area", addEmployee),
@@ -417,7 +418,7 @@ function resetParticipatedInvestigationsTableModalDialog() {
     console.log("resetParticipatedInvestigationsTableModalDialog()");
     debugger;
     $("#participatedInvestigationsTableBody").empty();
-    $("#containerForEmptyDataMessageInTable").remove();
+    if ($("#containerForEmptyDataMessageInTable").length) $("#containerForEmptyDataMessageInTable").remove();
 }
 
 function enableLoadingAnimationInParticipatedInvestigationsTable(state) {
@@ -492,9 +493,9 @@ function getEmployeeFromModalWindow() {
     let participatedInvestigations = [];
     let investigationsIds = getSelectedInvestigationsIds();
 
-    for (let i = 0; i < investigationsIds.length; i++) {
+    for (let id of investigationsIds) {
         participatedInvestigations.push({
-            investigationId: parseInt(investigationsIds[i], 10),
+            investigationId: parseInt(id, 10),
             number: daHelper.TEMPLATE_INVESTIGATION_NUMBER,
             title: daHelper.TEMPLATE_INVESTIGATION_TITLE,
             startInvestigationDate: daHelper.TEMPLATE_INVESTIGATION_START_INVESTIGATION_DATE,
@@ -568,7 +569,6 @@ function initEmployeeModalWindow() {
     daHelper.settingDatePickers("employeeAgeDate", "employeeWorkingDate");
 
     $("#employeeName")[0].CustomValidation = new CustomValidation($("#employeeName")[0], nameValidityCheck, EMPLOYEE_FIELD_TYPE.NAME);
-    // $("#employeeName").on("input", $("#employeeName")[0].CustomValidation.checkValidity);
     $("#employeeName").on("change", () => {
         $("#employeeName")[0].CustomValidation.checkValidity();
     });
@@ -682,7 +682,6 @@ function drawInvestigation(investigation) {
             .text(INVESTIGATION_NUMBER_PREFIX + investigation.number + '   ' + investigation.title)
     );
 
-    // $("#ms-investigations").children(":first").append(
     $("#ms-investigations").children(":first").children().eq(1).append(
         $('<li>').addClass(" ms-elem-selectable").attr("id", investigation.investigationId + "-selectable")
             .html(`<span>${INVESTIGATION_NUMBER_PREFIX} ${investigation.number} ${investigation.title}</span>`)
@@ -821,7 +820,7 @@ function initEmployeesLoading() {
 
     let employeeLoader = new daHelper.DataLoader("GET", daHelper.EMPLOYEES_URL,
         successfulRequest2GetEmployees,
-        daHelper.failureResponse("alerts_area", daHelper.LOAD_ERROR_MESSAGE),
+        daHelper.failureResponseWithDrawEmptyData("containerForEmployees", "alerts_area", daHelper.LOAD_ERROR_MESSAGE),
         {offset: 0, limit: getCountEmployeesInPage()}, {Accept: "application/json"}, null, "text json");
 
     employeeLoader.loadData();
@@ -945,7 +944,6 @@ CustomValidation.prototype = {
     checkValidity: function () {
 
         debugger;
-        // if (hasElementValidationState(this.inputField)) resetValidation(this.inputField, this.fieldType);
         if (hasElementValidationState(this.inputField)) this.resetValidation();
 
         if (this.validityCheck.isInvalid(this.inputField)) {
@@ -1014,5 +1012,4 @@ let startWorkingDateValidityCheck = {
         return !(pickedMoment.isValid() && ageDate.isValid() ? ageDate.isBefore(pickedMoment) : false);
     },
     invalidityMessage: "Start working date must be early than age date."
-
 };
