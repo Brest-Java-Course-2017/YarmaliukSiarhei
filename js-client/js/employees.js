@@ -1,8 +1,3 @@
-/*
- * In this page tried use
- *
- * */
-
 const INVESTIGATION_NUMBER_PREFIX = 'N ';
 const DEFAULT_INVISIBLE_EMPLOYEE_COUNT_ON_PAGE = 1;
 const DEFAULT_EMPLOYEE_ELEMENT_HEIGHT = 238;
@@ -18,6 +13,7 @@ const EMPLOYEE_FIELD_TYPE = {
     AGE_DATE: "age",
     START_WORKING_DATE: "start_working_date"
 };
+
 
 $(() => {
 
@@ -71,7 +67,7 @@ function setMultiselectElementInModalWindow(successfulFunction, failureFunction)
     let multiSelectContainer = document.getElementById("ms-" + "investigations");
 
     let allEmployeesLoader = new daHelper.DataLoader("GET", daHelper.INVESTIGATIONS_URL,
-        successfulFunction(multiSelectContainer.children[0]), failureFunction(multiSelectContainer.children[0], "alerts_area"),
+        successfulFunction(multiSelectContainer.children[0], drawInvestigation), failureFunction(multiSelectContainer.children[0], "alerts_area"),
         {offset: 0, limit: DEFAULT_INVESTIGATIONS_ON_PAGE}, {Accept: "application/json"}, null, "text json");
 
     let selectableContainer = document.getElementById("ms-" + "investigations").children[0].children[1];
@@ -91,7 +87,7 @@ function addEmployee() {
 
     $("#modal_title").text("Add employee");
 
-    setMultiselectElementInModalWindow(allInvestigationsSuccessfulResponse, investigationsFailureResponse);
+    setMultiselectElementInModalWindow(daHelper.successfulResponse2GetAllElementsInMultiselect, daHelper.failureResponseInMultiselect);
 
     $("#employeeModal").modal("show");
 
@@ -122,7 +118,8 @@ function addEmployee() {
         let dataS = JSON.stringify(addEmployee);
 
         let employeeLoader = new daHelper.DataLoader("POST", daHelper.EMPLOYEES_URL,
-            successfulRequestFunction("containerForEmployees", "alerts_area", addEmployee), failureRequestFunction("alerts_area"),
+            successfulRequestFunction("containerForEmployees", "alerts_area", addEmployee),
+            daHelper.failureResponse("alerts_area", daHelper.SEND_ERROR_MESSAGE),
             JSON.stringify(addEmployee), null, "application/json;charset=UTF-8", null);
         employeeLoader.loadData();
     });
@@ -138,7 +135,7 @@ function editEmployee(element) {
     let lastLoadingInvestigationId = -1;
     let lastLoadingParticipatedInvestigationId = -1;
 
-    let allInvestigationsSuccessfulResponse = function (element) {
+    let successfulResponse2GetAllInvestigationsInMultiselect = function (element, drawElementFunction) {
 
         return function (result) {
             debugger;
@@ -158,13 +155,13 @@ function editEmployee(element) {
                 lastLoadingInvestigationId = returnedObjects[returnedObjects.length - 1].employeeId;
 
                 for (let investigation of returnedObjects) {
-                    drawInvestigation(investigation);
+                    drawElementFunction(investigation);
                 }
             }
         }
     };
 
-    let participatedInvestigationsSuccessfulResponse = function (element) {
+    let successfulResponse2GetParticipatedInvestigationsInMultiselect = function (element) {
 
         return function (result) {
             debugger;
@@ -182,12 +179,13 @@ function editEmployee(element) {
         }
     };
 
-    setMultiselectElementInModalWindow(allInvestigationsSuccessfulResponse, investigationsFailureResponse);
+    setMultiselectElementInModalWindow(successfulResponse2GetAllInvestigationsInMultiselect, daHelper.failureResponseInMultiselect);
 
     let multiSelectContainer = document.getElementById("ms-" + "investigations");
 
     participatedInvestigationsLoader = new daHelper.DataLoader("GET", daHelper.EMPLOYEE_INVESTIGATIONS_URL + "/" + originalEmployee.employeeId,
-        participatedInvestigationsSuccessfulResponse(multiSelectContainer.children[1]), investigationsFailureResponse(multiSelectContainer.children[1], "alerts_area"),
+        successfulResponse2GetParticipatedInvestigationsInMultiselect(multiSelectContainer.children[1]),
+        daHelper.failureResponseInMultiselect(multiSelectContainer.children[1], "alerts_area"),
         {offset: 0, limit: DEFAULT_INVESTIGATIONS_ON_PAGE}, {Accept: "application/json"}, null, "text json");
 
     let selectionContainer = document.getElementById("ms-" + "investigations").children[1].children[1];
@@ -200,7 +198,9 @@ function editEmployee(element) {
 
     $("#modal_save").off('click').on('click', () => {
 
-        let editEmployee = null;
+        debugger;
+
+        let editEmployee = {};
 
         let requestParams;
         let url = daHelper.EMPLOYEES_URL;
@@ -215,10 +215,11 @@ function editEmployee(element) {
             requestParams = getSelectedInvestigationsIds();
         } else {
             editEmployee = getEmployeeFromModalWindow();
-            editEmployee.employeeId = originalEmployee.employeeId;
             requestParams = editEmployee;
             isRedraw = true;
         }
+
+        editEmployee.employeeId = originalEmployee.employeeId;
 
         let successfulRequestFunction = (employee, alertAreaElementId, isRedrawEmployee) => {
             return function (result) {
@@ -237,7 +238,8 @@ function editEmployee(element) {
 
         debugger;
         let employeeLoader = new daHelper.DataLoader("PUT", url,
-            successfulRequestFunction(editEmployee, "alerts_area", isRedraw), failureRequestFunction("alerts_area"),
+            successfulRequestFunction(editEmployee, "alerts_area", isRedraw),
+            daHelper.failureResponse("alerts_area", daHelper.SEND_ERROR_MESSAGE),
             JSON.stringify(requestParams), null, "application/json;charset=UTF-8", null);
         employeeLoader.loadData();
     });
@@ -266,19 +268,18 @@ function getRating(employeeId) {
 
     if (!isFind) return defaultRating;
 
-    let responseRatingsActions = ((employeeId) => {
-        return {
-            successfulRequestFunction: function (result) {
+    let successfulFunction2GetRatings = ((employeeId) => {
+        return function (result) {
 
-                debugger;
-                let rating = employeeId === result[0].first ? result[0].second : "N/A";
-                drawEmployeeRating(result[0].first, rating);
-            }
+            debugger;
+            let rating = employeeId === result[0].first ? result[0].second : "N/A";
+            drawEmployeeRating(result[0].first, rating);
         }
     })(employeeId);
 
     let ratingLoader = new daHelper.DataLoader("GET", daHelper.EMPLOYEES_URL + daHelper.RATING_URL,
-        responseRatingsActions.successfulRequestFunction, failureRequestFunction("alerts_area"),
+        successfulFunction2GetRatings,
+        daHelper.failureResponse("alerts_area", daHelper.LOAD_ERROR_MESSAGE),
         {offset: offset, limit: 1}, {Accept: "application/json"}, null, "text json");
     ratingLoader.loadData();
 }
@@ -325,7 +326,7 @@ function showParticipatedInvestigations(employeeElement) {
             enableLoadingAnimationInParticipatedInvestigationsTable(false);
             drawEmptyDataMessageInTable("Data is not available.");
 
-            daHelper.drawMessage(alertAreaElementId, "Can't load data from server. Please check connection and try again.",
+            daHelper.drawMessage(alertAreaElementId, daHelper.LOAD_ERROR_MESSAGE,
                 daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
         }
     };
@@ -423,20 +424,10 @@ function enableLoadingAnimationInParticipatedInvestigationsTable(state) {
 
     console.log("enableLoadingAnimationInParticipatedInvestigationsTable(state)");
 
-    var elementDisplayMode = "none";
+    let elementDisplayMode = "none";
     if (state) elementDisplayMode = "block";
 
     $("#modalTableLoadingAnimation").css("display", elementDisplayMode);
-}
-
-function failureRequestFunction(alertAreaElementId) {
-    console.log("failureRequestFunction(alertAreaElementId)");
-
-    return function (jqXHR, textStatus, errorThrown) {
-        debugger;
-        daHelper.drawMessage(alertAreaElementId, "Can't send data to server. Please check connection and try again.",
-            daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
-    };
 }
 
 function redrawEmployee(employee) {
@@ -449,6 +440,9 @@ function redrawEmployee(employee) {
     let titleElement = element.parentElement;
 
     let dateFormat = daHelper.DATE_TIME_FORMAT.split(" ")[0];
+
+    let nameElement = element.nextElementSibling;
+    nameElement.innerText = employee.name;
 
     let ageElement = titleElement.nextElementSibling.firstElementChild.children[1];
     let startWorkingElement = titleElement.nextElementSibling.children[1].children[1];
@@ -636,7 +630,7 @@ function removeEmployee(element) {
 
         $("#confirmModal").addClass("loading");
 
-        var removeDataLoader = new daHelper.DataLoader("DELETE", daHelper.EMPLOYEES_URL + "/" + employeeId,
+        let removeDataLoader = new daHelper.DataLoader("DELETE", daHelper.EMPLOYEES_URL + "/" + employeeId,
             (result) => {
 
                 element.remove();
@@ -647,7 +641,7 @@ function removeEmployee(element) {
             (jqXHR, textStatus, errorThrown) => {
 
                 $("#confirmModal").modal("hide").removeClass("loading");
-                daHelper.drawMessage("alerts_area", "Can't remove employee. Please reset connection and reload page.",
+                daHelper.drawMessage("alerts_area", "Can't remove employee. Please check connection and try again.",
                     daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
             }, null, null, null, null);
 
@@ -657,35 +651,6 @@ function removeEmployee(element) {
     $("#confirmCancel").off('click').on('click', function () {
         $("#confirmModal").modal("hide");
     });
-}
-
-function allInvestigationsSuccessfulResponse(element) {
-
-    return function (result) {
-        debugger;
-        daHelper.enableLoadingAnimationInMultiselect(element, false);
-
-        let returnedObjects = daHelper.getArrayOfObjects(result);
-        if (returnedObjects.length !== this.requestData.limit) this.isAvailableMoreData = false;
-
-        this.requestData.offset += returnedObjects.length;
-
-        if (returnedObjects.length > 0) {
-            for (let investigation of returnedObjects) {
-                drawInvestigation(investigation);
-            }
-        }
-    }
-}
-
-function investigationsFailureResponse(element, alertAreaElementId) {
-    return function (jqXHR, textStatus, errorThrown) {
-        debugger;
-        daHelper.enableLoadingAnimationInMultiselect(element, false);
-
-        daHelper.drawMessage(alertAreaElementId, "Can't load data from server. Please check connection and reload page.",
-            daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
-    }
 }
 
 function drawParticipatedInvestigations(investigations) {
@@ -766,7 +731,7 @@ function isInvestigationDraw(investigation) {
     console.log("isInvestigationDraw(investigation)");
 
     debugger;
-    var isDraw = false;
+    let isDraw = false;
 
     for (let investigationElement of document.getElementById("investigations").children) {
         if (parseInt(investigationElement.value, 10) === investigation.investigationId) {
@@ -806,34 +771,25 @@ function initEmployeesLoading() {
 
     debugger;
 
-    let responseRatingsActions = ((alertAreaElementId) => {
-        return {
-            successfulRequestFunction: function (result) {
+    let successfulFunction2GetRatings = (() => {
+        return function (result) {
 
-                // Returned value is [{first: 1, second: 0},{first:2, second: 66}]
-                debugger;
-                for (let pair of result) {
-                    drawEmployeeRating(pair.first, pair.second);
-                }
-            },
-            failureRequestFunction: function (jqXHR, textStatus, errorThrown) {
-
-                debugger;
-                daHelper.drawMessage(alertAreaElementId, "Can't send data to server. Please check connection and try again.",
-                    daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
+            // Returned value is [{first: 1, second: 0},{first:2, second: 66}]
+            debugger;
+            for (let pair of result) {
+                drawEmployeeRating(pair.first, pair.second);
             }
         };
-    })("alerts_area");
+    })();
 
     let ratingLoader = new daHelper.DataLoader("GET", daHelper.EMPLOYEES_URL + daHelper.RATING_URL,
-        responseRatingsActions.successfulRequestFunction, responseRatingsActions.failureRequestFunction,
+        successfulFunction2GetRatings,
+        daHelper.failureResponse("alerts_area", daHelper.LOAD_ERROR_MESSAGE),
         {offset: 0, limit: getCountEmployeesInPage()}, {Accept: "application/json"}, null, "text json");
-
-    let responseActions = new daHelper.GetDataResponseAction("containerForEmployees", "alerts_area", null);
 
     debugger;
 
-    responseActions.successfulRequestFunction = ((dataAreaElementId, drawDataFunction) => {
+    let successfulRequest2GetEmployees = ((dataAreaElementId, drawDataFunction) => {
         return function (result) {
 
             debugger;
@@ -859,19 +815,20 @@ function initEmployeesLoading() {
             }
 
             $(window).on('scroll', setEmployeesScroll(employeeLoader));
+            $(window).on('scroll', daHelper.scrollingHeaderEvent("headerContainer"));
         }
     })("containerForEmployees", daHelper.drawEmployees);
 
     let employeeLoader = new daHelper.DataLoader("GET", daHelper.EMPLOYEES_URL,
-        responseActions.successfulRequestFunction, responseActions.failureRequestFunction,
+        successfulRequest2GetEmployees,
+        daHelper.failureResponse("alerts_area", daHelper.LOAD_ERROR_MESSAGE),
         {offset: 0, limit: getCountEmployeesInPage()}, {Accept: "application/json"}, null, "text json");
 
     employeeLoader.loadData();
-    // $(window).on('onscroll', setEmployeesScroll(employeeLoader));
 }
 
 function setEmployeesScroll(loader) {
-    console.log("employeeScroll(loader)");
+    console.log("setEmployeeScroll(loader)");
 
     return () => {
 
@@ -892,7 +849,7 @@ function setEmployeesScroll(loader) {
         if ((scrollHeight - scrollTop - clientHeight) < DEFAULT_EMPLOYEE_ELEMENT_HEIGHT + footerHeight) {
             daHelper.enableLoadingAnimation(true);
             loader.loadData();
-            $(window).off('scroll');
+            $(window).off("scroll");
         }
     };
 }
@@ -901,7 +858,7 @@ function enableLoadingAnimation(state) {
 
     console.log("enableLoadingAnimation(state)");
 
-    var elementDisplayMode = "none";
+    let elementDisplayMode = "none";
     if (state) elementDisplayMode = "block";
 
     $("#loading_animation").css("display", elementDisplayMode);
@@ -1023,7 +980,6 @@ CustomValidation.prototype = {
         oldParentElement.appendChild(this.inputField);
     }
 };
-
 
 let nameValidityCheck = {
     isInvalid: (input) => {

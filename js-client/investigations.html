@@ -23,9 +23,6 @@
 <!--<article>-->
 
 <header class="primary-header">
-
-    <!--style="border-top: 4px solid #ffbd09"-->
-
     <div class="row">
         <nav>
             <ul>
@@ -37,25 +34,21 @@
 </header>
 
 <main>
-    <div class="row">
-
-        <section>
-
+    <section id="headerContainer" class="header-container">
+        <div class="row">
             <h1 class="header-title">Investigations</h1>
 
             <i class="material-icons header-button" onclick="addInvestigation()" style="cursor: pointer">add</i>
-
             <i id="removeFilterButton" class="material-icons header-button" onclick="removeFilter()"
                style="cursor: pointer; display: none">cancel</i>
 
             <input id="end_datetimepicker" type="text">
             <input id="start_datetimepicker" type="text">
+        </div>
+    </section>
+    <div class="row">
+        <section id="containerForInvestigations" class="data-area">
 
-        </section>
-
-        <section id="containerForInvestigations" class="scroll-area" style="overflow: auto">
-
-            <!--<section class="list_item investigation">-->
             <section class="list_item">
 
                 <section class="list_item-title">
@@ -166,11 +159,6 @@
                                 <!--<option value="3">Tom Pepper</option>-->
                                 <!--<option value="4" selected>Mike Wake</option>-->
                                 <!--<option value="5">Senior Tomato</option>-->
-                                <!--<option selected value="7">Big Lebowski</option>-->
-                                <!--<option value="8">Mike Wake</option>-->
-                                <!--<option value="9">Jake Chan</option>-->
-                                <!--<option value="10">Jake Chan 2</option>-->
-                                <!--<option value="11">Jake Chan 3</option>-->
                                 <!--<option value="12">Jake Chan 4</option>-->
                             </select>
                         </div>

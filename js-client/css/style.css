@@ -97,7 +97,7 @@ nav > ul > li {
     display: inline-block;
 }
 
-ul{
+nav ul {
     border-top: 4px solid #ffbd09;
     display: inline-block;
     padding-top: 5px;
@@ -114,22 +114,24 @@ strong {
 }
 
 header {
-    min-height: 100px;
-    height: 20%;
-    color: #648880;
+    /*min-height: 100px;*/
+    height: 100px;
+    /*color: #648880;*/
+    background-color: #648880;
     padding: 20px 10px;
     /*position: fixed;*/
     width: 100%;
     top: 0;
     left: 0;
-    /*z-index: 1000;*/
+    /*z-index: 1050;*/
     /*transform: translateZ(0);*/
     /*-webkit-transform: translateZ(0);*/
 }
 
 main {
     background: #fff;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
+    padding-top: 100px;
     padding-bottom: 10px;
 }
 
@@ -193,7 +195,6 @@ tbody tr:nth-child(even) {
     background: #f0f0f2;
 }
 
-
 /*
   ========================================
   Clearfix
@@ -215,6 +216,12 @@ tbody tr:nth-child(even) {
 }
 
 /* ======================================== */
+
+.primary-header {
+    position: fixed;
+    z-index: 1050;
+    background-color: #293f50;
+}
 
 .primary-footer {
     color: #648880;
@@ -266,6 +273,19 @@ article a {
     padding-left: 30px;
 }
 
+.header-container {
+    position: fixed;
+    background-color: #fff;
+    width: 100%;
+}
+
+.scrolling {
+    box-shadow: 0 1px 0 rgba(12, 13, 14, 0.1),
+    0 1px 3px rgba(12, 13, 14, 0.1),
+    0 4px 20px rgba(12, 13, 14, 0.035),
+    0 1px 1px rgba(12, 13, 14, 0.025);
+}
+
 .header-title {
     width: 30%;
     display: inline-block;
@@ -291,8 +311,10 @@ article a {
     float: right;
 }
 
-.scroll-area {
+.data-area {
+    padding-top: 74px;
     min-height: 300px;
+    margin-top: 10px;
 }
 
 .list {
@@ -408,15 +430,12 @@ article a {
     cursor: pointer;
 }
 
-
-
 .alert {
     position: relative;
     margin: 0 auto 15px auto;
     font-weight: bold;
     display: none;
 }
-
 
 .modal_input-validation {
     padding-right: 42.5px;

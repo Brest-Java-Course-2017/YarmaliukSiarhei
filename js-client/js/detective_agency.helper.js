@@ -12,6 +12,9 @@ var daHelper = (function () {
     publicInterface.RATING_URL = "/rating";
     publicInterface.STAFF_URL = "/staff";
 
+    publicInterface.LOAD_ERROR_MESSAGE = "Can't load data from server. Please check connection and reload page.";
+    publicInterface.SEND_ERROR_MESSAGE = "Can't send data to  server. Please check connection and try again.";
+
     publicInterface.SERVER_DATE_FORMAT = "YYYY-MM-DD";
     publicInterface.DATE_TIME_FORMAT = "DD.MM.YYYY HH:mm";
 
@@ -362,6 +365,21 @@ var daHelper = (function () {
         }
     };
 
+    publicInterface.scrollingHeaderEvent = function (headerContainerId) {
+        let isScrolling = false;
+        let headerContainerElement = document.getElementById(headerContainerId);
+        return () => {
+            debugger;
+            if (!isScrolling && $(window).scrollTop() > 0) {
+                headerContainerElement.className += " scrolling";
+                isScrolling = true;
+            } else if (isScrolling && $(window).scrollTop() === 0) {
+                headerContainerElement.className = "header-container";
+                isScrolling = false;
+            }
+        };
+    }
+    ;
 
     publicInterface.checkOldEmptyDataMessages = function (elementId, emptyDataMessage) {
 
@@ -606,41 +624,59 @@ var daHelper = (function () {
         };
     }
 
+    publicInterface.successfulResponse2GetAllElementsInMultiselect = function (element, drawElementFunction) {
 
-    publicInterface.GetDataResponseAction = function (dataAreaElementId, alertAreaElementId, drawDataFunction) {
-        return {
-            successfulRequestFunction: function (result) {
+        return function (result) {
+            debugger;
+            daHelper.enableLoadingAnimationInMultiselect(element, false);
 
-                debugger;
-                enableLoadingAnimation(false);
+            let returnedObjects = daHelper.getArrayOfObjects(result);
+            if (returnedObjects.length !== this.requestData.limit) this.isAvailableMoreData = false;
 
-                var returnedObjects = daHelper.getArrayOfObjects(result);
-                if (returnedObjects.length != this.requestData.limit) this.isAvailableMoreData = false;
+            this.requestData.offset += returnedObjects.length;
 
-                this.requestData.offset += returnedObjects.length;
-
-                if (this.requestData.offset === 0) {
-
-                    if (!publicInterface.checkOldEmptyDataMessages(dataAreaElementId, daHelper.DEFAULT_NO_DATA_MESSAGE)) {
-                        daHelper.drawEmptyData(dataAreaElementId, daHelper.DEFAULT_NO_DATA_MESSAGE);
-                    }
-                } else {
-                    drawDataFunction(dataAreaElementId, returnedObjects);
+            if (returnedObjects.length > 0) {
+                for (let investigation of returnedObjects) {
+                    drawElementFunction(investigation);
                 }
-            },
-            failureRequestFunction: function (jqXHR, textStatus, errorThrown) {
-
-                debugger;
-                enableLoadingAnimation(false);
-
-                if (!publicInterface.checkOldEmptyDataMessages(dataAreaElementId, daHelper.DEFAULT_NO_AVAILABLE_DATA_MESSAGE)) {
-                    daHelper.drawEmptyData(dataAreaElementId, daHelper.DEFAULT_NO_AVAILABLE_DATA_MESSAGE);
-                }
-                daHelper.drawMessage(alertAreaElementId, "Can't load data from server. Please check connection and reload page.",
-                    daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
             }
-        };
+        }
     };
+
+    publicInterface.failureResponseInMultiselect = function (element, alertAreaElementId) {
+        return function (jqXHR, textStatus, errorThrown) {
+            debugger;
+            daHelper.enableLoadingAnimationInMultiselect(element, false);
+
+            daHelper.drawMessage(alertAreaElementId, "Can't load data from server. Please check connection and reload page.",
+                daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
+        }
+    };
+
+
+    publicInterface.failureResponseWithDrawEmptyData = function (dataAreaElementId, alertAreaElementId, message) {
+        return function (jqXHR, textStatus, errorThrown) {
+
+            debugger;
+            enableLoadingAnimation(false);
+
+            if (!publicInterface.checkOldEmptyDataMessages(dataAreaElementId, daHelper.DEFAULT_NO_AVAILABLE_DATA_MESSAGE)) {
+                daHelper.drawEmptyData(dataAreaElementId, daHelper.DEFAULT_NO_AVAILABLE_DATA_MESSAGE);
+            }
+            daHelper.drawMessage(alertAreaElementId, message,
+                daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
+        }
+    };
+
+    publicInterface.failureResponse = function (alertAreaElementId, message) {
+        return function (jqXHR, textStatus, errorThrown) {
+
+            debugger;
+            daHelper.drawMessage(alertAreaElementId, message,
+                daHelper.MESSAGE_TYPE.danger, daHelper.DEFAULT_ERROR_MESSAGE_ALIVE_TIME_IN_SEC);
+        }
+    };
+
 
     publicInterface.DataLoader = function (typeOfRequest, url, successfulFunction, failureFunction,
                                            requestData, headers, contentType, dataType) {
@@ -671,4 +707,5 @@ var daHelper = (function () {
     };
 
     return publicInterface;
+
 })();
