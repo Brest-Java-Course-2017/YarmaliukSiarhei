@@ -279,9 +279,9 @@ public class InvestigationRestControllerMockTest {
                 get("/api/" + VERSION + "/investigations/" + sFirstTestInvestigation.getInvestigationId())
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         ).andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(content().json(EXPECTED_JSON_RESPONSE))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isFound());
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
     }
 
     @Test
@@ -338,7 +338,7 @@ public class InvestigationRestControllerMockTest {
                         .param(LIMIT, "1")
 
         ).andDo(print())
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().json("[" + EXPECTED_JSON_RESPONSE + "]"));
     }
@@ -359,7 +359,7 @@ public class InvestigationRestControllerMockTest {
                         .param(LIMIT, "1")
 
         ).andDo(print())
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().json("[" + EXPECTED_JSON_RESPONSE + "]"));
     }

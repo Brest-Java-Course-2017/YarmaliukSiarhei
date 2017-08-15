@@ -301,7 +301,7 @@ public class EmployeeRestControllerMockTest {
                 get("/api/" + VERSION + "/employees/" + sFirstTestEmployee.getEmployeeId())
 
         ).andDo(print())
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().json(EXPECTED_JSON_RESPONSE, false));
     }

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detective Agency js-client</title>
+
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="css/multi-select.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+
+<body>
+
+<header class="primary-header">
+
+    <div class="row">
+        <nav>
+            <ul>
+                <li><a href="investigations.html">Investigations</a></li>
+                <li><a href="employees.html">Staff</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section id="headerContainer" class="header-container">
+        <div class="row">
+            <h1 class="header-title">Employees</h1>
+            <i class="material-icons header-button" onclick="addEmployee()" style="cursor: pointer">add</i>
+        </div>
+    </section>
+
+    <div class="row">
+        <section id="containerForEmployees" class="data-area" style="overflow: auto">
+        </section>
+        <img id="loading_animation" src="images/refresh.gif" alt="loading ..."/>
+    </div>
+</main>
+
+<footer class="primary-footer">
+    <div class="row">
+
+        <div class="footer_about">
+            <a href="mailto:segniertomato@gmail.com?subject=About%20investigations%20report%20system" target="_blank">
+                Contact with me</a>
+        </div>
+
+        <div class="license">
+            <small class="footer_license">
+                Apache License, Version 2.0
+            </small>
+        </div>
+    </div>
+</footer>
+
+<div id="alerts_area">
+</div>
+
+<div id="employeeModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="modal_title" class="modal-title" style="margin: 0 auto">Create employee</h4>
+            </div>
+            <div class="modal-body" style="margin-top: 15px">
+                <form class="form-horizontal">
+                    <div class="form-group modal-group">
+                        <label for="employeeName" class="modal-label">Name</label>
+                        <input type="text" class="form-control modal-input" id="employeeName">
+                    </div>
+
+                    <!-- DateTime picker-->
+                    <div class="form-group modal-group">
+                        <label for="employeeAgeDate" class="modal-label">Age</label>
+                        <i id="removeAgeDateButton" class="material-icons modal_button-datetimepicker"
+                           onclick="removePickerData(this)">cancel</i>
+                        <input id="employeeAgeDate" class="form-control modal_input-datetimepicker" type="text">
+                    </div>
+
+                    <div class="form-group modal-group">
+                        <label for="employeeWorkingDate" class="modal-label">Start working date</label>
+                        <i id="removeWorkingDateButton" class="material-icons modal_button-datetimepicker"
+                           onclick="removePickerData(this)">cancel</i>
+
+                        <input id="employeeWorkingDate" class="form-control modal_input-datetimepicker" type="text">
+                    </div>
+
+                    <div class="form-group modal-group" style="padding-top: 10px">
+                        <label for="investigations">Select investigations</label>
+
+                        <div class="modal_multiselect-container">
+                            <select multiple="multiple" id="investigations" name="my-select[]" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="modal_save" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Participated investigations modal -->
+<div id="participatedInvestigationsTable" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true" style="overflow: hidden">
+    <div class="modal-dialog modal-lg">
+        <!--<div class="modal-content" style="overflow: hidden;">-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Participated Investigations</h4>
+            </div>
+            <div id="participatedInvestigationsTableModalBody" class="modal-body table-body">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Number</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">start/end date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="participatedInvestigationsTableBody">
+                    </tbody>
+
+                    <tfoot>
+                    </tfoot>
+                </table>
+                <div class="table_modal-loading_container">
+                    <img id="modalTableLoadingAnimation" src="images/refresh.gif" alt="loading ..."/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal confirm -->
+<div class="modal fade" id="confirmModal" style="display: none; z-index: 1050;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+                <strong>Do you want delete employee?</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="confirmOk">Ok</button>
+                <button type="button" class="btn btn-default" id="confirmCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/xregexp/xregexp-all.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/jquery.multi-select.js"></script>
+<script src="js/jquery.datetimepicker.full.min.js"></script>
+<script src="js/detective_agency.helper.js" defer></script>
+<script src="js/employees.js" defer></script>
+
+</body>
+</html>
