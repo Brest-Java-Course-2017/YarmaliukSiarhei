@@ -44,46 +44,34 @@ After this js-client will be available in url http://localhost:8080/project_name
 3. get involved employees in investigation with id = 1:                      
 ```curl -v localhost:8088/api/v1/employees/investigation/1?limit=5\&offset=0```
 4. add new employee: 
-```
-    curl -X POST -H 'Content-Type: application/json'
-   -d '{"employeeId":null,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees
-```
+``` curl -X POST -H 'Content-Type: application/json' -d '{"employeeId":null,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees ```
 5. add investigations to employee in which he participated:                   
-```curl -X POST -H 'Content-Type: application/json' -d '[1,2,3]' -v localhost:8088/api/v1/employees/1/investigations```
+``` curl -X POST -H 'Content-Type: application/json' -d '[1,2,3]' -v localhost:8088/api/v1/employees/1/investigations ```
 6. update employee: 
-```
-   curl -X PUT -H 'Content-Type:application/json'
-   -d '{"employeeId":2,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees```
+``` curl -X PUT -H 'Content-Type:application/json' -d '{"employeeId":2,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees ```
 7. update employee participated in investigations:                                                    
-```curl -X PUT -H 'Content-Type:application/json' -d '[1,2,3]' localhost:8088/api/v1/employees/1/investigations```
-8. delete employee with id=1: ```curl -X DELETE -v localhost:8088/api/v1/employees/1```
-9. get employees' rating: ```curl -v localhost:8088/api/v1/employees/rating?limit=5\&offset=0```
+``` curl -X PUT -H 'Content-Type:application/json' -d '[1,2,3]' localhost:8088/api/v1/employees/1/investigations ```
+8. delete employee with id=1: ``` curl -X DELETE -v localhost:8088/api/v1/employees/1 ```
+9. get employees' rating: ``` curl -v localhost:8088/api/v1/employees/rating?limit=5\&offset=0 ```
 
 ###### For investigation's entity
-10. get investigations: ```curl -v localhost:8088/api/v1/investigations?limit=5\&offset=0```
+10. get investigations: ``` curl -v localhost:8088/api/v1/investigations?limit=5\&offset=0 ```
 11. get filtered investigations by time period: 
-```
-   curl -v localhost:8088/api/v1/investigations/filter?startDate=2017-11-26T00:05:08Z\&endDate=2017-11-            26T00:05:07%2B02:15\&limit=5\&offset=0```
-12. get investigation with id=1: ```curl -v localhost:8088/api/v1/investigations/1```
+``` curl -v localhost:8088/api/v1/investigations/filter?startDate=2017-11-26T00:05:08Z\&endDate=2017-11-            26T00:05:07%2B02:15\&limit=5\&offset=0 ```
+12. get investigation with id=1: ``` curl -v localhost:8088/api/v1/investigations/1 ```
 13. get investigations in which involved employee with id = 1:               
-```curl -v localhost:8088/api/v1/investigations/employee/1?limit=5\&offset=0```
+``` curl -v localhost:8088/api/v1/investigations/employee/1?limit=5\&offset=0 ```
 14. add new investigation: 
-```
-curl -X POST -H 'Content-Type: application/json'
--d '{"investigationId":null,"number":null,"title":"Toy thief","description":"Someone stole a rabbit toy.",
-"startInvestigationDate":"2017-05-26T02:00:15+03:00", "endInvestigationDate":null}' -v localhost:8088/api/v1/investigations
-```
-15. add involved staff to investigation:                                              
-```curl -X POST -H 'Content-Type: application/json' -d '[1,3]' -v localhost:8088/api/v1/investigations/1/staff ```
-16. update investigation:  
-```
-curl -X PUT -H 'Content-Type: application/json'
+``` curl -X POST -H 'Content-Type: application/json' -d '{"investigationId":null,"number":null,"title":"Toy thief","description":"Someone stole a rabbit toy.","startInvestigationDate":"2017-05-26T02:00:15+03:00","endInvestigationDate":null}' -v localhost:8088/api/v1/investigations ```
+15. add involved staff to investigation: ``` curl -X POST -H 'Content-Type: application/json' -d '[1,3]' -v localhost:8088/api/v1/investigations/1/staff ```
+16. update investigation:                               
+``` curl -X PUT -H 'Content-Type: application/json'
  -d '{"investigationId":1,"number":null,"title":"Some title","description":"Some description",
  "startInvestigationDate":"2011-05-26T15:56:45+03:00","endInvestigationDate":"2013-02-29T20:01:23Z"}',
  "involvedStaff":[{"employeeId":2,"name":"Some name","age":"1965-05-16","startWorkingDate":"1980-04-16"}]
  -v localhost:8088/api/v1/investigations
 ```
-17. update involved staff in investigation:                                         
+17. update involved staff in investigation:                                                                    
 ``` curl -X PUT -H 'Content-Type: application/json' -d '[1,4]' -v localhost:8088/api/v1/investigations/1/staff ```
 18. delete investigation with id=1: ``` curl -X DELETE -v localhost:8088/api/v1/investigations/1 ```
 
