@@ -41,18 +41,20 @@ After this js-client will be available in url http://localhost:8080/project_name
 
 1. get employees: ```curl -v localhost:8088/api/v1/employees?limit=5\&offset=0```
 2. get employee with id=1: ```curl -v localhost:8088/api/v1/employees/1```
-3. get involved employees in investigation with id = 1: 
+3. get involved employees in investigation with id = 1:                      
 ```curl -v localhost:8088/api/v1/employees/investigation/1?limit=5\&offset=0```
 4. add new employee: 
 ```
     curl -X POST -H 'Content-Type: application/json'
    -d '{"employeeId":null,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees
 ```
-5. add investigations to employee in which he participated: 
+5. add investigations to employee in which he participated:                   
 ```curl -X POST -H 'Content-Type: application/json' -d '[1,2,3]' -v localhost:8088/api/v1/employees/1/investigations```
-6. update employee: ```curl -X PUT -H 'Content-Type:application/json'
- -d '{"employeeId":2,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees```
-7. update employee participated in investigations: 
+6. update employee: 
+```
+   curl -X PUT -H 'Content-Type:application/json'
+   -d '{"employeeId":2,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16"}' -v localhost:8088/api/v1/employees```
+7. update employee participated in investigations:                                                    
 ```curl -X PUT -H 'Content-Type:application/json' -d '[1,2,3]' localhost:8088/api/v1/employees/1/investigations```
 8. delete employee with id=1: ```curl -X DELETE -v localhost:8088/api/v1/employees/1```
 9. get employees' rating: ```curl -v localhost:8088/api/v1/employees/rating?limit=5\&offset=0```
@@ -60,9 +62,10 @@ After this js-client will be available in url http://localhost:8080/project_name
 ###### For investigation's entity
 10. get investigations: ```curl -v localhost:8088/api/v1/investigations?limit=5\&offset=0```
 11. get filtered investigations by time period: 
-```curl -v localhost:8088/api/v1/investigations/filter?startDate=2017-11-26T00:05:08Z\&endDate=2017-11-26T00:05:07%2B02:15\&limit=5\&offset=0```
+```
+   curl -v localhost:8088/api/v1/investigations/filter?startDate=2017-11-26T00:05:08Z\&endDate=2017-11-            26T00:05:07%2B02:15\&limit=5\&offset=0```
 12. get investigation with id=1: ```curl -v localhost:8088/api/v1/investigations/1```
-13. get investigations in which involved employee with id = 1: 
+13. get investigations in which involved employee with id = 1:               
 ```curl -v localhost:8088/api/v1/investigations/employee/1?limit=5\&offset=0```
 14. add new investigation: 
 ```
@@ -70,7 +73,7 @@ curl -X POST -H 'Content-Type: application/json'
 -d '{"investigationId":null,"number":null,"title":"Toy thief","description":"Someone stole a rabbit toy.",
 "startInvestigationDate":"2017-05-26T02:00:15+03:00", "endInvestigationDate":null}' -v localhost:8088/api/v1/investigations
 ```
-15. add involved staff to investigation: 
+15. add involved staff to investigation:                                              
 ```curl -X POST -H 'Content-Type: application/json' -d '[1,3]' -v localhost:8088/api/v1/investigations/1/staff ```
 16. update investigation:  
 ```
@@ -80,29 +83,29 @@ curl -X PUT -H 'Content-Type: application/json'
  "involvedStaff":[{"employeeId":2,"name":"Some name","age":"1965-05-16","startWorkingDate":"1980-04-16"}]
  -v localhost:8088/api/v1/investigations
 ```
-17. update involved staff in investigation: 
+17. update involved staff in investigation:                                         
 ``` curl -X PUT -H 'Content-Type: application/json' -d '[1,4]' -v localhost:8088/api/v1/investigations/1/staff ```
 18. delete investigation with id=1: ``` curl -X DELETE -v localhost:8088/api/v1/investigations/1 ```
 
->For add/update investigation and employee, you can add data about involved staff or participated investigations.
+For add/update investigation and employee, you can add data about involved staff or participated investigations.
 Example, for employee we can pass next data to server:
 {"employeeId":null,"name":"Eric Dickman","age":"1990-11-26","startWorkingDate":"2005-12-16",**"participatedInvestigations":[]**}
 Instead "participatedInvestigations":[] you can use "participatedInvestigations":null or omit this expression,
 server will interpret it as same.
->
->You can specify which participated investigations will be included in employee:
+
+You can specify which participated investigations will be included in employee:
 instead "participatedInvestigations":[] use 
 "participatedInvestigations":[{"investigationId":someId,"number":null/778,"title":"Some title","description":"Some description",
 "startInvestigationDate":"1996-05-26T23:56:01Z","endInvestigationDate":"2005-06-15T15:45:59Z"},...]"
 In this version of application server just take investigation's id, other field not need for server.
 But important which format for these fields you will use.
->
->Same behavior you can see when you will pass investigation for add or update.
+
+Same behavior you can see when you will pass investigation for add or update.
 Expressions "involvedStaff":null, "involvedStaff":[] or omit it - same.
 Example for investigation entity:
 "involvedStaff":[{"employeeId":someId,"name":"Some Derrek","age":"1996-05-16","startWorkingDate":"1965-05-26"},
 {"employeeId":someOtherId,"name":"Some other Derrek","age":"1996-05-16","startWorkingDate":"1965-05-26"},...]"
->
+
 >Note: server will not change existed investigations or employees described in participatedInvestigations, involvedStaff expressions.
 
-######This project under the Apache License 2.0.
+###### This project under the Apache License 2.0.
