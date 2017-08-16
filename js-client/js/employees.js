@@ -568,20 +568,13 @@ function initEmployeeModalWindow() {
 
     daHelper.settingDatePickers("employeeAgeDate", "employeeWorkingDate");
 
-    $("#employeeName")[0].CustomValidation = new CustomValidation($("#employeeName")[0], nameValidityCheck, EMPLOYEE_FIELD_TYPE.NAME);
+    $("#employeeName")[0].CustomValidation = new daHelper.CustomValidation($("#employeeName")[0], nameValidityCheck, EMPLOYEE_FIELD_TYPE.NAME);
     $("#employeeName").on("change", () => {
         $("#employeeName")[0].CustomValidation.checkValidity();
     });
 
-    $("#employeeAgeDate")[0].CustomValidation = new CustomValidation($("#employeeAgeDate")[0], ageValidityCheck, EMPLOYEE_FIELD_TYPE.AGE_DATE);
-    $("#employeeAgeDate").on("change", () => {
-        $("#employeeAgeDate")[0].CustomValidation.checkValidity();
-    });
-
-    $("#employeeWorkingDate")[0].CustomValidation = new CustomValidation($("#employeeWorkingDate")[0], startWorkingDateValidityCheck, EMPLOYEE_FIELD_TYPE.START_WORKING_DATE);
-    $("#employeeWorkingDate").on("change", () => {
-        $("#employeeWorkingDate")[0].CustomValidation.checkValidity();
-    });
+    $("#employeeAgeDate")[0].CustomValidation = new daHelper.CustomValidation($("#employeeAgeDate")[0], ageValidityCheck, EMPLOYEE_FIELD_TYPE.AGE_DATE);
+    $("#employeeWorkingDate")[0].CustomValidation = new daHelper.CustomValidation($("#employeeWorkingDate")[0], startWorkingDateValidityCheck, EMPLOYEE_FIELD_TYPE.START_WORKING_DATE);
 }
 
 function prepareEditEmployeeModalWindow(element) {
@@ -872,7 +865,7 @@ function removePickerData(removeButtonElement) {
     if (element.tagName === "DIV") element = element.firstElementChild;
 
     element.value = "";
-    element.CustomValidation.resetValidation();
+    element.CustomValidation.checkValidity();
 }
 
 function hasElementValidationState(element) {
@@ -890,9 +883,9 @@ function hasElementValidationState(element) {
     return false;
 }
 
-function setElementValidation(element, fieldType, isValid) {
+function setElementValidation(element, fieldType, isValid, message) {
 
-    console.log("setElementValidation(element, isValid)");
+    console.log("setElementValidation(element, isValid, message)");
     debugger;
 
     if (hasElementValidationState(element)) return;
@@ -919,8 +912,44 @@ function setElementValidation(element, fieldType, isValid) {
         "<span id=\"" + element.id + arrayPreferences[1] + "\" class=\"sr-only\">" + arrayPreferences[3] + "</span>";
 
     validationElementContainer.appendChild(element);
+
     validationElementContainer.insertAdjacentHTML("beforeend", elementsHTML);
+
+    if (typeof message !== typeof undefined || message != null) {
+        let errorMessageElement = document.createElement("p");
+        errorMessageElement.className = "has-error";
+        errorMessageElement.style.textAlign = "justify";
+        errorMessageElement.style.marginBottom = 0;
+        errorMessageElement.style.fontSize = "14px";
+        errorMessageElement.innerText = message;
+
+        validationElementContainer.appendChild(errorMessageElement);
+    }
+
     elementOldParent.appendChild(validationElementContainer);
+}
+
+function resetElementValidation(inputElement, fieldType) {
+
+    console.log("resetValidation(inputElement, filedType)");
+
+    debugger;
+
+    if (!hasElementValidationState(inputElement)) return;
+
+    let oldParentElement = inputElement.parentElement.parentElement;
+    inputElement.parentElement.remove();
+
+    inputElement.className = "form-control";
+
+    if (fieldType === EMPLOYEE_FIELD_TYPE.AGE_DATE || fieldType === EMPLOYEE_FIELD_TYPE.START_WORKING_DATE) {
+        inputElement.className += " modal_input-datetimepicker";
+    } else {
+        inputElement.className += " modal-input";
+    }
+
+    inputElement.removeAttribute("aria-describedby");
+    oldParentElement.appendChild(inputElement);
 }
 
 function isSuccessfulValidationState(element) {
@@ -933,51 +962,6 @@ function isSuccessfulValidationState(element) {
     return daHelper.hasClass(element.parentElement, daHelper.arrayValidationSuccessPref[0]);
 }
 
-function CustomValidation(inputField, validityCheck, fieldType) {
-    this.inputField = inputField;
-    this.validityCheck = validityCheck;
-    this.fieldType = fieldType;
-}
-
-CustomValidation.prototype = {
-    constructor: CustomValidation,
-    checkValidity: function () {
-
-        debugger;
-        if (hasElementValidationState(this.inputField)) this.resetValidation();
-
-        if (this.validityCheck.isInvalid(this.inputField)) {
-            //  draw Message and get onfocus event;
-            setElementValidation(this.inputField, this.fieldType, false);
-            this.inputField.setCustomValidity(this.validityCheck.invalidityMessage);
-
-        } else {
-            setElementValidation(this.inputField, this.fieldType, true);
-        }
-    },
-    resetValidation: function () {
-
-        debugger;
-
-        if (!hasElementValidationState(this.inputField)) return;
-
-        let oldParentElement = this.inputField.parentElement.parentElement;
-        this.inputField.nextElementSibling.remove();
-        this.inputField.nextElementSibling.remove();
-        this.inputField.parentElement.remove();
-
-        this.inputField.className = "form-control";
-
-        if (this.fieldType === EMPLOYEE_FIELD_TYPE.AGE_DATE || this.fieldType === EMPLOYEE_FIELD_TYPE.START_WORKING_DATE) {
-            this.inputField.className += " modal_input-datetimepicker";
-        } else {
-            this.inputField.className += " modal-input";
-        }
-
-        this.inputField.removeAttribute("aria-describedby");
-        oldParentElement.appendChild(this.inputField);
-    }
-};
 
 let nameValidityCheck = {
     isInvalid: (input) => {

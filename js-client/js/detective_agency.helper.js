@@ -558,18 +558,15 @@ var daHelper = (function () {
 
             $input.attr("readonly", true);
 
-            // var otherPickerId = $input.attr("id") !== ageDatePickerElementId ?
-            //     ageDatePickerElementId : startWorkingDatePickerElementId;
-            // var otherPickedMoment = moment($('#' + otherPickerId).val(), dateFormat);
-            //
-            //
-            // if (pickedMoment.isValid() && otherPickedMoment.isValid()) {
-            //     if ((otherPickerId === startDatetimePickerElementId && otherPickedMoment.isAfter(pickedMoment)) ||
-            //         otherPickerId === endDatetimePickerElementId && otherPickedMoment.isBefore(pickedMoment)) {
-            //         $input.val(null);
-            //         return;
-            //     }
-            // }
+            if (typeof $ageDatePickerElement[0].CustomValidation !== typeof undefined
+                && $ageDatePickerElement[0].CustomValidation != null) {
+                $ageDatePickerElement[0].CustomValidation.checkValidity();
+            }
+
+            if (typeof $startWorkingDatePickerElement[0].CustomValidation !== typeof undefined
+                && $startWorkingDatePickerElement[0].CustomValidation != null) {
+                $startWorkingDatePickerElement[0].CustomValidation.checkValidity();
+            }
         };
 
         debugger;
@@ -703,6 +700,34 @@ var daHelper = (function () {
                     error: failureFunction.bind(this)
                 }
             );
+        }
+    };
+
+
+    publicInterface.CustomValidation = function (inputField, validityCheck, fieldType) {
+        this.inputField = inputField;
+        this.validityCheck = validityCheck;
+        this.fieldType = fieldType;
+    };
+
+    publicInterface.CustomValidation.prototype = {
+        constructor: publicInterface.CustomValidation,
+        checkValidity: function () {
+
+            debugger;
+            if (hasElementValidationState(this.inputField)) this.resetValidation();
+
+            if (this.validityCheck.isInvalid(this.inputField)) {
+                //  draw Message and get onfocus event;
+                setElementValidation(this.inputField, this.fieldType, false, this.validityCheck.invalidityMessage);
+                this.inputField.setCustomValidity(this.validityCheck.invalidityMessage);
+
+            } else {
+                setElementValidation(this.inputField, this.fieldType, true);
+            }
+        },
+        resetValidation: function () {
+            resetElementValidation(this.inputField, this.fieldType)
         }
     };
 

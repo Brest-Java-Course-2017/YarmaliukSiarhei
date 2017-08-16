@@ -85,27 +85,27 @@ function initInvestigationModalWindow() {
 
     console.log("initInvestigationModalWindow()");
 
-    let arrayInvestigationFields = ["investigationNumber", "investigationTitle", "investigationDescription", "investigationStartDate", "investigationEndDate"];
 
-    let i = 0;
-    for (let FIELD_TYPE in  INVESTIGATION_FIELD_TYPE) {
+    $("#investigationNumber")[0].CustomValidation = new daHelper.CustomValidation(
+        $("#investigationNumber")[0], numberValidityCheck, INVESTIGATION_FIELD_TYPE.NUMBER);
+    $("#investigationNumber").on("change", () => $("#investigationNumber")[0].CustomValidation.checkValidity());
 
-        (function (x, TYPE) {
+    $("#investigationTitle")[0].CustomValidation = new daHelper.CustomValidation(
+        $("#investigationTitle")[0], titleValidityCheck, INVESTIGATION_FIELD_TYPE.TITLE);
+    $("#investigationTitle").on("change", () => $("#investigationTitle")[0].CustomValidation.checkValidity());
 
-            let element = document.getElementById(arrayInvestigationFields[x]);
-            element.onblur = function (event) {
-                console.log("onblur event on element: " + element);
-                let isValid = isValidInvestigationField(INVESTIGATION_FIELD_TYPE[TYPE], element);
-                setElementValidation(element, INVESTIGATION_FIELD_TYPE[TYPE], isValid);
-            };
+    $("#investigationDescription")[0].CustomValidation = new daHelper.CustomValidation(
+        $("#investigationDescription")[0], descriptionValidityCheck, INVESTIGATION_FIELD_TYPE.DESCRIPTION);
+    $("#investigationDescription").on("change", () => $("#investigationDescription")[0].CustomValidation.checkValidity());
 
-            element.onfocus = function (event) {
-                console.log("onfocus event on element: " + element);
-                resetValidation(element, INVESTIGATION_FIELD_TYPE[TYPE])
-            };
-        })(i, FIELD_TYPE);
-        i++;
-    }
+    $("#investigationStartDate")[0].CustomValidation = new daHelper.CustomValidation(
+        $("#investigationStartDate")[0], startDateValidityCheck, INVESTIGATION_FIELD_TYPE.START_DATE);
+    $("#investigationStartDate").on("change", () => $("#investigationStartDate")[0].CustomValidation.checkValidity());
+
+    $("#investigationEndDate")[0].CustomValidation = new daHelper.CustomValidation(
+        $("#investigationEndDate")[0], endDateValidityCheck, INVESTIGATION_FIELD_TYPE.END_DATE);
+    $("#investigationEndDate").on("change", () => $("#investigationEndDate")[0].CustomValidation.checkValidity());
+
 }
 
 function resetInvestigationModalWindow() {
@@ -120,16 +120,17 @@ function resetInvestigationModalWindow() {
     $("#involvedStaff").multiSelect("destroy");
     $("#involvedStaff").empty();
 
-    let investigationIdsElements = ["investigationNumber", "investigationTitle", "investigationDescription", "investigationStartDate", "investigationEndDate"];
+    $("#investigationNumber")[0].CustomValidation.resetValidation();
+    $("#investigationTitle")[0].CustomValidation.resetValidation();
+    $("#investigationDescription")[0].CustomValidation.resetValidation();
+    $("#investigationStartDate")[0].CustomValidation.resetValidation();
+    $("#investigationEndDate")[0].CustomValidation.resetValidation();
 
-    let i = 0;
-    for (let FIELD in INVESTIGATION_FIELD_TYPE) {
-
-        let element = document.getElementById(investigationIdsElements[i]);
-        resetValidation(element, INVESTIGATION_FIELD_TYPE[FIELD]);
-        element.value = "";
-        i++;
-    }
+    $("#investigationNumber").val('');
+    $("#investigationTitle").val('');
+    $("#investigationDescription").val('');
+    $("#investigationStartDate").val('');
+    $("#investigationEndDate").val('');
 }
 
 function prepareEditInvestigationModalWindow(element) {
@@ -144,44 +145,37 @@ function prepareEditInvestigationModalWindow(element) {
     let investigationElements = element.children;
 
     let investigationId = investigationElements[0].children[0].id.split(daHelper.INVESTIGATION_ID_PREFIX)[1];
-    let investigationNumber = investigationElements[0].children[1].innerText.split(daHelper.INVESTIGATION_NUMBER_PREFIX)[1];
-    let investigationTitle = investigationElements[0].children[2].innerText;
-    let investigationStartAndEndDates = investigationElements[1].children[1].innerText.split(daHelper.INVESTIGATION_DATE_SEPARATOR.trim());
-    let investigationDescription = investigationElements[2].firstElementChild.innerText;
+    let number = investigationElements[0].children[1].innerText.split(daHelper.INVESTIGATION_NUMBER_PREFIX)[1];
+    let title = investigationElements[0].children[2].innerText;
+    let startAndEndDates = investigationElements[1].children[1].innerText.split(daHelper.INVESTIGATION_DATE_SEPARATOR.trim());
+    let description = investigationElements[2].firstElementChild.innerText;
 
     daHelper.settingDateTimePickers("investigationStartDate", "investigationEndDate", null, function () {
     });
 
-    let investigationNumberElement = document.getElementById("investigationNumber");
-    setElementValidation(investigationNumberElement, INVESTIGATION_FIELD_TYPE.NUMBER, true);
-    investigationNumberElement.value = investigationNumber;
+    $("#investigationNumber").val(number);
+    $("#investigationTitle").val(title);
+    $("#investigationDescription").val(description);
+    $("#investigationStartDate").val(startAndEndDates[0].trim());
 
-    let investigationTitleElement = document.getElementById("investigationTitle");
-    setElementValidation(investigationTitleElement, INVESTIGATION_FIELD_TYPE.TITLE, true);
-    investigationTitleElement.value = investigationTitle;
-
-    let investigationStartDateElement = document.getElementById("investigationStartDate");
-    setElementValidation(investigationStartDateElement, INVESTIGATION_FIELD_TYPE.START_DATE, true);
-    investigationStartDateElement.value = investigationStartAndEndDates[0].trim();
-
-    let investigationEndDateElement = document.getElementById("investigationEndDate");
-    setElementValidation(investigationEndDateElement, INVESTIGATION_FIELD_TYPE.END_DATE, true);
-    if (investigationStartAndEndDates.length >= 2 && daHelper.isString(investigationStartAndEndDates[1])
-        && investigationStartAndEndDates[1].length !== 0) {
-        investigationEndDateElement.value = investigationStartAndEndDates[1].trim();
+    if (startAndEndDates.length >= 2 && daHelper.isString(startAndEndDates[1])
+        && startAndEndDates[1].length !== 0) {
+        $("#investigationEndDate").val(startAndEndDates[1].trim());
     }
 
-    let investigationDescriptionElement = document.getElementById("investigationDescription");
-    setElementValidation(investigationDescriptionElement, INVESTIGATION_FIELD_TYPE.DESCRIPTION, true);
-    investigationDescriptionElement.value = investigationDescription;
+    $("#investigationNumber")[0].CustomValidation.checkValidity();
+    $("#investigationTitle")[0].CustomValidation.checkValidity();
+    $("#investigationDescription")[0].CustomValidation.checkValidity();
+    $("#investigationStartDate")[0].CustomValidation.checkValidity();
+    $("#investigationEndDate")[0].CustomValidation.checkValidity();
 
     return {
         investigationId: parseInt(investigationId, 10),
-        number: investigationNumber,
-        title: investigationTitle.length > 0 ? investigationTitle : null,
-        description: investigationDescription,
-        startDate: investigationStartAndEndDates[0].trim(),
-        endDate: investigationStartAndEndDates[1].trim().length > 0 ? investigationStartAndEndDates[1].trim() : null
+        number: number,
+        title: title.length > 0 ? title : null,
+        description: description,
+        startDate: startAndEndDates[0].trim(),
+        endDate: startAndEndDates[1].trim().length > 0 ? startAndEndDates[1].trim() : null
     };
 }
 
@@ -868,65 +862,6 @@ function isValidInvestigationField(fieldType, element) {
     return false;
 }
 
-function setElementValidation(element, fieldType, isValid) {
-
-    console.log("setElementValidation(element, fieldType, isValid)");
-
-    debugger;
-
-    if (hasElementValidationState(element)) return;
-
-    let arrayPreferences = isValid ? daHelper.arrayValidationSuccessPref : daHelper.arrayValidationErrorPref;
-
-    let validationElementContainer = document.createElement("div");
-
-    if (fieldType === INVESTIGATION_FIELD_TYPE.START_DATE || fieldType === INVESTIGATION_FIELD_TYPE.END_DATE) {
-        validationElementContainer.className = "modal_input-datetimepicker";
-    } else {
-        validationElementContainer.className = "modal-input";
-    }
-
-    validationElementContainer.className += " modal_validate-container " + arrayPreferences[0];
-
-    let elementOldParent = element.parentElement;
-
-    element.setAttribute("aria-describedby", element.id + arrayPreferences[1]);
-    element.className = "form-control modal_input-validation";
-
-    let elementsHTML = "<span class=\"glyphicon " + arrayPreferences[2] + " modal_input_validation-status_icon\" " +
-        "aria-hidden=\"true\"></span>" +
-        "<span id=\"" + element.id + arrayPreferences[1] + "\" class=\"sr-only\">" + arrayPreferences[3] + "</span>";
-
-    validationElementContainer.appendChild(element);
-    validationElementContainer.insertAdjacentHTML("beforeend", elementsHTML);
-    elementOldParent.appendChild(validationElementContainer);
-}
-
-function resetValidation(element, fieldType) {
-
-    console.log("resetValidation(element, fieldType)");
-
-    debugger;
-
-    if (!hasElementValidationState(element)) return;
-
-    let oldParentElement = element.parentElement.parentElement;
-    element.nextElementSibling.remove();
-    element.nextElementSibling.remove();
-    element.parentElement.remove();
-
-    element.className = "form-control";
-
-    if (fieldType === INVESTIGATION_FIELD_TYPE.START_DATE || fieldType === INVESTIGATION_FIELD_TYPE.END_DATE) {
-        element.className += " modal_input-datetimepicker";
-    } else {
-        element.className += " modal-input";
-    }
-
-    element.removeAttribute("aria-describedby");
-    oldParentElement.appendChild(element);
-}
-
 function hasElementValidationState(element) {
 
     console.log("hasElementValidationState(element)");
@@ -953,7 +888,7 @@ function isSuccessfulValidationState(element) {
     return daHelper.hasClass(element.parentElement, daHelper.arrayValidationSuccessPref[0]);
 }
 
-function removePickerData(fieldType, removeButtonElement) {
+function removePickerData(removeButtonElement) {
 
     console.log("removePickerData(fieldType, removeButtonElement)");
 
@@ -964,10 +899,13 @@ function removePickerData(fieldType, removeButtonElement) {
     }
 
     element.value = "";
-    if (hasElementValidationState(element)) {
-        resetValidation(element, fieldType);
+
+    if (element.CustomValidation.fieldType === INVESTIGATION_FIELD_TYPE.END_DATE) {
+        element.CustomValidation.checkValidity();
     }
-    setElementValidation(element, fieldType, isValidInvestigationField(fieldType, element));
+    else {
+        element.CustomValidation.resetValidation();
+    }
 }
 
 function enableLoadingAnimation(state) {
@@ -1002,7 +940,7 @@ function clearInvestigationsHTMLElementsInDOM() {
     console.log("clearInvestigationHTMLElementsInDOM()");
 
     document.getElementsByClassName("investigation").remove();
-    if($("#containerForEmptyDataMessage").length) $("#containerForEmptyDataMessage").remove();
+    if ($("#containerForEmptyDataMessage").length) $("#containerForEmptyDataMessage").remove();
 }
 
 
@@ -1097,4 +1035,131 @@ let SuccessfulResponse2GetInvestigation = function (dataAreaElementId, alertArea
         $(window).on("scroll", daHelper.scrollingHeaderEvent("headerContainer"));
 
     }
+};
+
+function setElementValidation(element, fieldType, isValid, message) {
+
+    console.log("setElementValidation(element, fieldType, isValid, message)");
+
+    debugger;
+
+    if (hasElementValidationState(element)) return;
+
+    let arrayPreferences = isValid ? daHelper.arrayValidationSuccessPref : daHelper.arrayValidationErrorPref;
+
+    let validationElementContainer = document.createElement("div");
+
+    if (fieldType === INVESTIGATION_FIELD_TYPE.START_DATE || fieldType === INVESTIGATION_FIELD_TYPE.END_DATE) {
+        validationElementContainer.className = "modal_input-datetimepicker";
+    } else {
+        validationElementContainer.className = "modal-input";
+    }
+
+    validationElementContainer.className += " modal_validate-container " + arrayPreferences[0];
+
+    let elementOldParent = element.parentElement;
+
+    element.setAttribute("aria-describedby", element.id + arrayPreferences[1]);
+    element.className = "form-control modal_input-validation";
+
+    let elementsHTML = "<span class=\"glyphicon " + arrayPreferences[2] + " modal_input_validation-status_icon\" " +
+        "aria-hidden=\"true\"></span>" +
+        "<span id=\"" + element.id + arrayPreferences[1] + "\" class=\"sr-only\">" + arrayPreferences[3] + "</span>";
+
+    validationElementContainer.appendChild(element);
+    validationElementContainer.insertAdjacentHTML("beforeend", elementsHTML);
+
+    if (typeof message !== typeof undefined || message != null) {
+        let errorMessageElement = document.createElement("p");
+        errorMessageElement.className = "has-error";
+        errorMessageElement.style.textAlign = "justify";
+        errorMessageElement.style.marginBottom = 0;
+        errorMessageElement.style.fontSize = "14px";
+        errorMessageElement.innerText = message;
+
+        validationElementContainer.appendChild(errorMessageElement);
+    }
+
+    elementOldParent.appendChild(validationElementContainer);
+}
+
+
+function resetElementValidation(inputElement, fieldType) {
+
+    console.log("resetValidation(inputElement, fieldType)");
+
+    debugger;
+
+    if (!hasElementValidationState(inputElement)) return;
+
+    let oldParentElement = inputElement.parentElement.parentElement;
+    inputElement.parentElement.remove();
+
+    inputElement.className = "form-control";
+
+    if (fieldType === INVESTIGATION_FIELD_TYPE.START_DATE || fieldType === INVESTIGATION_FIELD_TYPE.END_DATE) {
+        inputElement.className += " modal_input-datetimepicker";
+    } else {
+        inputElement.className += " modal-input";
+    }
+
+    inputElement.removeAttribute("aria-describedby");
+    oldParentElement.appendChild(inputElement);
+}
+
+
+let numberValidityCheck = {
+    isInvalid: (input) => {
+
+        console.log("numberValidityChecks - inInvalid(input)");
+        debugger;
+        return !(input.value === null || (input.value !== null && daHelper.isNumber(input.value) && input.value > 0));
+    },
+    invalidityMessage: "Number can't be empty or less than 0."
+};
+
+
+let titleValidityCheck = {
+    isInvalid: (input) => {
+
+        console.log("titleValidityChecks - inInvalid(input)");
+        debugger;
+        return false;
+    },
+    invalidityMessage: ""
+};
+
+let descriptionValidityCheck = {
+    isInvalid: (input) => {
+
+        console.log("descriptionValidityChecks - inInvalid(input)");
+        debugger;
+        return !(input.value !== null && input.value.trim() !== "");
+    },
+    invalidityMessage: "Description can't be empty."
+};
+
+let startDateValidityCheck = {
+    isInvalid: (input) => {
+
+        console.log("startDateValidityChecks - inInvalid(input)");
+        debugger;
+        let startDateMoment = moment(input.value, daHelper.DATE_TIME_FORMAT);
+        return !(startDateMoment.isValid() && startDateMoment.isBefore(moment()));
+    },
+    invalidityMessage: "Start investigation date can't be null and must be early than now."
+};
+
+let endDateValidityCheck = {
+    isInvalid: (input) => {
+
+        console.log("endDateValidityChecks - inInvalid(input)");
+        debugger;
+        let endDateMoment = moment(input.value, daHelper.DATE_TIME_FORMAT);
+        let startMoment = moment(document.getElementById("investigationStartDate").value, daHelper.DATE_TIME_FORMAT);
+
+        return !(typeof input.value === "string" && input.value === "" || (endDateMoment.isValid() && endDateMoment.isBefore(moment()) &&
+        startMoment.isValid() && startMoment.isBefore(endDateMoment)))
+    },
+    invalidityMessage: "End investigation date can be null or must be early than start investigation date."
 };
