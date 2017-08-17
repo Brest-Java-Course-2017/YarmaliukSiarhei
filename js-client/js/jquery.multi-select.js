@@ -373,8 +373,6 @@
         },
 
         'destroy': function () {
-            debugger;
-            console.error('destroy method inside mustiselect');
             $("#ms-" + this.$element.attr("id")).remove();
             this.$element.off('focus');
             this.$element.css('position', '').css('left', '');
