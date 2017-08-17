@@ -787,79 +787,18 @@ function checkValidation() {
 
     debugger;
 
-    let arrayValidationElementsId = ["investigationNumber", "investigationTitle", "investigationDescription", "investigationStartDate", "investigationEndDate"];
+    let arrayOfCheckedElements = [$("#investigationNumber")[0], $("#investigationTitle")[0],
+        $("#investigationDescription")[0], $("#investigationStartDate")[0], $("#investigationEndDate")[0]];
 
-    let i = 0;
-    for (let FIELD_TYPE in  INVESTIGATION_FIELD_TYPE) {
-
-        let element = document.getElementById(arrayValidationElementsId[i]);
-
-        if (!hasElementValidationState(element)) {
-            let isValid = isValidInvestigationField(INVESTIGATION_FIELD_TYPE[FIELD_TYPE], element);
-            setElementValidation(element, INVESTIGATION_FIELD_TYPE[i], isValid);
-        }
+    for (let element of arrayOfCheckedElements) {
 
         if (!isSuccessfulValidationState(element)) {
             element.focus();
             return false;
         }
-        i++;
     }
 
     return true;
-}
-
-function isValidInvestigationField(fieldType, element) {
-
-    console.log("isValidInvestigationFiled(fieldType, element)");
-
-    debugger;
-
-    let fieldValue = element.value;
-
-    switch (fieldType) {
-        case "number":
-            // can't be 0 or negative number'
-            // maybe null
-            if (fieldValue === null || (fieldValue !== null && daHelper.isNumber(fieldValue) && fieldValue > 0)) {
-                return true;
-            }
-            break;
-
-        case "title":
-            // maybe null
-            return true;
-            break;
-
-        case "description":
-            // can't null and empty'
-            if (fieldValue !== null || fieldValue.trim() !== "") {
-                return true;
-            }
-            break;
-
-        case "startDate":
-            let startDateMoment = moment(fieldValue, daHelper.DATE_TIME_FORMAT);
-            if (startDateMoment.isValid() && startDateMoment.isBefore(moment())) {
-                return true;
-            }
-            break;
-
-        case "endDate":
-            let endDateMoment = moment(fieldValue, daHelper.DATE_TIME_FORMAT);
-            let startMoment = moment(document.getElementById("investigationStartDate").value, daHelper.DATE_TIME_FORMAT);
-
-            if (typeof fieldValue === "string" && fieldValue === "" || (endDateMoment.isValid() && endDateMoment.isBefore(moment()) &&
-                startMoment.isValid() && startMoment.isBefore(endDateMoment))) {
-                return true;
-            }
-            break;
-
-        default:
-            throw new Error("Invalid type of investigation field.");
-    }
-
-    return false;
 }
 
 function hasElementValidationState(element) {
@@ -882,7 +821,7 @@ function isSuccessfulValidationState(element) {
     console.log("isElementValidationSuccessful(element)");
 
     if (!hasElementValidationState(element)) {
-        throw new Error("Element doesn't has validation state.");
+        element.CustomValidation.checkValidity();
     }
 
     return daHelper.hasClass(element.parentElement, daHelper.arrayValidationSuccessPref[0]);
@@ -1117,7 +1056,6 @@ let numberValidityCheck = {
     },
     invalidityMessage: "Number can't be empty or less than 0."
 };
-
 
 let titleValidityCheck = {
     isInvalid: (input) => {

@@ -12,17 +12,17 @@ Environment requirements:
 
 #### How to start REST service:
 1. Clone project: ```git clone https://github.com/Brest-Java-Course-2017/YarmaliukSiarhei.git destination_folder```
-2. Go to: ```cd destination_folder/DetectiveAgency/rest-app```
+2. Go to: ```cd destination_folder/rest-app```
 3. Package and install rest app: ```mvn clean install```
 After it war file will be available on next path:
-destination_folder/DetectiveAgency/rest-app/target/rest-app-1.0-SNAPSHOT.war
+destination_folder/rest-app/target/rest-app-1.0-SNAPSHOT.war
 4. Then you can start service using some container servlets or using Jetty plugin:
     * Start service with Jetty plugin. 
-    >Run command: ```mvn jetty:run```
+    >Go to rest-app folder and run command: ```mvn jetty:run```
     * Start service with Apache Tomcat.
     >Run Apache Tomcat,
     than go to http://localhost:8080/manager/html page.
-    In 'WAR file to deploy' section choose war file (rest-app-1.0-SNAPSHOT.war) and than push 'Deploy' button.
+    In 'WAR file to deploy' section choose war file (rest-app-1.0-SNAPSHOT.war will be in rest-app/target folder) and than push 'Deploy' button.
 
 After this REST service will be available in url http://localhost:8088/api/v1.
 
